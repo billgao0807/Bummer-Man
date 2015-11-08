@@ -7,5 +7,4 @@ public class BMMove {
 	public static final int left = 3;
 	public static final int right = 4;
 	public static final int bomb = 5;
-	
 }
