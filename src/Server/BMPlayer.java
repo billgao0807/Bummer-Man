@@ -4,8 +4,12 @@ import java.awt.Point;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Vector;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
+import node.BMBombing;
 import node.BMItem;
+import node.BMNode;
 
 public abstract class BMPlayer extends Thread {
 //	Store all the information of a player. The functions support all possible actions of the player.
@@ -37,10 +41,10 @@ public abstract class BMPlayer extends Thread {
 	private static final int normalDetonatedTime = 5;
 	private static final int reducedDetonatedTime = 3;
 	//Inclusive Coordinates limit:0, 255
-	private static final int coordinateUpperLimit = 255;
-	private static final int coordinateLowerLimit = 0;
+	private static final int coordinateUpperLimit = 248;
+	private static final int coordinateLowerLimit = 8;
 	
-	protected final Point initialLocation;
+	protected Point initialLocation;
 	protected Point location;
 	protected int speed;
 	protected int power;
@@ -55,7 +59,9 @@ public abstract class BMPlayer extends Thread {
 	protected boolean lost;
 	protected BMSimulation simulation;
 	
-	
+	private Lock mLock;
+	private volatile boolean respawning;
+	private volatile boolean cooling;
 //	Functions:
 //		+ BMPlayer(int ID, int initialLives, boolean isVIP)
 //		+ setSimulation(BMSimulation simulation)
@@ -85,6 +91,8 @@ public abstract class BMPlayer extends Thread {
 		HP = initialLives;
 		kills = 0;
 		lost = false;
+		mLock = new ReentrantLock();
+		respawning = false;
 	}
 	
 	public void setSimulation(BMSimulation simulation){
@@ -92,8 +100,17 @@ public abstract class BMPlayer extends Thread {
 	}
 	
 	public void killed(){
+		if (respawning) return;
+		respawning = true;
 		HP--;
-		if (HP == 0) lost = true;
+		if (HP < 0) lost = true;
+		location = initialLocation;
+		try{
+			Thread.sleep(3000);
+		} catch (InterruptedException ie){
+			ie.printStackTrace();
+		}
+		respawning = false;
 	}
 	
 	public Point getLocation(){
@@ -104,7 +121,7 @@ public abstract class BMPlayer extends Thread {
 		Vector<BMItem> returnVector = new Vector<BMItem>();
 		Object [] array = itemQueue.toArray();
 		if (array.length > 2 || array.length < 0)
-			System.out.println("Player has " + array.length + " items. Error in BMPlayer.");
+			System.out.println("Player has " + array.length + " items. Error in BMPlayer getItemsProcessed.");
 		for(int i=0; i< array.length; i++){
 			returnVector.addElement((BMItem) array[i]);
 		}
@@ -123,6 +140,21 @@ public abstract class BMPlayer extends Thread {
 	}
 	public int getNumOfPlayerKilled(){
 		return kills;
+	}
+	public int getSpeed(){
+		return speed;
+	}
+	public int getPower(){
+		return power;
+	}
+	public int getCoolingTime(){
+		return coolingTime;
+	}
+	public int getDetonatedTime(){
+		return detonatedTime;
+	}
+	public boolean hasLost(){
+		return lost;
 	}
 	public void startMove(int moveType){
 		if (!canMove(moveType)) return;
@@ -145,15 +177,27 @@ public abstract class BMPlayer extends Thread {
 			case 4: location.setLocation(initX+1, initY);
 					break;
 			//Drop a bomb
-			case 5: simulation.dropBomb(initX, initY);
+			case 5: simulation.dropBomb(initX, initY, this);
 					break;
+		}
+		Point nextPoint = new Point(location.x/16, location.y/16);
+		BMNode nextNode = simulation.getNode(nextPoint);
+		if (nextNode instanceof BMBombing){
+			killed();
 		}
 	}
 
 	private boolean canMove(int moveType) {
-		if (moveType < 0 || moveType > 5)
+		if (hasLost()) return false;
+		if (moveType < 0 || moveType > 5){
+			System.out.println("Error input of moveType. BMPlayer canMove.");
 			return false;
-		else if (moveType == 5 || moveType == 0) return true;
+		}
+			
+		else if (moveType == 0) return true;
+		else if (moveType == 5){
+			//if ()
+		}
 		
 		else{
 			switch(moveType){
@@ -172,17 +216,28 @@ public abstract class BMPlayer extends Thread {
 		
 	}
 	
-	public void setInitialLocation(int x){
-		if (x == 0){
-			x = 8;
-			y = 8;
+	public void setInitialLocation(int playerNumber){
+		if (playerNumber > 3 || playerNumber < 0) System.out.println("Input out of bounds, needs 0 to 3. In BMPlayer setInitialLocation.");
+		switch(playerNumber){
+			case 0:
+				location.x = coordinateLowerLimit;
+				location.y = coordinateLowerLimit;
+				break;
+			case 1:
+				location.x = coordinateUpperLimit;
+				location.y = coordinateUpperLimit;
+				break;
+			case 2:
+				location.x = coordinateUpperLimit;
+				location.y = coordinateLowerLimit;
+				break;
+			case 3:
+				location.x = coordinateLowerLimit;
+				location.y = coordinateUpperLimit;
+				break;
 		}
-		else if (x == 1){
-			x = 248;
-			y = 248;
-		}
-		else if (){
-			
-		}
+		initialLocation = new Point(location.x, location.y);
 	}
+	
+	
 }
