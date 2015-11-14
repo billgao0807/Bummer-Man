@@ -1,6 +1,23 @@
 package Server;
 
+import java.util.Timer;
+import java.util.Vector;
+
 public class BMSimulation extends Thread {
+	private BMNode[][] nodes;
+	private Vector<BMPlayer> players;
+	private BMPlayer host;
+	private Timer timeLeft;
+	private BMHostServer hs;
+	public BMSimulation(BMPlayer host, int port){
+		BMHostServer hs = new BMHostServer(port);
+	}
+	public Vector<String> getHPs(){
+		Vector<String> HPs = new Vector<String>();
+		for (BMPlayer player : players){
+			String hp = player.getHP();
+		}
+	}
 //	 In charge of all the information of one round of the game. 
 //		Function:
 //			+ BMSimulation(BMPlayer host, String ip)
@@ -16,12 +33,4 @@ public class BMSimulation extends Thread {
 //			- getResult(int id) : String
 //			- startGame() : void
 //		Variable:
-//			- BMNode[ ][ ] : nodes
-//			- Vector<BMPlayer> players
-//			- BMPlayer host
-//			- Time : timeLeft
-//			- BMChatServer : chatServer
-//			- RatingPeriodResults result
-//			- BMRankTable rankTable
-//			- String ip
 }
