@@ -7,4 +7,7 @@ public class BMAIPlayer extends BMPlayer {
 //		- aiMove() : void
 //		- aiGetBestTry : int
 //		- aiTry(int move) : int
+
+	
+//Matthew edits.
 }
