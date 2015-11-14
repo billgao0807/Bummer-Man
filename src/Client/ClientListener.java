@@ -79,7 +79,11 @@ public class ClientListener  extends Thread{
 				// in case the server sends another factory to us
 				Object obj =ois.readObject();
 				
+<<<<<<< HEAD
 				
+=======
+				/////
+>>>>>>> Charlene
 			}
 		} catch (IOException ioe) {
 			//mFClientGUI.addMessage(Constants.serverCommunicationFailed);
