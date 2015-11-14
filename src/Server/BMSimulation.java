@@ -29,6 +29,7 @@ public class BMSimulation extends Thread {
 	
 	public BMSimulation(BMPlayer host, int port, int numPlayer){
 		this.numPlayer = numPlayer; 
+		players = new Vector<BMPlayer>();
 		BMHostServer hs = new BMHostServer(port,numPlayer);
 		hs.setSimulation(this);
 		loadBoard(BMLibrary.loadBoard());
@@ -96,11 +97,15 @@ public class BMSimulation extends Thread {
 	}
 	public void startGame(int type){
 		Vector<BMClient> clients = hs.getClients();
-		for (BMClient client : clients){
-			client.setPlayer(new BMRealPlayer());
+		for (int i = 0; i < clients.size(); i++){
+			BMPlayer player = new BMRealPlayer();
+			clients.setPlayer(player);
+			players.add(player);
 		}
 		if (type == start_with_AI){
-			
+			for (int i = 0; i < numPlayer-clients.size(); i++){
+				players.add(new BMAIPlayer());
+			}
 		}
 	}
 	public void endGame() {
@@ -114,6 +119,9 @@ public class BMSimulation extends Thread {
 			}
 		}
 		return myBoard;
+	}
+	public Vector<BMPlayer> getPlayers(){
+		return players;
 	}
 //	 In charge of all the information of one round of the game. 
 //		Function:
