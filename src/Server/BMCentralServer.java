@@ -1,5 +1,6 @@
 package Server;
 
-public class BMCentralServer {
+//Maintains user database
+public class BMCentralServer extends Thread {
 
 }
