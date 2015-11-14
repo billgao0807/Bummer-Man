@@ -14,16 +14,24 @@ public abstract class BMPlayer extends Thread {
 //		- Vector<BMItem> : items
 //		- int : deaths
 //		- int : initialLives
+//		- int : HP
 //		- int : kills
 //		- int : ID
 //		- bool : lost
 //		- BMSimulation : simulation
-	private Point location;
-	private int speed;
-	private int power;
-	private int coolingTime;
-	private int detonatedTime;
-	//private Vector<BMItem> items;
+	protected Point location;
+	protected int speed;
+	protected int power;
+	protected int coolingTime;
+	protected int detonatedTime;
+	//protected Vector<BMItem> items;
+	protected int deaths;
+	protected int initialLives;
+	protected int HP;
+	protected int ID;
+	protected boolean lost;
+	protected BMSimulation simulation;
+	
 	
 //	Functions:
 //		+ BMPlayer(int ID, int initialLives)
@@ -42,7 +50,16 @@ public abstract class BMPlayer extends Thread {
 //		protected getCoolingTime() : int
 //		protected getDetonatedTime() : int
 //		- canMove() : Boolean
-	
+	public BMPlayer(int ID, int initialLives){
+		this.ID = ID;
+		this.initialLives = initialLives;
+		location = new Point();
+		speed = 1;
+		power = 3;
+		coolingTime = 10;
+		
+		
+	}
 	
 	
 }
