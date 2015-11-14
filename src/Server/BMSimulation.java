@@ -7,16 +7,34 @@ public class BMSimulation extends Thread {
 	private BMNode[][] nodes;
 	private Vector<BMPlayer> players;
 	private BMPlayer host;
-	private Timer timeLeft;
+	private int timeLeft;
 	private BMHostServer hs;
+	private int totalHP;
 	public BMSimulation(BMPlayer host, int port){
 		BMHostServer hs = new BMHostServer(port);
+	}
+	public void startTimer(){
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				while (timeLeft > 0){
+					Thread.sleep(1000);
+					timeLeft--;
+				}
+			}			
+		}).start();
+	}
+	public void setVariables(int time, int HP){
+		timeLeft = time;
+		totalHP = HP;
 	}
 	public Vector<String> getHPs(){
 		Vector<String> HPs = new Vector<String>();
 		for (BMPlayer player : players){
-			String hp = player.getHP();
+			String hp = player.getHP() + "/" + totalHP;
+			HPs.add(hp);
 		}
+		return HPs;
 	}
 //	 In charge of all the information of one round of the game. 
 //		Function:
