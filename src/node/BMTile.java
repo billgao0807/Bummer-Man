@@ -2,12 +2,14 @@ package node;
 
 import java.util.Random;
 
+import Utilities.BMNodeType;
+
 public class BMTile extends BMNode {
 
 	Random rn;
 
-	public BMTile(int x, int y, BMNodePanel np){
-		super(x, y, BMNodeType.tile, false, np);
+	public BMTile(int x, int y, BMNode[][] board){
+		super(x, y, BMNodeType.tile, false, board);
 		rn = new Random();
 	}
 	
@@ -22,9 +24,9 @@ public class BMTile extends BMNode {
 			tempItemID = tempItemID % 4;
 			tempItemID += 5;
 			// Let this tile be the randomly generated item type after bombing
-			nodePanel.node = new BMBombing(x, y, nodePanel, tempItemID);
+			board[x][y] = new BMBombing(x, y, board, tempItemID);
 		} else {
-			nodePanel.node = new BMBombing(x, y, nodePanel, BMNodeType.road);
+			board[x][y] = new BMBombing(x, y, board, BMNodeType.road);
 		}
 		return false;
 	}

@@ -1,9 +1,11 @@
 package node;
 
+import Utilities.BMNodeType;
+
 public class BMWall extends BMNode {
 
-	public BMWall(int x, int y, BMNodePanel np) {
-		super(x, y, BMNodeType.wall, false, np);
+	public BMWall(int x, int y, BMNode[][] board) {
+		super(x, y, BMNodeType.wall, false, board);
 	}
 	
 	
