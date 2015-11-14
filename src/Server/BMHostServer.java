@@ -7,13 +7,13 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 public class BMHostServer extends Thread {
-
 	private Vector<BMClient> ctVector = new Vector<BMClient>();
-	public BMHostServer() {
+	public BMHostServer(int port) {
 		ServerSocket ss = null;
 		try {
 			System.out.println("Starting Chat Server");
 			ss = new ServerSocket(6789);
+			this.start();
 			while (true) {
 				System.out.println("Waiting for client to connect...");
 				Socket s = ss.accept();

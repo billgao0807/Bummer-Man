@@ -15,6 +15,7 @@ public class BMClient extends Thread {
 	public BMClient(Socket s, BMHostServer hs) {
 		this.hs = hs;
 		this.s = s;
+		this.start();
 		try {
 			ois = new ObjectInputStream(s.getInputStream());
 			oos = new ObjectOutputStream(s.getOutputStream());
