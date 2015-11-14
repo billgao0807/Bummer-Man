@@ -1,5 +1,8 @@
 package Server;
 
+import java.awt.Point;
+import java.util.Vector;
+
 public abstract class BMPlayer extends Thread {
 //	Store all the information of a player. The functions support all possible actions of the player.
 //	Variables:
@@ -15,6 +18,13 @@ public abstract class BMPlayer extends Thread {
 //		- int : ID
 //		- bool : lost
 //		- BMSimulation : simulation
+	private Point location;
+	private int speed;
+	private int power;
+	private int coolingTime;
+	private int detonatedTime;
+	//private Vector<BMItem> items;
+	
 //	Functions:
 //		+ BMPlayer(int ID, int initialLives)
 //		+ setSimulation(BMSimulation simulation)
@@ -32,4 +42,7 @@ public abstract class BMPlayer extends Thread {
 //		protected getCoolingTime() : int
 //		protected getDetonatedTime() : int
 //		- canMove() : Boolean
+	
+	
+	
 }
