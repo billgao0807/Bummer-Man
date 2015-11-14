@@ -78,8 +78,7 @@ public class ClientListener  extends Thread{
 			while(true) {
 				// in case the server sends another factory to us
 				Object obj =ois.readObject();
-				
-				/////
+
 			}
 		} catch (IOException ioe) {
 			//mFClientGUI.addMessage(Constants.serverCommunicationFailed);
