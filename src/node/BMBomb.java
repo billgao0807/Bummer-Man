@@ -17,26 +17,26 @@ public class BMBomb extends BMNode{
 	public boolean vanish() {
 		for (int i = 0; i < power; i++) {
 			if (x + i < 16) {
-				if (!board[x+i][y].vanish())
+				if (board[x+i][y].vanish())
 					break;
 			}
 		}
 		for (int i = 0; i < power; i++) {
 			if (x - i < 16) {
-				if (!board[x-i][y].vanish())
+				if (board[x-i][y].vanish())
 					break;
 			}
 		}
 		for (int i = 0; i < power; i++) {
 			if (y + i < 16) {
-				if (!board[x][y+i].vanish())
+				if (board[x][y+i].vanish())
 					break;
 			}
 		}
 		
 		for (int i = 0; i < power; i++) {
 			if (y - i < 16) {
-				if (!board[x][y-i].vanish())
+				if (board[x][y-i].vanish())
 					break;
 			}
 		}
