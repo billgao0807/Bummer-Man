@@ -8,7 +8,28 @@ import java.util.Vector;
 
 public class BMHostServer extends Thread {
 	private Vector<BMClient> ctVector = new Vector<BMClient>();
-	public BMHostServer(int port) {
+	private int port;
+	private int numPlayer;
+	private BMSimulation simulation;
+	public Vector<BMClient> getClients(){
+		return ctVector;
+	}
+	public BMHostServer(int port, int numPlayer) {
+		this.port = port;
+		this.numPlayer = numPlayer;
+	}
+	public void setSimulation(BMSimulation simulation){
+		this.simulation = simulation;
+	}
+	public void removeChatThread(BMClient ct) {
+		ctVector.remove(ct);
+	}
+	public void sendMapToClients(BMClient ct, TreeMap<String,Object> output) {
+		for (BMClient ct1 : ctVector) {
+				ct1.sendMap(output);
+		}
+	}
+	public void run(){
 		ServerSocket ss = null;
 		try {
 			System.out.println("Starting Chat Server");
@@ -34,13 +55,4 @@ public class BMHostServer extends Thread {
 			}
 		}
 	}
-	public void removeChatThread(BMClient ct) {
-		ctVector.remove(ct);
-	}
-	public void sendMapToClients(BMClient ct, TreeMap<String,Object> output) {
-		for (BMClient ct1 : ctVector) {
-				ct1.sendMap(output);
-		}
-	}
-
 }

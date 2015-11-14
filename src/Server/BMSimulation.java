@@ -7,7 +7,13 @@ import java.util.Vector;
 import Utilities.BMLibrary;
 import Utilities.BMNodeType;
 import Utilities.BMResult;
+import node.BMBomb;
+import node.BMBombing;
 import node.BMNode;
+import node.BMNodeItem;
+import node.BMRoad;
+import node.BMTile;
+import node.BMWall;
 
 public class BMSimulation extends Thread {
 	private BMNode[][] board;
@@ -16,8 +22,15 @@ public class BMSimulation extends Thread {
 	private int timeLeft;
 	private BMHostServer hs;
 	private int totalHP;
-	public BMSimulation(BMPlayer host, int port){
-		BMHostServer hs = new BMHostServer(port);
+	private int numPlayer;
+	
+	public final static int start_game = 0;
+	public final static int start_with_AI = 1;
+	
+	public BMSimulation(BMPlayer host, int port, int numPlayer){
+		this.numPlayer = numPlayer; 
+		BMHostServer hs = new BMHostServer(port,numPlayer);
+		hs.setSimulation(this);
 		loadBoard(BMLibrary.loadBoard());
 	}
 	private void loadBoard(int[][] board){
@@ -28,16 +41,7 @@ public class BMSimulation extends Thread {
 		}
 	}
 	private BMNode initNode(int i, int j, int id){
-		if (id > 4){
-			return new BMNodeItem(i,j,board,id);
-		}
-		else if (id == BMNodeType.bombing){
-			return new BMBombing(i,j,board);
-		}
-		else if (id == BMNodeType.bomb){
-			return new BMBomb(i,j,board);
-		}
-		else if (id == BMNodeType.tile){
+		if (id == BMNodeType.tile){
 			return new BMTile(i,j,board);
 		}
 		else if (id == BMNodeType.wall){
@@ -45,8 +49,6 @@ public class BMSimulation extends Thread {
 		}
 		else return new BMRoad(i,j,board);
 	}
-	
-	
 	public void startTimer(){
 		new Thread(new Runnable(){
 			@Override
@@ -62,9 +64,6 @@ public class BMSimulation extends Thread {
 				BMSimulation.this.endGame();
 			}			
 		}).start();
-	}
-	protected void endGame() {
-		
 	}
 	public void setVariables(int time, int HP){
 		timeLeft = time;
@@ -95,7 +94,27 @@ public class BMSimulation extends Thread {
 	public void dropBomb(int x, int y, BMPlayer player){
 		board[x][y] = new BMBomb(x,y,board,player.power,player.detonatedTime);
 	}
-	public void setNode()
+	public void startGame(int type){
+		Vector<BMClient> clients = hs.getClients();
+		for (BMClient client : clients){
+			client.setPlayer(new BMRealPlayer());
+		}
+		if (type == start_with_AI){
+			
+		}
+	}
+	public void endGame() {
+		
+	}
+	public Integer[][] getBoard(){
+		Integer[][] myBoard = new Integer[16][16];
+		for (int i = 0; i < 16; i++){
+			for (int j = 0; j < 16; j++){
+				myBoard[i][j] = board[i][j].getType();
+			}
+		}
+		return myBoard;
+	}
 //	 In charge of all the information of one round of the game. 
 //		Function:
 //			+ BMSimulation(BMPlayer host, String ip)
