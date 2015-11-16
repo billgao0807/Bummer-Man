@@ -10,13 +10,13 @@ public class BMBombing extends BMNode{
 	public BMBombing(int x, int y, BMNode[][] board, int afterBombingType) {
 		super(x, y, BMNodeType.bombing, true, board);
 		this.afterBombingType = afterBombingType;
-		timeToSleep = 300;
+		timeToSleep = 30;
 		start();
 	}
 
 	@Override
 	public boolean vanish() {
-		timeToSleep += 300;
+		timeToSleep = 30;
 		return true;
 	}
 
@@ -24,7 +24,7 @@ public class BMBombing extends BMNode{
 	public void run() {
 		while (timeToSleep > 0) {
 			try {
-				java.lang.Thread.sleep(1);
+				java.lang.Thread.sleep(10);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

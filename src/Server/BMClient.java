@@ -36,7 +36,12 @@ public class BMClient extends Thread {
 		try {
 			while (true) {
 				try {
-					TreeMap<String,Object>map = (TreeMap<String,Object>)ois.readObject();
+					@SuppressWarnings("unchecked")
+					TreeMap<String,Object> map = (TreeMap<String,Object>)ois.readObject();
+					String type = (String)map.get("type");  
+					if (type.startsWith("join")) {
+						
+					}
 				} catch (ClassNotFoundException e) {
 					System.out.println("BMClient Run CNFE: " + e.getMessage());
 				}
