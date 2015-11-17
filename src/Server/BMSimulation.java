@@ -150,4 +150,7 @@ public class BMSimulation extends Thread {
 		map.put("players", players);
 		hs.sendMapToClients(map);
 	}
+	public Vector<BMPlayer> getAllPlayers(){
+		return players;
+	}
 }
