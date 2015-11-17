@@ -8,35 +8,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 
-public class BMLibrary {
-
-
+public class ImageLibrary {
+private static Map<String, Image> imageMap;
 	
-	public final String SQLName = "SQLName";
-	
-	private static Map<String, Image> imageMap;
 	static{
 		imageMap = new HashMap<String,Image>();
 	}
-		
-	private BMLibrary(){} //disable constructor
+	
+	private ImageLibrary(){} //disable constructor
 	
 	//Gets the image if available already, otherwise the image is loaded and returned
 	public static Image getImage(String directory) {
-		
-		URL url = BMLibrary.class.getResource(directory);
-		System.out.println(url);
-		Image img = null;
-		try {
-			img = ImageIO.read(url);
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-//		Image img = imageMap.get(directory);
+		Image img = imageMap.get(directory);
 		if(img == null) {
 			try {
 				if(directory.startsWith("http")) {
