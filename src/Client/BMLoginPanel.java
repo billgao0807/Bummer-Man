@@ -1,5 +1,6 @@
 package Client;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -12,8 +13,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import Utilities.BMLibrary;
 import customUI.PaintedButton;
 import customUI.PaintedPanel;
+
 
 public class BMLoginPanel extends PaintedPanel{
 	
@@ -25,27 +28,31 @@ public class BMLoginPanel extends PaintedPanel{
 	private JButton signupB;
 	private JButton quickGameB;
 	private JButton loginB;
-	private JPanel titlePanel = new JPanel();
-	private JPanel userPanel = new JPanel();
-	private JPanel passwordPanel = new JPanel();
-	private JPanel buttonPanel  = new JPanel();
+	private PaintedPanel titlePanel = new PaintedPanel(null);
+	private PaintedPanel userPanel = new PaintedPanel(null);
+	private PaintedPanel passwordPanel = new PaintedPanel(null);
+	private PaintedPanel buttonPanel  = new PaintedPanel(null);
 	
 	
 	BMLoginPanel (ActionListener signup, ActionListener quickG, ActionListener login, Image image)
 	{
 		super(image,true);
-		title = new JLabel("BomberMan");
-		titlePanel.add(title);
+	
+		//titlePanel.add(title);
+		Image titleImage = BMLibrary.readImages("bin/Utilities/images/logo.png");
+		PaintedPanel titlePanel = new PaintedPanel(titleImage);
 		
-		username = new JLabel("Username:");
-		userPanel.add(username);
+		
 		nameInput = new JTextField();
+		nameInput.setText("Username: ");
+		nameInput.setForeground(Color.GRAY);
 		nameInput.setPreferredSize(new Dimension(200,20));
 		userPanel.add(nameInput);
 		
-		password = new JLabel("Password:");
-		passwordPanel.add(password);
+		
 		passwordInput = new JTextField();
+		passwordInput.setText("Password:");
+		passwordInput.setForeground(Color.GRAY);
 		passwordInput.setPreferredSize(new Dimension(200,20));
 		passwordPanel.add(passwordInput);
 		
@@ -62,8 +69,11 @@ public class BMLoginPanel extends PaintedPanel{
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		//gbc.insets = new Insets(40,40,40,40);
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.gridy = 1;
+		
+		gbc.ipadx = titleImage.getWidth(null);
+		gbc.ipady = titleImage.getHeight(null);
+		gbc.insets = new Insets(40,40,40,40);
+		gbc.fill = GridBagConstraints.HORIZONTAL;	
 		gbc.gridy = 1;
 		add(titlePanel,gbc);
 		gbc.ipadx = 100;
