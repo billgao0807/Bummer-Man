@@ -25,7 +25,7 @@ public class BMLibrary {
 	public static Image getImages(String name){
 		return null;
 	}
-	public int[ ][ ] getGameMap(){
+	public static int[ ][ ] getGameMap(){
 		int [][] gamemap = new int[16][16];
 		
 		
