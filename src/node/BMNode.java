@@ -25,4 +25,8 @@ public abstract class BMNode extends Thread{
 		public int getType() {
 			return type;
 		}
+		
+		public boolean canPass() {
+			return canPass;
+		}
 }
