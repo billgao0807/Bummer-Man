@@ -1,17 +1,21 @@
 package Server;
 
 import java.awt.Point;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Vector;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import node.BMBomb;
 import node.BMBombing;
 import node.BMItem;
 import node.BMNode;
+import node.BMTile;
+import node.BMWall;
 
-public abstract class BMPlayer extends Thread {
+public abstract class BMPlayer extends Thread implements Serializable{
 //	Store all the information of a player. The functions support all possible actions of the player.
 //	Variables:
 //		- Point : location
@@ -27,7 +31,7 @@ public abstract class BMPlayer extends Thread {
 //		- int : ID
 //		- bool : lost
 //		- BMSimulation : simulation
-	
+	private static final long serialVersionUID = 4139291657328559403L;
 	//Move 2 or 4 spaces per second 
 	private static final int normalSpeed = 2;
 	private static final int increasedSpeed = 4;
@@ -156,6 +160,9 @@ public abstract class BMPlayer extends Thread {
 	public boolean hasLost(){
 		return lost;
 	}
+	public boolean isRealPlayer(){
+		return ID >= 0;
+	}
 	public void startMove(int moveType){
 		if (!canMove(moveType)) return;
 		int initX = location.x;
@@ -177,48 +184,63 @@ public abstract class BMPlayer extends Thread {
 			case 4: location.setLocation(initX+1, initY);
 					break;
 			//Drop a bomb
-			case 5: simulation.dropBomb(initX, initY, this);
+			case 5: simulation.dropBomb(initX/16, initY/16, this);
+					cooling = true;
 					break;
 		}
-		Point nextPoint = new Point(location.x/16, location.y/16);
-		BMNode nextNode = simulation.getNode(nextPoint);
+		BMNode nextNode = simulation.getNode(new Point(location.x/16, location.y/16));
 		if (nextNode instanceof BMBombing){
 			killed();
 		}
+		else if (nextNode instanceof BMItemNode){
+			
+		}
 	}
 
-	private boolean canMove(int moveType) {
+	protected boolean canMove(int moveType) {
 		if (hasLost()) return false;
 		if (moveType < 0 || moveType > 5){
 			System.out.println("Error input of moveType. BMPlayer canMove.");
 			return false;
 		}
-			
 		else if (moveType == 0) return true;
 		else if (moveType == 5){
-			//if ()
-		}
-		
-		else{
-			switch(moveType){
-			//Up
-			case 1: return location.y > coordinateLowerLimit;
-			//Down
-			case 2: return location.y < coordinateUpperLimit;
-			//Left
-			case 3: return location.x > coordinateLowerLimit;
-			//Right
-			case 4: return location.x < coordinateUpperLimit;
+			if (cooling) return false;
+			BMNode node = simulation.getNode(new Point(location.x/16, location.y/16));
+			if (node instanceof BMBombing || node instanceof BMBomb){
+				return false;
 			}
-			System.out.println("Error in BMPlayer canMove");
-			return true;
+			else return true;
 		}
-		
+		else{
+			int initX = location.x;
+			int initY = location.y;
+			switch(moveType){
+				case 0: initY--; break;
+				case 1: initY++; break;
+				case 2: initX--; break;
+				case 3: initX++; break;
+			}
+			if (pointInBounds(new Point(initX, initY))){
+				BMNode nextNode = simulation.getNode(new Point(initX/16, initY/16));
+				if (nextNode instanceof BMWall || nextNode instanceof BMTile) return false;
+				else return true;
+			}
+			else return false;
+			//System.out.println("Error in BMPlayer canMove");			
+		}
+	}
+	protected boolean pointInBounds(Point p){
+		return inBounds(p.x) && inBounds(p.y);
+	}
+	private boolean inBounds(int x){
+		return x >= coordinateLowerLimit && x <= coordinateUpperLimit; 
 	}
 	
 	public void setInitialLocation(int playerNumber){
 		if (playerNumber > 3 || playerNumber < 0) System.out.println("Input out of bounds, needs 0 to 3. In BMPlayer setInitialLocation.");
 		switch(playerNumber){
+		
 			case 0:
 				location.x = coordinateLowerLimit;
 				location.y = coordinateLowerLimit;
