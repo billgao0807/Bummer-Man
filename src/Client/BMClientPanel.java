@@ -5,6 +5,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 
+import Utilities.BMLibrary;
+
 public class BMClientPanel extends JPanel{
 	private static final long serialVersionUID = 6415716059554739910L;
 	private BMLoginPanel loginPanel;
@@ -44,7 +46,7 @@ public class BMClientPanel extends JPanel{
 				BMClientPanel.this.add(menuPanel);
 				BMClientPanel.this.revalidate();
 				BMClientPanel.this.repaint();
-			}});
+			}}, BMLibrary.readImages("bin/Utilities/images/background1.jpg"));
 		
 		
 		//Set up the panel to display

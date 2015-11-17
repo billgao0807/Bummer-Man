@@ -3,6 +3,7 @@ package Client;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
 
@@ -30,9 +31,9 @@ public class BMLoginPanel extends PaintedPanel{
 	private JPanel buttonPanel  = new JPanel();
 	
 	
-	BMLoginPanel (ActionListener signup, ActionListener quickG, ActionListener login)
+	BMLoginPanel (ActionListener signup, ActionListener quickG, ActionListener login, Image image)
 	{
-		super(null,true);
+		super(image,true);
 		title = new JLabel("BomberMan");
 		titlePanel.add(title);
 		

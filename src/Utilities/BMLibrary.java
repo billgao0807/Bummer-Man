@@ -4,11 +4,13 @@ import java.awt.Image;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class BMLibrary {
@@ -22,8 +24,15 @@ public class BMLibrary {
 		
 	}
 	
-	public static Image getImages(String name){
-		return null;
+	public static Image readImages(String path){
+		Image img = null;
+		try {
+			img = ImageIO.read(new File(path));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return img;
 	}
 	public int[ ][ ] getGameMap(){
 		int [][] gamemap = new int[16][16];
@@ -31,7 +40,7 @@ public class BMLibrary {
 		
 		List<String[]> data = new ArrayList<>();		 
 		try {
-??			Scanner in = new Scanner(new File("   ??"));
+			//			Scanner in = new Scanner(new File("   ??"));
 		 
 		    while (in.hasNextLine()) {
 		           String str = in.nextLine();
