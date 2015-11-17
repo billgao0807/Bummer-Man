@@ -33,7 +33,7 @@ public class BMSimulation extends Thread {
 		players = new Vector<BMPlayer>();
 		BMHostServer hs = new BMHostServer(port,numPlayer);
 		hs.setSimulation(this);
-		loadBoard(BMLibrary.loadBoard());
+		loadBoard(BMLibrary.getGameMap());
 	}
 	private void loadBoard(int[][] board){
 		for (int i = 0; i < 16; i++){
