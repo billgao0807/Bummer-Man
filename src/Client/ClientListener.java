@@ -8,7 +8,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Dictionary;
 import java.util.Scanner;
+import java.util.TreeMap;
 import java.util.Vector;
 
 
@@ -33,16 +35,20 @@ public class ClientListener  extends Thread{
 		}
 	}
 	
-	public void sendMove(int key){
-		
-		try {
-			oos.writeObject(key);
-			oos.flush();
-		} catch (IOException ioe) {	
-			System.out.print(ioe);
-		}
 
-	}
+	
+	 public void sendMove(int key ) {
+		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
+		 tempMap.put("type", "move");
+		 tempMap.put("move", key);		 
+	        try {
+	        	oos.writeObject(tempMap);
+				oos.flush();
+	        } catch (Exception e) {
+	            System.out.println(e.toString());
+	        }
+	    }
+	
 	
 
 	
@@ -60,25 +66,106 @@ public class ClientListener  extends Thread{
 	}
 	
 	 public void sendMsg(String msg) {
+		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
+		 tempMap.put("type", "msg");
+		 tempMap.put("content", msg);		 
 	        try {
-	        	oos.writeObject(msg);
+	        	oos.writeObject(tempMap);
 				oos.flush();
 	        } catch (Exception e) {
 	            System.out.println(e.toString());
 	        }
- 
 	    }
 
-	    
+	 public void sendJoin(String username) {
+		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
+		 tempMap.put("type", "join");
+		 tempMap.put("username", username);		 
+	        try {
+	        	oos.writeObject(tempMap);
+				oos.flush();
+	        } catch (Exception e) {
+	            System.out.println(e.toString());
+	        }
+	    }
+	 
+	 public void sendLogin(String username, String password) {
+		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
+		 tempMap.put("type", "join");
+		 tempMap.put("username", username);		
+		 tempMap.put("password", password);
+	        try {
+	        	oos.writeObject(tempMap);
+				oos.flush();
+	        } catch (Exception e) {
+	            System.out.println(e.toString());
+	        }
+	    }
+	 
+	 public void sendSignUp(String username, String password) {
+		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
+		 tempMap.put("type", "signup");
+		 tempMap.put("username", username);		
+		 tempMap.put("password", password);	 
+	        try {
+	        	oos.writeObject(tempMap);
+				oos.flush();
+	        } catch (Exception e) {
+	            System.out.println(e.toString());
+	        }
+	    }
+	 
+	 public void sendmy_rank(String username, String password) {
+		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
+		 tempMap.put("type", "my_rank");
+		 tempMap.put("username", username);		
+	        try {
+	        	oos.writeObject(tempMap);
+				oos.flush();
+	        } catch (Exception e) {
+	            System.out.println(e.toString());
+	        }
+	    }
+	 
+//	 public void sendworld_rank(String ){
+//		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
+//		 tempMap.put("type", "world_rank");
+//		 tempMap.put("username", username);		
+//		 tempMap.put("password", password);	 
+//	        try {
+//	        	oos.writeObject(tempMap);
+//				oos.flush();
+//	        } catch (Exception e) {
+//	            System.out.println(e.toString());
+//	        }
+//	 }
+	 
+	 
+	 
+	 public void sendgame_result(Vector<Dictionary<String, Object>> game_result) {
+		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
+		 tempMap.put("type", "game_result");		 
+		 tempMap.put("result" , game_result);
+		 
+	        try {
+	        	oos.writeObject(tempMap);
+				oos.flush();
+	        } catch (Exception e) {
+	            System.out.println(e.toString());
+	        }
+	    }
+	 
+	 
+	
 	    
 	public void run() {
 		try {
-			String msg;
-			Vector<Color>players;
+			
 			while(true) {
 				// in case the server sends another factory to us
-				Object obj =ois.readObject();
+				TreeMap<String,Object>map = (TreeMap<String,Object>)ois.readObject();
 
+				//if()
 			}
 		} catch (IOException ioe) {
 			//mFClientGUI.addMessage(Constants.serverCommunicationFailed);
