@@ -52,5 +52,9 @@ public class BMBomb extends BMNode{
 		}
 
 	}
+	
+	public int getPower() {
+		return power;
+	}
 
 }
