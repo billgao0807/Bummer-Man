@@ -12,6 +12,8 @@ public class BMClient extends Thread {
 	private BMHostServer hs;
 	private Socket s;
 	private BMSimulation mSimulation;
+	private BMPlayer player;
+	private String userName;
 	
 	public BMClient(Socket s, BMHostServer hs, BMSimulation mSimulation) {
 		this.hs = hs;
@@ -34,7 +36,11 @@ public class BMClient extends Thread {
 			System.out.println("BMClient sendMap IOE: " + e.getMessage());
 		}
 	}
-
+	
+	public void setPlayer(BMPlayer player){
+		this.player = player;
+	}
+	
 	public void run() {
 		try {
 			while (true) {
@@ -42,13 +48,20 @@ public class BMClient extends Thread {
 					@SuppressWarnings("unchecked")
 					TreeMap<String,Object> map = (TreeMap<String,Object>)ois.readObject();
 					String type = (String)map.get("type");  
-					if (type.startsWith("join")) {
-						sendJoinMap(map);
-					} else if (type.startsWith("move")) {
-						sendMoveMap(map);
-					} else if (type.startsWith("msg")) {
+					if (type.equals("msg")) {
 						sendMsgMap(map);
-					} 
+					}
+					else if (type.equals("join")){
+						this.userName = (String)(map.get("username"));
+						mSimulation.joinGame();
+					}
+					else if (type.equals("move")){
+						player.startMove((Integer)(map.get("move")));
+						mSimulation.getGameBoard();
+					}
+					else if (type.equals("msg")){
+						sendMsgMap(map);
+					}
 				} catch (ClassNotFoundException e) {
 					System.out.println("BMClient Run CNFE: " + e.getMessage());
 				}
@@ -59,38 +72,11 @@ public class BMClient extends Thread {
 		} 
 	}
 
-	private void setup(TreeMap<String, Object> map) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	private void sendMsgMap(TreeMap<String, Object> map) {
 		TreeMap<String,Object> tempMap = new TreeMap<String, Object>();
 		tempMap.put("type", "msg");
-		tempMap.put("username", sender);
+		tempMap.put("username", userName);
 		tempMap.put("content", (String)map.get("content"));
 		hs.sendMapToClients(tempMap);
-		
-		
 	}
-
-	private void sendMoveMap(TreeMap<String, Object> map) {
-		TreeMap<String,Object> tempMap = new TreeMap<String, Object>();
-		tempMap.put("type", "game");
-		tempMap.put("board", mSimulation.getBoard());
-		tempMap.put("time", mSimulation.getTime());
-		tempMap.put("players", mSimulation.getPlayerDict());
-		hs.sendMapToClients(tempMap);
-	}
-
-	private void sendJoinMap(TreeMap<String,Object> map) {
-		TreeMap<String,Object> tempMap = new TreeMap<String, Object>();
-		tempMap.put("type", "join");
-		tempMap.put("time", mSimulation.getTime());
-		tempMap.put("hp", mSimulation.getHPs());
-		tempMap.put("player", mSimulation.getPlayers());
-		hs.sendMapToClients(tempMap);
-		
-	}
-	
 }

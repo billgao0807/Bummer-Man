@@ -88,7 +88,7 @@ public class BMSimulation extends Thread {
 		return results;
 	}
 	public boolean canMove(int x, int y){
-		return board[x][y].canMove();
+		return board[x][y].canPass();
 	}
 	public BMNode getNode(int x, int y){
 		return board[x][y];
@@ -100,7 +100,7 @@ public class BMSimulation extends Thread {
 		Vector<BMClient> clients = hs.getClients();
 		for (int i = 0; i < clients.size(); i++){
 			BMPlayer player = new BMRealPlayer();
-			clients.setPlayer(player);
+			clients.get(i).setPlayer(player);
 			players.add(player);
 		}
 		if (type == start_with_AI){

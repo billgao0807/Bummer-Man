@@ -10,6 +10,7 @@ public class BMHostServer extends Thread {
 	private Vector<BMClient> ctVector = new Vector<BMClient>();
 	private int port;
 	private int numPlayer;
+	private BMSimulation simulation;
 	public Vector<BMClient> getClients(){
 		return ctVector;
 	}
@@ -35,7 +36,7 @@ public class BMHostServer extends Thread {
 				System.out.println("Waiting for client to connect...");
 				Socket s = ss.accept();
 				System.out.println("Client " + s.getInetAddress() + ":" + s.getPort() + " connected");
-				BMClient ct = new BMClient(s, this);
+				BMClient ct = new BMClient(s, this,simulation);
 				if (ctVector.size() < numPlayer){
 					ctVector.add(ct);
 					ct.start();
@@ -65,5 +66,8 @@ public class BMHostServer extends Thread {
 			names.add(client.getName());
 		}
 		return names;
+	}
+	public void setSimulation(BMSimulation bmSimulation) {
+		this.simulation = bmSimulation;
 	}
 }
