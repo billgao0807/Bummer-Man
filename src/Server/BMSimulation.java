@@ -2,6 +2,7 @@ package Server;
 
 import java.awt.Point;
 import java.util.Timer;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import Utilities.BMLibrary;
@@ -107,9 +108,19 @@ public class BMSimulation extends Thread {
 				players.add(new BMAIPlayer());
 			}
 		}
+		TreeMap<String,Object> map = new TreeMap<String,Object>();
+		map.put("type", "start");
+		map.put("time", timeLeft);
+		map.put("board", getBoard());
+		map.put("players", players);
+		hs.sendMapToClients(map);
+		startTimer();
 	}
-	public void endGame() {
-		
+	public void endGame() {	
+		TreeMap<String,Object> map = new TreeMap<String,Object>();
+		map.put("type", "end");
+		map.put("result", getResult());
+		hs.sendMapToClients(map);
 	}
 	public Integer[][] getBoard(){
 		Integer[][] myBoard = new Integer[16][16];
@@ -123,19 +134,20 @@ public class BMSimulation extends Thread {
 	public Vector<BMPlayer> getPlayers(){
 		return players;
 	}
-//	 In charge of all the information of one round of the game. 
-//		Function:
-//			+ BMSimulation(BMPlayer host, String ip)
-//			+ getHPs() : String[ ]
-//			+ getResults() : String[ ]
-//			+ canMove(int x, int y) : Boolean
-//			+ getNode(Point p) : BMNode
-//			+ dropBomb(int x, int y) : void
-//			+ setNode(int x, int y, BMNode node) : void
-//			+ sendMessage(int id, string msg) : void
-//			+ getGameData() : string // get the data of the game in json_encode
-//			- getHP(int id) : String
-//			- getResult(int id) : String
-//			- startGame() : void
-//		Variable:
+	public void joinGame(){
+		TreeMap<String,Object> map = new TreeMap<String,Object>();
+		map.put("type", "join");
+		map.put("time", timeLeft);
+		map.put("hp", totalHP);
+		map.put("players", hs.getNames());
+		hs.sendMapToClients(map);
+	}
+	public void getGameBoard(){
+		TreeMap<String,Object> map = new TreeMap<String,Object>();
+		map.put("type", "game");
+		map.put("board", getBoard());
+		map.put("time", timeLeft);
+		map.put("players", players);
+		hs.sendMapToClients(map);
+	}
 }
