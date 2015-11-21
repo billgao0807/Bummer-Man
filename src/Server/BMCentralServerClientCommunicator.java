@@ -33,7 +33,9 @@ public class BMCentralServerClientCommunicator extends Thread {
 	private void login(UserPasswordInfo upi) {
 		try {
 			if (bmcs.login(upi.getUsername(), upi.getPassword())) {
+				//If login is successful, then set the currentUPI and assign their VIP status
 				currentUPI = upi;
+				if (bmcs.isVIP(currentUPI.getUsername())) currentUPI.setVIPStatus(ServerConstants.VIPSTATUSTRUE);
 				sendObject(ServerConstants.SUCCESSFULLOGIN);
 			} else {
 				currentUPI = null;
@@ -84,8 +86,17 @@ public class BMCentralServerClientCommunicator extends Thread {
 						String str = (String) obj;
 						if (str.equals(ServerConstants.LOGOUT)) {
 							currentUPI = null;
+							sendObject(ServerConstants.SUCCESSFULLOGOUT);
+						}
+						else if (str.equals(ServerConstants.VIPSTATUSREQUEST)) {
+							if (currentUPI != null) {
+								sendObject(currentUPI.getVIPStatus());
+							}
+						} else if (str.equals(ServerConstants.DISCONNECT)) {
+							running = false;
 						}
 					}
+					//CLient is attempting a login/signup
 					else if (obj instanceof UserPasswordInfo) {
 						UserPasswordInfo upi = (UserPasswordInfo) obj;
 						if (upi.isLogin()) login(upi);
@@ -97,6 +108,8 @@ public class BMCentralServerClientCommunicator extends Thread {
 				
 			}
 		} catch (IOException ioe) {
+			System.out.println("Trouble connecting to client");
+		} finally {
 			bmcs.removeServerClientCommunicator(this);
 			System.out.println(s.getInetAddress() + ":" + s.getPort() + " - " + ServerConstants.clientDisconnected);
 			// this means that the socket is closed since no more lines are being received

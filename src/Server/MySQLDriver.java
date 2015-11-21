@@ -105,6 +105,18 @@ public class MySQLDriver {
 		
 		return false;
 	}
+	public boolean isVIP(String userName) {
+		try {
+			ResultSet result = getUsernameResults(userName);
+			while (result.next()) {
+				if (result.getString(3).equals("true")) return true;
+			}
+		} catch (SQLException sqle) {
+			sqle.printStackTrace();
+		}
+		
+		return false;
+	}
 	
 	//Helper Funciton
 	public ResultSet getUsernameResults(String userName) throws SQLException {

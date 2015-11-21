@@ -5,6 +5,7 @@ public class ServerConstants {
 	public static final String LOGIN = "login";
 	public static final String SIGNUP = "signup";
 	public static final String LOGOUT = "logout";
+	public static final String DISCONNECT = "disconnect";
 	public static final String SUCCESSFULLOGIN = " SUCCESFULLY LOGGED IN |";
 	public static final String LOGINFAILED = " LOGIN FAILED |";
 	public static final String SUCCESSFULLOGOUT = " SUCCESFULLY LOGGED OUT |";
@@ -19,6 +20,14 @@ public class ServerConstants {
 	
 	public static final String WorldRankingFetchFailure = "Error retrieving World Ranking";
 	public static final String PersonalRankingFetchFailure = "Error retrieving Personal Record";
+	public static final String CannotCompleteRequest = "Cannot complete request: ";
+	public static final String NotLoggedIn = "Not Logged In to Server";
+	public static final String NotConnected = "Not Connected to Server";
+	
+	
+	public static final String VIPSTATUSREQUEST = "VIP Status Request";
+	public static final String VIPSTATUSTRUE = "User is a VIP";
+	public static final String VIPSTATUSFALSE = "User is not a VIP";
 	
 	
 	/*

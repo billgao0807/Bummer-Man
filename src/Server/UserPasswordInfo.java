@@ -12,6 +12,8 @@ public class UserPasswordInfo implements Serializable {
 	private boolean isLogin = false;
 	private boolean isSignUp = false;
 	
+	private String VIPStatus = ServerConstants.VIPSTATUSFALSE;		//set this to one of the server constants
+	
 	public UserPasswordInfo(String u, String p, String loginOrSignup) {
 		username = u;
 		password = p;
@@ -35,6 +37,9 @@ public class UserPasswordInfo implements Serializable {
 	public void setPassword(String p) {
 		password = p;
 	}
+	public void setVIPStatus(String stat) {
+		VIPStatus = stat;
+	}
 	
 	/*
 	 * Getters
@@ -44,6 +49,9 @@ public class UserPasswordInfo implements Serializable {
 	}
 	public String getPassword() {
 		return password;
+	}
+	public String getVIPStatus() {
+		return VIPStatus;
 	}
 	
 	/*

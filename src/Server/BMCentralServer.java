@@ -53,6 +53,9 @@ public class BMCentralServer extends Thread {
 		} else 
 			return false;
 	}
+	public synchronized boolean isVIP(String username) {
+		return msqlDriver.isVIP(username);
+	}
 	
 	
 	

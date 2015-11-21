@@ -23,10 +23,12 @@ public class BMCentralServerClient extends Thread {
 	private Condition mRanksArrived;
 	private Condition loginResult;
 	private Condition signupResult;
+	private Condition vipResult;
 	
 	private volatile boolean running;
-	private boolean loggedIn;
-	private boolean signupSuccess;
+	private Boolean loggedIn;
+	private Boolean vipStatus;
+	private Boolean signupSuccess;
 	
 	private Queue<Ranking> ranks;
 	
@@ -36,9 +38,11 @@ public class BMCentralServerClient extends Thread {
 		mRanksArrived = mLock.newCondition();
 		loginResult = mLock.newCondition();
 		signupResult = mLock.newCondition();
+		vipResult = mLock.newCondition();
 		
 		running = false;
 		loggedIn = false;
+		vipStatus = false;
 	}
 	
 	public BMCentralServerClient(int port) throws UnknownHostException {
@@ -70,7 +74,7 @@ public class BMCentralServerClient extends Thread {
 	/*
 	 * Login screen methods
 	 */
-	public boolean login(String username, String password) {
+	public Boolean login(String username, String password) {
 		mLock.lock();
 		System.out.println("**LOGGING IN**");
 		UserPasswordInfo upi = new UserPasswordInfo(username, password, ServerConstants.LOGIN);
@@ -87,7 +91,7 @@ public class BMCentralServerClient extends Thread {
 		if (loggedIn) return true;
 		else return false;
 	}
-	public boolean signup(String username, String password) {
+	public Boolean signup(String username, String password) {
 		mLock.lock();
 		System.out.println("**SIGNING UP**");
 		UserPasswordInfo upi = new UserPasswordInfo(username, password, ServerConstants.SIGNUP);
@@ -104,6 +108,28 @@ public class BMCentralServerClient extends Thread {
 		if (signupSuccess) return true;
 		else return false;
 	}
+	public Boolean getVIPStatus() {
+		if (!loggedIn) {
+			System.out.println(ServerConstants.CannotCompleteRequest + ServerConstants.NotLoggedIn);
+			return null;
+		}
+		mLock.lock();
+		try {
+			sendObject(ServerConstants.VIPSTATUSREQUEST);
+			vipResult.await();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			System.out.println(ServerConstants.CannotCompleteRequest + ServerConstants.NotConnected);
+		} catch (InterruptedException ie) {
+			ie.printStackTrace();
+			System.out.println(ServerConstants.CannotCompleteRequest + "Method call interrupted");
+		}
+		
+		mLock.unlock();
+		return vipStatus;
+		
+		
+	}
 	
 	/*
 	 * Logs out of the server
@@ -115,6 +141,14 @@ public class BMCentralServerClient extends Thread {
 		} catch (IOException e) {
 			//e.printStackTrace();
 			System.out.println(ServerConstants.LOGOUTFAILED);
+		}
+	}
+	public void disconnect() {
+		try {
+			sendObject(ServerConstants.DISCONNECT);
+		} catch (IOException e) {
+			//e.printStackTrace();
+			System.out.println(ServerConstants.CannotCompleteRequest + "Disconnect Failed");
 		}
 	}
 	
@@ -156,38 +190,53 @@ public class BMCentralServerClient extends Thread {
 	public void run() {
 		try {
 			while(running) {
-				Object obj = ois.readObject();
-				if (obj instanceof Queue<?>){
-					mLock.lock();
-					ranks = (Queue<Ranking>) obj;
-					mRanksArrived.signal();
-					mLock.unlock();
-				}
-				
-				if (obj instanceof String) {
-					mLock.lock();
-					String str = (String) obj;
-					if (str.equals(ServerConstants.SUCCESSFULLOGIN)){
-						loggedIn = true;
-						loginResult.signal();
-					} else if (str.equals(ServerConstants.LOGINFAILED)) {
-						loggedIn = false;
-						loginResult.signal();
-					} else if (str.equals(ServerConstants.SUCCESSFULSIGNUP)) {
-						signupSuccess = true;
-						signupResult.signal();
-					} else if (str.equals(ServerConstants.SIGNUPFAILED)) {
-						signupSuccess = false;
-						signupResult.signal();
-					} else if (str.equals(ServerConstants.SUCCESSFULLOGOUT)) {
-						running = false;
+				try {
+					Object obj = ois.readObject();
+					if (obj instanceof Queue<?>){
+						mLock.lock();
+						ranks = (Queue<Ranking>) obj;
+						mRanksArrived.signal();
+						mLock.unlock();
 					}
 					
-					mLock.unlock();
+					if (obj instanceof String) {
+						mLock.lock();
+						String str = (String) obj;
+						if (str.equals(ServerConstants.SUCCESSFULLOGIN)){
+							loggedIn = true;
+							loginResult.signal();
+						} else if (str.equals(ServerConstants.LOGINFAILED)) {
+							loggedIn = false;
+							loginResult.signal();
+						} else if (str.equals(ServerConstants.SUCCESSFULSIGNUP)) {
+							signupSuccess = true;
+							signupResult.signal();
+						} else if (str.equals(ServerConstants.SIGNUPFAILED)) {
+							signupSuccess = false;
+							signupResult.signal();
+						} else if (str.equals(ServerConstants.SUCCESSFULLOGOUT)) {
+							loggedIn = false;
+							vipStatus = null;
+						} else if (str.equals(ServerConstants.VIPSTATUSTRUE)) {
+							vipStatus = true;
+							vipResult.signal();
+						} else if (str.equals(ServerConstants.VIPSTATUSFALSE)) {
+							vipStatus = false;
+							vipResult.signal();
+						} else if (str.equals(ServerConstants.DISCONNECT)) {
+							running = false;
+						}
+						
+						mLock.unlock();
+					}
+				} catch (ClassNotFoundException cnfe) {
+					System.out.println("Error reading object sent from Server");
+					cnfe.printStackTrace();
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			System.out.println("Can't connect to Central Server at " + s.getInetAddress() + ":" + s.getPort());
 		} finally {
 			if (s != null) {
 				try {
