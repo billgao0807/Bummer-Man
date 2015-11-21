@@ -9,9 +9,9 @@ public class BMBomb extends BMNode{
 	private final int timeToLive;
 	private final BMPlayer mPlayer;
 
-	public BMBomb(int x, int y, BMNode[][] board, int power, int timeToLive, BMPlayer player) {
+	public BMBomb(int x, int y, BMNode[][] board, int timeToLive, BMPlayer player) {
 		super(x, y, BMNodeType.bomb, false, board);
-		this.power = power;
+		this.power = player.getPower();
 		this.timeToLive = timeToLive;
 		mPlayer = player;
 		start();
