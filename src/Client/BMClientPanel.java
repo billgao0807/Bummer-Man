@@ -46,7 +46,7 @@ public class BMClientPanel extends JPanel{
 				BMClientPanel.this.add(menuPanel);
 				BMClientPanel.this.revalidate();
 				BMClientPanel.this.repaint();
-			}}, BMLibrary.readImages("bin/Utilities/images/background1.jpg"));
+			}}, BMLibrary.readImages("bin/Utilities/images/menu.png"));
 		
 		
 		//Set up the panel to display
