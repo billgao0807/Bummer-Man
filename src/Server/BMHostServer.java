@@ -37,9 +37,9 @@ public class BMHostServer extends Thread {
 				Socket s = ss.accept();
 				System.out.println("Client " + s.getInetAddress() + ":" + s.getPort() + " connected");
 				BMClient ct = new BMClient(s, this,simulation);
+				System.out.println("size " + ctVector.size());
 				if (ctVector.size() < numPlayer){
 					ctVector.add(ct);
-					ct.start();
 				}
 				else {
 					TreeMap<String,Object>map = new TreeMap<String,Object>();

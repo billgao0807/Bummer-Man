@@ -40,12 +40,6 @@ import customUI.PaintedButton;
 import customUI.PaintedLabel;
 import customUI.PaintedPanel;
 
-
-
-
-
-
-
 public class BMBoardPanel extends JPanel{
 	private final static int boardSize = 16;
 	//private final TilePanel[][] tileGrid;
@@ -216,7 +210,7 @@ public class BMBoardPanel extends JPanel{
 		for (int i=0; i<players.size(); i++) {
 			int x =(Integer)players.get(i).get("posX");
 			int y =(Integer)players.get(i).get("poxY");
-			Image image= BMLibrary.readImage("bin/Utilities/images/player" + i + ".png");
+			Image image= BMLibrary.readImages("bin/Utilities/images/player" + i + ".png");
 			g.drawImage(image, x*this.boardPanel.getWidth()/256, y*this.boardPanel.getHeight()/256, this.boardPanel);
 
 		}
@@ -317,144 +311,76 @@ public class BMBoardPanel extends JPanel{
 			super(null);
 			this.node_type=node_type;
 			setLayout(new GridBagLayout());
-			
-			if(node_type == 0){
-				//road
-				setImage(Utilities.BMLibrary.readImages("bin/Utilities/images/wall0.jpg"));
-
-				
-			}
-			else if(node_type == 1){
-				//wall
-				setImage(Utilities.BMLibrary.readImages("bin/Utilities/images/wall1.jpg"));
-
-			}
-			else if(node_type == 2){
-				//tile
-				setImage(Utilities.BMLibrary.readImages("bin/Utilities/images/wall2.jpg"));
-
-			}
-			else if(node_type == 3){
-				//bomb
-				setImage(BMLibrary.getImages("bomb"));
-
-			}
-			else if(node_type == 4){
-				//bombing
-				setImage(BMLibrary.getImages("bombing"));
-
-			}
-			else if(node_type == 5){
-				//niceShoes
-				setImage(BMLibrary.getImages("niceShoes"));
-
-			}
-			else if(node_type == 6){
-				//badShoes
-				setImage(BMLibrary.getImages("badShoes"));
-
-			}
-			else if(node_type == 7){
-				//improvePower
-				setImage(BMLibrary.getImages("improvePower"));
-
-			}
-			else if(node_type == 8){
-				//reducePower
-				setImage(BMLibrary.getImages("reducePower"));
-
-			}
-			else if(node_type == 9){
-				//reduceCoolingTime
-				setImage(BMLibrary.getImages("reduceCoolingTime"));
-
-			}
-			else if(node_type == 10){
-				//increaseCoolingTime
-				setImage(BMLibrary.getImages("increaseCoolingTime"));
-
-			}
-			else if(node_type == 11){
-				//increaseDetonatedTime
-				setImage(BMLibrary.getImages("increaseDetonatedTime"));
-
-			}
-			else if(node_type ==12){
-				//reduceDenotatedTime
-				setImage(BMLibrary.getImages("reduceDenotatedTime"));
-			}
-			revalidate();
-			repaint();
-
+			update(node_type);
 		}
 
 		
 		public void update(int new_type){
 			node_type =new_type;
 			if(new_type == -1) return;
-			if(new_type == 0){
+			else if(new_type == 0){
 				//road
-				setImage(BMLibrary.getImages("road"));
+				setImage(BMLibrary.readImages("road"));
 				
 			}
 			if(new_type == 1){
 				//wall
-				setImage(BMLibrary.getImages("wall"));
+				setImage(BMLibrary.readImages("wall"));
 
 			}
 			if(new_type == 2){
 				//tile
-				setImage(BMLibrary.getImages("tile"));
+				setImage(BMLibrary.readImages("tile"));
 
 			}
-			if(new_type == 3){
+			else if(new_type == 3){
 				//bomb
-				setImage(BMLibrary.getImages("bomb"));
+				setImage(BMLibrary.readImages("bomb"));
 
 			}
-			if(new_type == 4){
+			else if(new_type == 4){
 				//bombing
-				setImage(BMLibrary.getImages("bombing"));
+				setImage(BMLibrary.readImages("bombing"));
 
 			}
-			if(new_type == 5){
+			else if(new_type == 5){
 				//niceShoes
-				setImage(BMLibrary.getImages("niceShoes"));
+				setImage(BMLibrary.readImages("niceShoes"));
 
 			}
-			if(new_type == 6){
+			else if(new_type == 6){
 				//badShoes
-				setImage(BMLibrary.getImages("badShoes"));
+				setImage(BMLibrary.readImages("badShoes"));
 
 			}
-			if(new_type == 7){
+			else if(new_type == 7){
 				//improvePower
-				setImage(BMLibrary.getImages("improvePower"));
+				setImage(BMLibrary.readImages("improvePower"));
 
 			}
-			if(new_type == 8){
+			else if(new_type == 8){
 				//reducePower
-				setImage(BMLibrary.getImages("reducePower"));
+				setImage(BMLibrary.readImages("reducePower"));
 
 			}
-			if(new_type == 9){
+			else if(new_type == 9){
 				//reduceCoolingTime
-				setImage(BMLibrary.getImages("reduceCoolingTime"));
+				setImage(BMLibrary.readImages("reduceCoolingTime"));
 
 			}
-			if(new_type == 10){
+			else if(new_type == 10){
 				//increaseCoolingTime
-				setImage(BMLibrary.getImages("increaseCoolingTime"));
+				setImage(BMLibrary.readImages("increaseCoolingTime"));
 
 			}
-			if(new_type == 11){
+			else if(new_type == 11){
 				//increaseDetonatedTime
-				setImage(BMLibrary.getImages("increaseDetonatedTime"));
+				setImage(BMLibrary.readImages("increaseDetonatedTime"));
 
 			}
-			if(new_type ==12) {
+			else if(new_type ==12) {
 				//reduceDenotatedTime
-				setImage(BMLibrary.getImages("reduceDenotatedTime"));
+				setImage(BMLibrary.readImages("reduceDenotatedTime"));
 
 			}
 		

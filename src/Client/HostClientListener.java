@@ -21,7 +21,6 @@ public class HostClientListener  extends Thread{
 	private ObjectOutputStream oos;
 
 	private ObjectInputStream ois;
-	private PrintWriter pw;
 	public String username;
 	private BMClientPanel clientpanel;
 
@@ -30,28 +29,35 @@ public class HostClientListener  extends Thread{
 		try
 		{
 			mSocket = new Socket(ip,host);
-			
+			System.out.println("Hello");
+
+			this.clientpanel = clientpanel;		
+			System.out.println("world");
+
+			boolean socketReady = initializeVariables();
+			System.out.println("Fuck");
+
+			if (socketReady) {
+				start();
+				System.out.println(".....");
+
+			}
 		}
 		catch(IOException ioe)
 		{
 			System.out.println("IOE in SorryClient constructor: " + ioe.getMessage());
 		}
 	
-		this.clientpanel = clientpanel;
-		boolean socketReady = initializeVariables();
-		if (socketReady) {
-			start();
-		}
 	}
 	
 
 	
 	private boolean initializeVariables() {
 		try {
-			ois = new ObjectInputStream(mSocket.getInputStream());
-			pw = new PrintWriter(mSocket.getOutputStream());
 			oos = new ObjectOutputStream(mSocket.getOutputStream());
-
+			System.out.println("Break321");
+			ois = new ObjectInputStream(mSocket.getInputStream());
+			System.out.println("Break123");
 		} catch (IOException ioe) {
 			System.out.println(ioe);
 			return false;
@@ -141,7 +147,7 @@ public class HostClientListener  extends Thread{
 					else if (((String)map.get("type")).equals("end")){
 						
 						Vector<Dictionary> result = (Vector<Dictionary>)map.get("result");
-						BMBoardPanel.set_result(result);
+//						BMBoardPanel.set_result(result);
 					}
 					
 					
@@ -153,9 +159,6 @@ public class HostClientListener  extends Thread{
 				System.out.println(cnfe);
 			}finally{
 				try{
-					if(pw != null) {
-						pw.close();
-					}
 					if (oos != null) {
 						oos.close();
 					}

@@ -19,10 +19,10 @@ public class BMClient extends Thread {
 		this.hs = hs;
 		this.s = s;
 		this.mSimulation = mSimulation;
-		this.start();
 		try {
 			ois = new ObjectInputStream(s.getInputStream());
 			oos = new ObjectOutputStream(s.getOutputStream());
+			this.start();
 		} catch (IOException ioe) {
 			System.out.println("IOE in ChatThread constructor: " + ioe.getMessage());
 		}
@@ -46,7 +46,9 @@ public class BMClient extends Thread {
 			while (true) {
 				try {
 					@SuppressWarnings("unchecked")
-					TreeMap<String,Object> map = (TreeMap<String,Object>)ois.readObject();
+					Object obj = ois.readObject();
+					if (!(obj instanceof TreeMap<?,?>)) continue;
+					TreeMap<String,Object> map = (TreeMap<String,Object>)obj;
 					String type = (String)map.get("type");  
 					if (type.equals("msg")) {
 						sendMsgMap(map);
