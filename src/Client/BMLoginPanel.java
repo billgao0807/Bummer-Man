@@ -28,9 +28,7 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 public class BMLoginPanel extends PaintedPanel implements KeyListener{
 	
-	private JLabel title;
-	private JLabel username;
-	private JLabel password;
+	
 	public JTextField nameInput;
 	private JTextField passwordInput;
 	private JButton signupB;
@@ -51,30 +49,7 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 		Image buttonImage = null;//BMLibrary.readImages(BMLibrary.path+"button.png");
 		setLayout(new BorderLayout(0, 0));
 		
-		panel = new JPanel();
-		panel.setOpaque(false);
-		add(panel, BorderLayout.NORTH);
-		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-		
-		nameInput = new JTextField();
-		panel.add(nameInput);
-		nameInput.setText("Username: ");
-		nameInput.setForeground(Color.GRAY);
-		nameInput.setPreferredSize(new Dimension(100, 20));
-		
-		
-		passwordInput = new JTextField();
-		panel.add(passwordInput);
-		passwordInput.setText("Password:");
-		passwordInput.setForeground(Color.GRAY);
-		passwordInput.setPreferredSize(new Dimension(100, 20));
-		panel.add(Box.createHorizontalStrut(100));
-		signupB = new PaintedButton("Sign up", buttonImage, buttonImage, 20);
-		panel.add(signupB);
-		quickGameB = new PaintedButton("Quick Game", buttonImage, buttonImage, 20);
-		panel.add(quickGameB);
-		loginB = new PaintedButton("Log In", buttonImage, buttonImage, 20);
-		panel.add(loginB);
+
 		
 		panel_1 = new JPanel();
 		panel_1.setOpaque(false);
@@ -84,25 +59,9 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 		panel_1.add(label);
 		label.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
-		loginB.addActionListener(login);
-		quickGameB.addActionListener(quickG);
-		signupB.addActionListener(signup);
 		
-		/*
-		Scanner keyboard = new Scanner(System.in);
-		if (keyboard.nextLine() != null)
-		{
-			JDialog jd = new JDialog();
-			jd.setLocationRelativeTo(this);
-			jd.setSize(400,150);
-			jd.setLocation(400,250);
-			jd.setModal(true);	
-			jd.setLayout(new GridBagLayout());
-			
-			
-		}
-		*/
 		
+	
 		new Thread(new Runnable(){
 			@Override
 			public void run() {
@@ -134,6 +93,8 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		System.out.println("Hello2");
+		 BMSigninPage signin = new BMSigninPage();
+		signin.setVisible(true);
 		
 	}
 	@Override

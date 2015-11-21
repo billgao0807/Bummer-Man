@@ -18,6 +18,7 @@ public class BMClientPanel extends JPanel{
 	private BMRoomPanel roomPanel;
 	private BMRankPanel rankPanel;
 	public BMBoardPanel boardPanel;
+	public BMSigninPage detailSignin;
 	private Integer[][] board = null;
 	private int time = 0;	
 	HostClientListener hostClient;
@@ -29,6 +30,7 @@ public class BMClientPanel extends JPanel{
 	
 	{
 		players = new Vector<TreeMap<String,Object>>();
+		detailSignin = new BMSigninPage();
 		loginPanel = new BMLoginPanel(new ActionListener() {
 			@Override
 			
@@ -147,7 +149,7 @@ public class BMClientPanel extends JPanel{
 					BMClientPanel.this.revalidate();
 					
 				}
-			},BMLibrary.readImages("menu.png")
+			},BMLibrary.readImages("background3.png")
 			);
 		
 	rankPanel = new BMRankPanel(new ActionListener(){
