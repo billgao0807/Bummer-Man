@@ -3,6 +3,10 @@ package Client;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Dictionary;
+import java.util.TreeMap;
+import java.util.Vector;
+
 import javax.swing.JPanel;
 
 import Utilities.BMLibrary;
@@ -14,6 +18,13 @@ public class BMClientPanel extends JPanel{
 	private BMMenuPanel menuPanel;
 	private BMRoomPanel roomPanel;
 	private BMRankPanel rankPanel;
+	public BMBoardPanel boardPanel;
+	private int [][] board = null;
+	private int time = 0;	
+	HostClientListener hostClient;
+	private Vector<TreeMap<String, Object>> players;
+	String username;
+	
 	{
 		
 		loginPanel = new BMLoginPanel(new ActionListener() {
@@ -43,12 +54,17 @@ public class BMClientPanel extends JPanel{
 				@Override				
 			public void actionPerformed(ActionEvent ae) {
 					/*add check the correctness of the username and password*/
+					username = loginPanel.nameInput.getText().trim();
 				BMClientPanel.this.removeAll();				
 				BMClientPanel.this.add(menuPanel);
 				BMClientPanel.this.revalidate();
 				BMClientPanel.this.repaint();
+<<<<<<< HEAD
 				}
 			}, BMLibrary.getImage("images/background1.jpg"));
+=======
+			}}, BMLibrary.readImages("bin/Utilities/images/menu.png"));
+>>>>>>> Ellen
 		
 		
 		//Set up the panel to display
@@ -64,7 +80,11 @@ public class BMClientPanel extends JPanel{
 				//host the game
 				BMClientPanel.this.removeAll();
 				BMClientPanel.this.add(roomPanel);
-				BMClientPanel.this.revalidate();				
+				BMClientPanel.this.revalidate();	
+				String temp = menuPanel.port.getText();
+				String ip = menuPanel.IP.getText();
+				int portNumber = Integer.parseInt(temp);
+				hostClient = new HostClientListener(menuPanel, ip, portNumber);
 			}
 		},
 		new ActionListener()
@@ -73,6 +93,7 @@ public class BMClientPanel extends JPanel{
 			public void actionPerformed(ActionEvent e)
 			{
 			//joinGame
+			hostClient.sendJoin(username);
 			BMClientPanel.this.removeAll();
 			BMClientPanel.this.add(roomPanel);		
 			BMClientPanel.this.revalidate();
@@ -98,7 +119,7 @@ public class BMClientPanel extends JPanel{
 				public void actionPerformed(ActionEvent e){
 					//enter the game
 					BMClientPanel.this.removeAll();
-					BMClientPanel.this.add(roomPanel);
+					BMClientPanel.this.add(boardPanel);
 					BMClientPanel.this.revalidate();				
 				}
 			},
@@ -109,7 +130,7 @@ public class BMClientPanel extends JPanel{
 				{
 				//enter Game
 				BMClientPanel.this.removeAll();
-				BMClientPanel.this.add(roomPanel);		
+				BMClientPanel.this.add(boardPanel);		
 				BMClientPanel.this.revalidate();
 					
 				}
@@ -127,6 +148,14 @@ public class BMClientPanel extends JPanel{
 				}
 			}
 			);
+	
+	boardPanel = new BMBoardPanel(new ActionListener(){
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			
+		}
+	}, hostClient, time, board, players, username);
 		
 	rankPanel = new BMRankPanel(new ActionListener(){
 		@Override
@@ -137,6 +166,18 @@ public class BMClientPanel extends JPanel{
 			BMClientPanel.this.revalidate();
 		}
 	});
+	}
+	
+	void set_start(int [][] board, int time, Vector<TreeMap<String, Object>> players)
+	{
+		this.board = board;
+		this.time = time;
+		this.players = players;
+	}
+	
+	void set_join(Vector<TreeMap<String, Object>> players)
+	{
+		this.players = players;
 	}
 	
 	

@@ -1,5 +1,73 @@
 package Server;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.TreeMap;
+import java.util.Vector;
+
 public class BMHostServer extends Thread {
-// support the communication between server and client
+	private Vector<BMClient> ctVector = new Vector<BMClient>();
+	private int port;
+	private int numPlayer;
+	private BMSimulation simulation;
+	public Vector<BMClient> getClients(){
+		return ctVector;
+	}
+	public BMHostServer(int port, int numPlayer) {
+		this.port = port;
+		this.numPlayer = numPlayer;
+		this.start();
+	}
+	public void removeChatThread(BMClient ct) {
+		ctVector.remove(ct);
+	}
+	public void sendMapToClients(TreeMap<String,Object> output) {
+		for (BMClient ct : ctVector) {
+			ct.sendMap(output);
+		}
+	}
+	public void run(){
+		ServerSocket ss = null;
+		try {
+			System.out.println("Starting Chat Server");
+			ss = new ServerSocket(port);
+			while (true) {
+				System.out.println("Waiting for client to connect...");
+				Socket s = ss.accept();
+				System.out.println("Client " + s.getInetAddress() + ":" + s.getPort() + " connected");
+				BMClient ct = new BMClient(s, this,simulation);
+				if (ctVector.size() < numPlayer){
+					ctVector.add(ct);
+					ct.start();
+				}
+				else {
+					TreeMap<String,Object>map = new TreeMap<String,Object>();
+					map.put("type", "error");
+					map.put("errMsg","This room is full, please try another one");
+					ct.sendMap(map);
+				}
+			}
+		} catch (IOException ioe) {
+			System.out.println("IOE: " + ioe.getMessage());
+		} finally {
+			if (ss != null) {
+				try {
+					ss.close();
+				} catch (IOException ioe) {
+					System.out.println("IOE closing ServerSocket: " + ioe.getMessage());
+				}
+			}
+		}
+	}
+	public Vector<String> getNames() {
+		Vector<String> names = new Vector<String>();
+		for (BMClient client : ctVector){
+			names.add(client.getName());
+		}
+		return names;
+	}
+	public void setSimulation(BMSimulation bmSimulation) {
+		this.simulation = bmSimulation;
+	}
 }

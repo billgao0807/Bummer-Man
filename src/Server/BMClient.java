@@ -1,15 +1,82 @@
 package Server;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
+import java.util.TreeMap;
+
 public class BMClient extends Thread {
-//	holds a single client
-//	Variable:
-//		- OBjectInputStream ois
-//		- ObjectOutputStream oos
-//		- BMServer cs
-//		- Socket s
-//	Function:
-//		+ ChatThread(Socket s, ChatServer cs)
-//		+ sendMsg(String msg) : void
-//		+ run() : void
+	private ObjectOutputStream oos;
+	private ObjectInputStream ois;
+	private BMHostServer hs;
+	private Socket s;
+	private BMSimulation mSimulation;
+	private BMPlayer player;
+	private String userName;
 	
+	public BMClient(Socket s, BMHostServer hs, BMSimulation mSimulation) {
+		this.hs = hs;
+		this.s = s;
+		this.mSimulation = mSimulation;
+		this.start();
+		try {
+			ois = new ObjectInputStream(s.getInputStream());
+			oos = new ObjectOutputStream(s.getOutputStream());
+		} catch (IOException ioe) {
+			System.out.println("IOE in ChatThread constructor: " + ioe.getMessage());
+		}
+	}
+
+	public void sendMap(TreeMap<String,Object> output) {
+		try {
+			oos.writeObject(output);
+			oos.flush();
+		} catch (IOException e) {
+			System.out.println("BMClient sendMap IOE: " + e.getMessage());
+		}
+	}
+	
+	public void setPlayer(BMPlayer player){
+		this.player = player;
+	}
+	
+	public void run() {
+		try {
+			while (true) {
+				try {
+					@SuppressWarnings("unchecked")
+					TreeMap<String,Object> map = (TreeMap<String,Object>)ois.readObject();
+					String type = (String)map.get("type");  
+					if (type.equals("msg")) {
+						sendMsgMap(map);
+					}
+					else if (type.equals("join")){
+						this.userName = (String)(map.get("username"));
+						mSimulation.joinGame();
+					}
+					else if (type.equals("move")){
+						player.startMove((Integer)(map.get("move")));
+						mSimulation.getGameBoard();
+					}
+					else if (type.equals("msg")){
+						sendMsgMap(map);
+					}
+				} catch (ClassNotFoundException e) {
+					System.out.println("BMClient Run CNFE: " + e.getMessage());
+				}
+			}
+		} catch (IOException ioe) {
+			hs.removeChatThread(this);
+			System.out.println(s.getInetAddress() + ":" + s.getPort() + " disconnected.");
+		} 
+	}
+
+	private void sendMsgMap(TreeMap<String, Object> map) {
+		TreeMap<String,Object> tempMap = new TreeMap<String, Object>();
+		tempMap.put("type", "msg");
+		tempMap.put("username", userName);
+		tempMap.put("content", (String)map.get("content"));
+		hs.sendMapToClients(tempMap);
+	}
 }

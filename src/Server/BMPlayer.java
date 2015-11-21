@@ -1,6 +1,21 @@
 package Server;
 
-public abstract class BMPlayer extends Thread {
+import java.awt.Point;
+import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Vector;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+import node.BMBomb;
+import node.BMBombing;
+import node.BMItem;
+import node.BMNode;
+import node.BMTile;
+import node.BMWall;
+
+public abstract class BMPlayer extends Thread implements Serializable{
 //	Store all the information of a player. The functions support all possible actions of the player.
 //	Variables:
 //		- Point : location
@@ -11,12 +26,48 @@ public abstract class BMPlayer extends Thread {
 //		- Vector<BMItem> : items
 //		- int : deaths
 //		- int : initialLives
+//		- int : HP
 //		- int : kills
 //		- int : ID
 //		- bool : lost
 //		- BMSimulation : simulation
+	private static final long serialVersionUID = 4139291657328559403L;
+	//Move 2 or 4 spaces per second 
+	private static final int normalSpeed = 2;
+	private static final int increasedSpeed = 4;
+	//Bomb blasts 3 or 5 spaces at each direction
+	private static final int normalPower = 3;
+	private static final int increasedPower = 5;
+	//Wait 10 or 5 seconds before player dropping another bomb 
+	private static final int normalCoolingTime = 10;
+	private static final int reducedCoolingTime = 5;
+	//Wait 5 or 3 seconds between a bomb is dropped and it detonates
+	private static final int normalDetonatedTime = 5;
+	private static final int reducedDetonatedTime = 3;
+	//Inclusive Coordinates limit:0, 255
+	private static final int coordinateUpperLimit = 248;
+	private static final int coordinateLowerLimit = 8;
+	
+	protected Point initialLocation;
+	protected Point location;
+	protected int speed;
+	protected int power;
+	protected int coolingTime;
+	protected int detonatedTime;
+	protected Queue<BMItem> itemQueue;
+	protected int deaths;
+	protected int initialHP;
+	protected int HP;
+	protected int kills;
+	protected int ID;
+	protected boolean lost;
+	protected BMSimulation simulation;
+	
+	private Lock mLock;
+	private volatile boolean respawning;
+	private volatile boolean cooling;
 //	Functions:
-//		+ BMPlayer(int ID, int initialLives)
+//		+ BMPlayer(int ID, int initialLives, boolean isVIP)
 //		+ setSimulation(BMSimulation simulation)
 //		protected killed() : void     //should check at every moves
 //		protected getLocation() : Point
@@ -32,4 +83,183 @@ public abstract class BMPlayer extends Thread {
 //		protected getCoolingTime() : int
 //		protected getDetonatedTime() : int
 //		- canMove() : Boolean
+	public BMPlayer(int ID, int initialLives){
+		this.ID = ID;
+		this.initialHP = initialLives;
+		location = new Point(-1, -1);
+		speed = normalSpeed;
+		power = normalPower;
+		coolingTime = normalCoolingTime;
+		detonatedTime = normalDetonatedTime;
+		itemQueue = new LinkedList<BMItem>();
+		HP = initialLives;
+		kills = 0;
+		lost = false;
+		mLock = new ReentrantLock();
+		respawning = false;
+	}
+	
+	public void setSimulation(BMSimulation simulation){
+		this.simulation = simulation;
+	}
+	
+	public void killed(){
+		if (respawning) return;
+		respawning = true;
+		HP--;
+		if (HP < 0) lost = true;
+		location = initialLocation;
+		try{
+			Thread.sleep(3000);
+		} catch (InterruptedException ie){
+			ie.printStackTrace();
+		}
+		respawning = false;
+	}
+	
+	public Point getLocation(){
+		return location;
+	}
+	
+	public Vector<BMItem> getItemsProcessed(){
+		Vector<BMItem> returnVector = new Vector<BMItem>();
+		Object [] array = itemQueue.toArray();
+		if (array.length > 2 || array.length < 0)
+			System.out.println("Player has " + array.length + " items. Error in BMPlayer getItemsProcessed.");
+		for(int i=0; i< array.length; i++){
+			returnVector.addElement((BMItem) array[i]);
+		}
+		return returnVector;
+	}
+	
+	public int getNumOfItemsAcquired(){
+		return itemQueue.size();
+	}
+	
+	public int getHP(){
+		return HP;
+	}
+	public int getInitialLives(){
+		return initialHP;
+	}
+	public int getNumOfPlayerKilled(){
+		return kills;
+	}
+	public int getSpeed(){
+		return speed;
+	}
+	public int getPower(){
+		return power;
+	}
+	public int getCoolingTime(){
+		return coolingTime;
+	}
+	public int getDetonatedTime(){
+		return detonatedTime;
+	}
+	public boolean hasLost(){
+		return lost;
+	}
+	public boolean isRealPlayer(){
+		return ID >= 0;
+	}
+	public void startMove(int moveType){
+		if (!canMove(moveType)) return;
+		int initX = location.x;
+		int initY = location.y;
+		switch(moveType){
+			//Stop
+			case 0: location.setLocation(initX, initY);
+					break;
+			//Up
+			case 1: location.setLocation(initX, initY-1);
+					break;
+			//Down
+			case 2: location.setLocation(initX, initY+1);
+					break;
+			//Left
+			case 3: location.setLocation(initX-1, initY);
+					break;
+			//Right
+			case 4: location.setLocation(initX+1, initY);
+					break;
+			//Drop a bomb
+			case 5: simulation.dropBomb(initX/16, initY/16, this);
+					cooling = true;
+					break;
+		}
+		BMNode nextNode = simulation.getNode(new Point(location.x/16, location.y/16));
+		if (nextNode instanceof BMBombing){
+			killed();
+		}
+		else if (nextNode instanceof BMItemNode){
+			
+		}
+	}
+
+	protected boolean canMove(int moveType) {
+		if (hasLost()) return false;
+		if (moveType < 0 || moveType > 5){
+			System.out.println("Error input of moveType. BMPlayer canMove.");
+			return false;
+		}
+		else if (moveType == 0) return true;
+		else if (moveType == 5){
+			if (cooling) return false;
+			BMNode node = simulation.getNode(new Point(location.x/16, location.y/16));
+			if (node instanceof BMBombing || node instanceof BMBomb){
+				return false;
+			}
+			else return true;
+		}
+		else{
+			int initX = location.x;
+			int initY = location.y;
+			switch(moveType){
+				case 0: initY--; break;
+				case 1: initY++; break;
+				case 2: initX--; break;
+				case 3: initX++; break;
+			}
+			if (pointInBounds(new Point(initX, initY))){
+				BMNode nextNode = simulation.getNode(new Point(initX/16, initY/16));
+				if (nextNode instanceof BMWall || nextNode instanceof BMTile) return false;
+				else return true;
+			}
+			else return false;
+			//System.out.println("Error in BMPlayer canMove");			
+		}
+	}
+	protected boolean pointInBounds(Point p){
+		return inBounds(p.x) && inBounds(p.y);
+	}
+	private boolean inBounds(int x){
+		return x >= coordinateLowerLimit && x <= coordinateUpperLimit; 
+	}
+	
+	public void setInitialLocation(int playerNumber){
+		if (playerNumber > 3 || playerNumber < 0) System.out.println("Input out of bounds, needs 0 to 3. In BMPlayer setInitialLocation.");
+		switch(playerNumber){
+		
+			case 0:
+				location.x = coordinateLowerLimit;
+				location.y = coordinateLowerLimit;
+				break;
+			case 1:
+				location.x = coordinateUpperLimit;
+				location.y = coordinateUpperLimit;
+				break;
+			case 2:
+				location.x = coordinateUpperLimit;
+				location.y = coordinateLowerLimit;
+				break;
+			case 3:
+				location.x = coordinateLowerLimit;
+				location.y = coordinateUpperLimit;
+				break;
+		}
+		initialLocation = new Point(location.x, location.y);
+	}
+	
+	
 }

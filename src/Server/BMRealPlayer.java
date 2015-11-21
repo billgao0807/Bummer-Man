@@ -10,4 +10,7 @@ public class BMRealPlayer extends BMPlayer {
 //		- BurfferedReader : br
 //		- Socket : s
 //		- PrintWriter : pw
+	public BMRealPlayer(int ID, int initialLives){
+		super(ID, initialLives);
+	}
 }

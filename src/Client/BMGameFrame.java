@@ -1,12 +1,18 @@
 package Client;
 
 import java.awt.Dimension;
+<<<<<<< HEAD
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+=======
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+>>>>>>> Ellen
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import com.sun.media.jfxmedia.Media;
 
@@ -15,7 +21,7 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 
-public class BMGameFrame extends JFrame{
+public class BMGameFrame extends JFrame implements KeyListener{
 private static final long serialVersionUID = 5147395078473323173L;
 	
 	private final static Dimension minSize = new Dimension(640,480);
@@ -26,8 +32,11 @@ private static final long serialVersionUID = 5147395078473323173L;
 		setSize(minSize);
 		setMinimumSize(minSize);
 		setMaximumSize(maxSize);
+//		this.setFocusable(true);
+//		this.requestFocusInWindow();
 		add(new BMClientPanel());
 		setLocationRelativeTo(null);
+//		this.addKeyListener(this);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
@@ -53,4 +62,23 @@ private static final long serialVersionUID = 5147395078473323173L;
 		}
 		bmgf.setVisible(true);
 	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("type");
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("press");
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("Release");
+	}
+	
 }
