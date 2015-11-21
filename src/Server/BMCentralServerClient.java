@@ -41,9 +41,9 @@ public class BMCentralServerClient extends Thread {
 		loggedIn = false;
 	}
 	
-	public BMCentralServerClient() throws UnknownHostException {
+	public BMCentralServerClient(int port) throws UnknownHostException {
 		try{
-			s = new Socket("localhost", 6789);
+			s = new Socket("localhost", port);
 			oos = new ObjectOutputStream(s.getOutputStream());
 			ois = new ObjectInputStream(s.getInputStream());
 			running = true;
