@@ -64,7 +64,6 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		
 		nameInput = new JTextField();
-		nameInput.setVisible(false);
 		panel.add(nameInput);
 		nameInput.setText("Username: ");
 		nameInput.setForeground(Color.GRAY);
@@ -72,7 +71,6 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 		
 		
 		passwordInput = new JTextField();
-		passwordInput.setVisible(false);
 		panel.add(passwordInput);
 		passwordInput.setText("Password:");
 		passwordInput.setForeground(Color.GRAY);
@@ -80,13 +78,10 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 
 		panel.add(Box.createHorizontalStrut(100));
 		signupB = new PaintedButton("Sign up", buttonImage, buttonImage, 20);
-		signupB.setVisible(false);
 		panel.add(signupB);
 		quickGameB = new PaintedButton("Quick Game", buttonImage, buttonImage, 20);
-		quickGameB.setVisible(false);
 		panel.add(quickGameB);
 		loginB = new PaintedButton("Log In", buttonImage, buttonImage, 20);
-		loginB.setVisible(false);
 		panel.add(loginB);
 		
 		panel_1 = new JPanel();

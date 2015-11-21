@@ -8,6 +8,7 @@ import javax.swing.AbstractButton;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import customUI.PaintedButton;
 import customUI.PaintedPanel;
@@ -31,6 +32,8 @@ public class BMMenuPanel extends PaintedPanel{
 		titlePanel.add(title);
 		start = new PaintedButton("Start", null, null, 20);
 		
+		JTextField port = new JTextField(30);
+		b1.add(port);
 		start.addActionListener(host);
 		b1.add(start);
 		joinG = new PaintedButton("Join", null, null, 20);
