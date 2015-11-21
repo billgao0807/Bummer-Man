@@ -13,21 +13,24 @@ import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import javax.swing.table.TableModel;
 
-public class ClientListener  extends Thread{
+
+public class ServerClientListener  extends Thread{
 	private Socket mSocket;
 	private ObjectOutputStream oos;
 
 	private ObjectInputStream ois;
 	private PrintWriter pw;
-	//private GameManager mGManager;
+	public String username;
+	private BMClientPanel clientpanel;
 	//private Card card;
 
 	//private FactoryClientGUI mFClientGUI;
 	
-	public ClientListener(GameManager inGManager, Socket inSocket) {
+	public ServerClientListener(BMClientPanel clientpanel, Socket inSocket) {
 		mSocket = inSocket;
-		mGManager = inGManager;
+		//mGManager = inGManager;
 		//mFClientGUI = inFClientGUI;
 		boolean socketReady = initializeVariables();
 		if (socketReady) {
@@ -36,22 +39,6 @@ public class ClientListener  extends Thread{
 	}
 	
 
-	
-	 public void sendMove(int key ) {
-		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
-		 tempMap.put("type", "move");
-		 tempMap.put("move", key);		 
-	        try {
-	        	oos.writeObject(tempMap);
-				oos.flush();
-	        } catch (Exception e) {
-	            System.out.println(e.toString());
-	        }
-	    }
-	
-	
-
-	
 	private boolean initializeVariables() {
 		try {
 			ois = new ObjectInputStream(mSocket.getInputStream());
@@ -65,32 +52,10 @@ public class ClientListener  extends Thread{
 		return true;
 	}
 	
-	 public void sendMsg(String msg) {
-		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
-		 tempMap.put("type", "msg");
-		 tempMap.put("content", msg);		 
-	        try {
-	        	oos.writeObject(tempMap);
-				oos.flush();
-	        } catch (Exception e) {
-	            System.out.println(e.toString());
-	        }
-	    }
-
-	 public void sendJoin(String username) {
-		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
-		 tempMap.put("type", "join");
-		 tempMap.put("username", username);		 
-	        try {
-	        	oos.writeObject(tempMap);
-				oos.flush();
-	        } catch (Exception e) {
-	            System.out.println(e.toString());
-	        }
-	    }
 	 
 	 public void sendLogin(String username, String password) {
 		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
+		 this.username= username;
 		 tempMap.put("type", "join");
 		 tempMap.put("username", username);		
 		 tempMap.put("password", password);
@@ -114,7 +79,6 @@ public class ClientListener  extends Thread{
 	            System.out.println(e.toString());
 	        }
 	    }
-	 
 	 public void sendmy_rank(String username, String password) {
 		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
 		 tempMap.put("type", "my_rank");
@@ -127,7 +91,7 @@ public class ClientListener  extends Thread{
 	        }
 	    }
 	 
-//	 public void sendworld_rank(String ){
+	 public void sendworld_rank(String ){
 //		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
 //		 tempMap.put("type", "world_rank");
 //		 tempMap.put("username", username);		
@@ -138,10 +102,8 @@ public class ClientListener  extends Thread{
 //	        } catch (Exception e) {
 //	            System.out.println(e.toString());
 //	        }
-//	 }
-	 
-	 
-	 
+	 }
+	 	 
 	 public void sendgame_result(Vector<Dictionary<String, Object>> game_result) {
 		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
 		 tempMap.put("type", "game_result");		 
@@ -155,38 +117,81 @@ public class ClientListener  extends Thread{
 	        }
 	    }
 	 
-	 
-	
-	    
-	public void run() {
-		try {
-			
-			while(true) {
-				// in case the server sends another factory to us
-				TreeMap<String,Object>map = (TreeMap<String,Object>)ois.readObject();
+	 public void run() {
+			try {
+				
+				while(true) {
+					// in case the server sends another factory to us
+					TreeMap<String,Object>map = (TreeMap<String,Object>)ois.readObject();
 
-				//if()
-			}
-		} catch (IOException ioe) {
-			//mFClientGUI.addMessage(Constants.serverCommunicationFailed);
-			System.out.println("serverCommunicationFailed");
-		} catch (ClassNotFoundException cnfe) {
-			System.out.println(cnfe);
-		}finally{
-			try{
-				if(pw != null) {
-					pw.close();
+					if(((String)map.get("type")).equals("login")) {
+						
+						boolean status 	= (boolean) map.get("status");
+						String errMsg = (String) map.get("errMsg");
+						if (status){System.out.println("login successfully");}
+						else
+						{System.out.println("login error " + errMsg);}
+						
+
+					}
+					else if (((String)map.get("type")).equals("signup")){
+						boolean status 	= (boolean) map.get("status");
+						String errMsg = (String) map.get("errMsg");
+						if (status){System.out.println("signup successfully");}
+						else
+						{System.out.println("signup error " + errMsg);}
+						
+					}
+					else if (((String)map.get("type")).equals("my_rank")){
+						boolean status 	= (boolean) map.get("status");
+						String errMsg = (String) map.get("errMsg");
+						TableModel rank_table = (TableModel) map.get("table");
+						if (status)BMRankPanel.set_my_rank(rank_table);
+						else {System.out.println("my_rank error " + errMsg);}
+						
+					}
+					else if (((String)map.get("type")).equals("world_rank")){
+						boolean status 	= (boolean) map.get("status");
+						String errMsg = (String) map.get("errMsg");
+						TableModel rank_table = (TableModel) map.get("table");
+						if (status)BMRankPanel.set_world_rank(rank_table);
+						else {System.out.println("world_rank error " + errMsg);}
+
+						
+					}
+					else if (((String)map.get("type")).equals("game_result")){
+						
+						boolean status 	= (boolean) map.get("status");
+						String errMsg = (String) map.get("errMsg");
+						if (status){System.out.println("game_result successfully");}
+						else
+						{System.out.println("game_result error " + errMsg);}
+								
+					}
+		
+					
 				}
-				if (oos != null) {
-					oos.close();
+			} catch (IOException ioe) {
+				//mFClientGUI.addMessage(Constants.serverCommunicationFailed);
+				System.out.println("serverCommunicationFailed");
+			} catch (ClassNotFoundException cnfe) {
+				System.out.println(cnfe);
+			}finally{
+				try{
+					if(pw != null) {
+						pw.close();
+					}
+					if (oos != null) {
+						oos.close();
+					}
+					if (ois !=null) {
+						ois.close();
+					}
+				} catch(IOException ioe) {
+					System.out.println("lose connection");
 				}
-				if (ois !=null) {
-					ois.close();
-				}
-			} catch(IOException ioe) {
-				System.out.println("lose connection");
 			}
 		}
-	}
-	
+		
+	 
 }

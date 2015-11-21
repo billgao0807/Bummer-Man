@@ -16,7 +16,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Dictionary;
+import java.util.Map.Entry;
 import java.util.Stack;
+import java.util.TreeMap;
+import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -25,6 +29,10 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 
 import node.BMTile;
 import Utilities.BMLibrary;
@@ -43,7 +51,7 @@ public class BMBoardPanel extends JPanel{
 	//private final TilePanel[][] tileGrid;
 
 	private PaintedPanel chatPanel, boardPanel, playerPanel;
-	private JTextPane chatPane;
+	private static JTextPane chatPane;
 	private JTextField chatTF;
   	private final NodePanel[][] nodeGrid;
 
@@ -53,13 +61,38 @@ public class BMBoardPanel extends JPanel{
 	private int[][]map;
 	private KeyListener keylistener;
 	private ClientListener clientListener;
-	private PlayerPanel player_;
+	private String local_username;
+	private int local_hp;
+	private int total_hp;
+	private Vector<int[]> location; 
+	private int time;
+	private Vector<TreeMap<String,Object>> players;
+
 	
-	public BMBoardPanel(ActionListener playingGame, Image inImage, ClientListener clientListener, int[][] map ){
+	public BMBoardPanel(ActionListener playingGame,int time,int[][]map, Vector<TreeMap<String,Object>> players , String username){
 
 //Panel initialize
-		this.clientListener = clientListener;
+		//this.clientListener = clientListener;
 		this.map=map;
+		this.time =time;
+		location = new Vector<int[]>();
+		this.local_username = local_username;
+		for (int i = 0; i<players.size(); i++) {
+			if (players.get(i).get("username").equals(local_username))
+			{
+				local_hp = (int)players.get(i).get("hp");
+				total_hp=local_hp;
+			}
+		}
+//		for (int i = 0; i<players.size(); i++) {
+//			
+//			int x = (int)players.get(i).get("posX");
+//			int y = (int)players.get(i).get("posY");
+//			location.get(i)[0] =x;
+//			location.get(i)[0] =y;
+//
+//		}
+		
 		setSize(1000,600);
 		this.setLayout(new BorderLayout());
 		chatPanel= new PaintedPanel(null);
@@ -98,8 +131,8 @@ public class BMBoardPanel extends JPanel{
 //PlayerPanel initialize
 		playerPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
-		TimeLabel = new JLabel("Time: ");
-		HPLabel = new JLabel("HP 1/3");
+		TimeLabel = new JLabel("Time: " + time);
+		HPLabel = new JLabel("HP " + local_hp +"/" +total_hp);
 		AbilityLabel = new JLabel("Ability:");
 		SpeedButton = new PaintedButton("Speend", null, null, 10);
 		PowerButton = new PaintedButton("Power", null, null, 10);
@@ -165,23 +198,39 @@ public class BMBoardPanel extends JPanel{
 		chatPanel.add(chatButton, BorderLayout.SOUTH);
 //add players
 		
-		player_ = new PlayerPanel();
-		player_.setBounds(0, 50, 50, 50);
-		add(player_);
-		Thread t = new Thread(player_);
-		t.start();
-		
-		
 		
 //add all panels		
 		this.add(chatPanel, BorderLayout.WEST);
 		this.add(boardPanel, BorderLayout.CENTER);
 		this.add(playerPanel, BorderLayout.EAST);
+		this.addKeyListener(keylistener);
 		addAction();
-		redraw();
-
+		revalidate();
+		repaint();
 	}
 	
+
+	@Override 
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		for (TreeMap<String,Object> player : players){
+			int x = (Integer)(player.get("posX"));
+			int y = (Integer)(player.get("posY"));
+			g.drawImage(img, x*this.boardPanel.getWidth()/256, y*this.boardPanel.getHeight()/256, this.boardPanel);
+		}
+		
+	}
+	
+	public void set_move(int[][]board, int time, Vector<TreeMap<String,Object>>  players_){
+		this.players = players_;
+		revalidate();
+		repaint();
+		
+		repaintBoard(board);
+	}						
+
+	
+	//public void set_move( Vector<Dictionary> board,  )
 	public void addAction(){
 		keylistener = new KeyListener(){
 
@@ -227,123 +276,112 @@ public class BMBoardPanel extends JPanel{
 			
 		};
 	}
-	public void redraw() {
-		for(NodePanel row[] : nodeGrid) {
-			for(NodePanel tp : row) {
-				tp.update(  );
-			}
-		}
+	
+	public static void set_chat_text(String name, String content){
+		String orgin = chatPane.getText();
+	
+		chatPane.setText(orgin + '\n' +name + " : " + content);
+
+		chatPane.setCaretPosition(chatPane.getDocument().getLength());
 		
-////		
-//		for (int i=0; i<16;i ++){
-//			for (int j=0; j<16; j++){
-//				nodeGrid[i][j].update(current_board[i][j]);
-//			}
-//		}
-		revalidate();
-		repaint();
 	}
+
 	
 	public void endGame(){
 		
 	}
-	
+
+	public void repaintBoard(int[][] Board){
+//		nodeGrid
+		for (int i = 0; i < 16; i++){
+			for (int j = 0; j < 16; j++){
+				if (nodeGrid[i][j].node_type != Board[i][j]) nodeGrid[i][j].update(Board[i][j]);
+			}
+		}
+	}
 	
 	
 	class NodePanel extends PaintedPanel {
-		//private final Stack<Component> components;
-		
-		private JPanel pawn = new JPanel();
-	//	private boolean pawnDisplayed = false;	
+
 		private int node_type=-1;
-		private int new_type =-1;
 		
 		NodePanel(int node_type) {		
 			super(null);
 			this.node_type=node_type;
 			setLayout(new GridBagLayout());
 			
-		//	if(node_type == -1) return;
 			if(node_type == 0){
 				//road
 				setImage(BMLibrary.getImages("road"));
 				
 			}
-			if(node_type == 1){
+			else if(node_type == 1){
 				//wall
 				setImage(BMLibrary.getImages("wall"));
 
 			}
-			if(node_type == 2){
+			else if(node_type == 2){
 				//tile
 				setImage(BMLibrary.getImages("tile"));
 
 			}
-			if(node_type == 3){
+			else if(node_type == 3){
 				//bomb
 				setImage(BMLibrary.getImages("bomb"));
 
 			}
-			if(node_type == 4){
+			else if(node_type == 4){
 				//bombing
 				setImage(BMLibrary.getImages("bombing"));
 
 			}
-			if(node_type == 5){
+			else if(node_type == 5){
 				//niceShoes
 				setImage(BMLibrary.getImages("niceShoes"));
 
 			}
-			if(node_type == 6){
+			else if(node_type == 6){
 				//badShoes
 				setImage(BMLibrary.getImages("badShoes"));
 
 			}
-			if(node_type == 7){
+			else if(node_type == 7){
 				//improvePower
 				setImage(BMLibrary.getImages("improvePower"));
 
 			}
-			if(node_type == 8){
+			else if(node_type == 8){
 				//reducePower
 				setImage(BMLibrary.getImages("reducePower"));
 
 			}
-			if(node_type == 9){
+			else if(node_type == 9){
 				//reduceCoolingTime
 				setImage(BMLibrary.getImages("reduceCoolingTime"));
 
 			}
-			if(node_type == 10){
+			else if(node_type == 10){
 				//increaseCoolingTime
 				setImage(BMLibrary.getImages("increaseCoolingTime"));
 
 			}
-			if(node_type == 11){
+			else if(node_type == 11){
 				//increaseDetonatedTime
 				setImage(BMLibrary.getImages("increaseDetonatedTime"));
 
 			}
-			if(node_type ==12) {
+			else if(node_type ==12){
 				//reduceDenotatedTime
 				setImage(BMLibrary.getImages("reduceDenotatedTime"));
-
 			}
-			if(node_type ==13) {
-				//noCoolingTime
-				setImage(BMLibrary.getImages("noCoolingTime"));
-
-			}
+			revalidate();
+			repaint();
 
 		}
 
-		public void change_type(int i){
-			new_type = i;
-		}
 		
-		
-		public void update(){
-			if(new_type == -1) {new_type = node_type; }
+		public void update(int new_type){
+			node_type =new_type;
 			if(new_type == -1) return;
 			if(new_type == 0){
 				//road
@@ -395,7 +433,7 @@ public class BMBoardPanel extends JPanel{
 				setImage(BMLibrary.getImages("reduceCoolingTime"));
 
 			}
-			if(node_type == 10){
+			if(new_type == 10){
 				//increaseCoolingTime
 				setImage(BMLibrary.getImages("increaseCoolingTime"));
 
@@ -410,44 +448,12 @@ public class BMBoardPanel extends JPanel{
 				setImage(BMLibrary.getImages("reduceDenotatedTime"));
 
 			}
-			if(new_type ==13) {
-				//noCoolingTime
-				setImage(BMLibrary.getImages("noCoolingTime"));
-
-			}
-			redraw();
-
+		
+			revalidate();
+			repaint();
 		}
 		
 		
 		
 	}
-	
-	class PlayerPanel extends JPanel implements Runnable {
-		public int i, j;
-		protected void paintComponent(Graphics g) {
-			super.paintComponent(g);
-			//g.setColor(colorArray[colorIndex % 4]);
-			g.fillRect(0, 0, 50, 50);
-			i=0;
-			j=0;
-		}
-		
-		public void run() {
-			try {
-//				for (int i=30; i < 200; i+=4) {
-//					for (int j=60; j < 200; j+=2) {
-						//get i,j from socket
-						this.setBounds(i, j, 50, 50);
-						Thread.sleep(100);
-					
-				
-			} catch (InterruptedException ie) {
-				System.out.println("ie: " + ie.getMessage());
-			}
-		}
-	}
-	
-
-	//class PlayerPanel ext
 }
