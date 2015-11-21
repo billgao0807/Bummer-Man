@@ -15,6 +15,8 @@ import java.util.Vector;
 
 import javax.swing.table.TableModel;
 
+import Server.BMPlayer;
+
 
 public class HostClientListener  extends Thread{
 	private Socket mSocket;
@@ -110,25 +112,18 @@ public class HostClientListener  extends Thread{
 					if (((String)map.get("type")).equals("join")){
 						int time = (int )map.get("time");
 						int hp = (int) map.get("hp");
-						boolean status 	= (boolean) map.get("status");
-						String errMsg = (String) map.get("errMsg");
-						Vector<TreeMap<String,Object>> player = (Vector<TreeMap<String,Object>>) map.get("player");				
+						Vector<BMPlayer> player = (Vector<BMPlayer>) map.get("player");				
 						
-						if (status) clientpanel.set_join(player, hp, time);
-						else System.out.println("join error" + errMsg);
-						
-						
+						clientpanel.set_join(player, hp, time);
 					}
 					else if (((String)map.get("type")).equals("error")){
 						String errMsg= (String) map.get("errMsg");
-
 					}
 					else if (((String)map.get("type")).equals("start")){
 						//receive { type = start, board = 2D array of integers represent the board, time = xxx, players =  (Vector<Dictionary>) [ { username = xxx, posX =  x, posY = y, hp = xxx, speed = xxx, power = xxx, item1 = xxx, item2 = xxx } ] }
-						int [][] board = (int[][]) map.get("board");
+						Integer [][] board = (Integer[][]) map.get("board");
 						int time = (int) map.get("time");
-						
-						Vector<TreeMap<String,Object>> players =  (Vector<TreeMap<String,Object>>) map.get("players");
+						Vector<BMPlayer> players =  (Vector<BMPlayer>) map.get("players");
 						clientpanel.set_start(board, time, players);
 					}
 					else if (((String)map.get("type")).equals("move")){

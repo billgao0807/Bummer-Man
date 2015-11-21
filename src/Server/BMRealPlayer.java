@@ -10,7 +10,12 @@ public class BMRealPlayer extends BMPlayer {
 //		- BurfferedReader : br
 //		- Socket : s
 //		- PrintWriter : pw
-	public BMRealPlayer(int ID, int initialLives){
+	private String name;
+	public String getUserName(){
+		return name;
+	}
+	public BMRealPlayer(int ID, int initialLives, String name){
 		super(ID, initialLives);
+		this.name = name;
 	}
 }

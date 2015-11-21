@@ -34,6 +34,8 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
+import Server.BMPlayer;
+import Server.BMRealPlayer;
 import node.BMTile;
 import Utilities.BMLibrary;
 import customUI.PaintedButton;
@@ -52,7 +54,7 @@ public class BMBoardPanel extends JPanel{
 	private PaintedButton chatButton;
 	private JLabel TimeLabel, HPLabel,AbilityLabel;
 	private PaintedButton SpeedButton, PowerButton, Item1Button, Item2Button , QuitButton;
-	private int[][]map;
+	private Integer[][]map;
 	private KeyListener keylistener;
 	private HostClientListener clientListener;
 	private String local_username;
@@ -62,16 +64,17 @@ public class BMBoardPanel extends JPanel{
 	private int time;
 	private Vector<TreeMap<String,Object>> players;
 
-	public void setupMap(int[][] map, int time, Vector<TreeMap<String,Object>> players , String username){
+	public void setupMap(Integer[][] map, int time, Vector<BMPlayer> players , String username){
 
 		this.map=map;
 		this.time =time;
 		location = new Vector<int[]>();
 		this.local_username = local_username;
+		System.out.println(players);
 		for (int i = 0; i<players.size(); i++) {
-			if (players.get(i).get("username").equals(local_username))
+			if (players.get(i) instanceof BMRealPlayer && ((BMRealPlayer)(players.get(i))).getUserName().equals(local_username))
 			{
-				local_hp = (int)players.get(i).get("hp");
+				local_hp = players.get(i).getHP();
 				total_hp=local_hp;
 			}
 		}
@@ -342,12 +345,12 @@ public class BMBoardPanel extends JPanel{
 			}
 			if(new_type == 1){
 				//wall
-				setImage(BMLibrary.readImages("wall"));
+				setImage(BMLibrary.readImages(BMLibrary.path+"wall1.png"));
 
 			}
 			if(new_type == 2){
 				//tile
-				setImage(BMLibrary.readImages("tile"));
+				setImage(BMLibrary.readImages(BMLibrary.path+"wall2.png"));
 
 			}
 			else if(new_type == 3){

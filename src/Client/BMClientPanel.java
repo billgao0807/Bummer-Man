@@ -8,6 +8,7 @@ import java.util.Vector;
 import javax.swing.JPanel;
 
 import Server.BMHostServer;
+import Server.BMPlayer;
 import Server.BMSimulation;
 import Utilities.BMLibrary;
 public class BMClientPanel extends JPanel{
@@ -17,17 +18,17 @@ public class BMClientPanel extends JPanel{
 	private BMRoomPanel roomPanel;
 	private BMRankPanel rankPanel;
 	public BMBoardPanel boardPanel;
-	private int [][] board = null;
+	private Integer[][] board = null;
 	private int time = 0;	
 	HostClientListener hostClient;
-	private Vector<TreeMap<String, Object>> players;
+	private Vector<BMPlayer> players;
 	String username;
 	private int hp;
 	protected BMHostServer hs;
 	protected BMSimulation simulation;
 	
 	{
-		players = new Vector<TreeMap<String, Object>>();
+		players = new Vector<BMPlayer>();
 		System.out.println("enter login");
 		loginPanel = new BMLoginPanel(new ActionListener() {
 			@Override
@@ -81,13 +82,9 @@ public class BMClientPanel extends JPanel{
 				String temp = menuPanel.portField.getText();
 //				String ip = menuPanel.IP.getText();
 				int portNumber = Integer.parseInt(temp);
-				System.out.println("Break");
-//				hs = new BMHostServer(5555,4);
 				simulation = new BMSimulation(5555,5);
-				System.out.println("Break1");
 
 				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
-				System.out.println("Break2");
 			}
 		},
 		new ActionListener()
@@ -95,7 +92,6 @@ public class BMClientPanel extends JPanel{
 		@Override
 			public void actionPerformed(ActionEvent e)
 			{
-			//joinGame
 				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
 				hostClient.sendJoin(username);
 				
@@ -127,10 +123,7 @@ public class BMClientPanel extends JPanel{
 				@Override
 				public void actionPerformed(ActionEvent e){
 					//enter the game
-					System.out.println("room panel");
-					BMClientPanel.this.removeAll();
-					BMClientPanel.this.add(boardPanel);
-					BMClientPanel.this.revalidate();				
+					simulation.startGame(0);				
 				}
 			},
 			new ActionListener()
@@ -138,11 +131,10 @@ public class BMClientPanel extends JPanel{
 			@Override
 				public void actionPerformed(ActionEvent e)
 				{
+				
+				
 				//enter Game
-				BMClientPanel.this.removeAll();
-				BMClientPanel.this.add(boardPanel);		
-				BMClientPanel.this.revalidate();
-					
+					simulation.startGame(1);
 				}
 			},
 			new ActionListener()
@@ -170,15 +162,19 @@ public class BMClientPanel extends JPanel{
 	});
 	}
 	
-	void set_start(int [][] board, int time, Vector<TreeMap<String, Object>> players)
+	void set_start(Integer [][] board, int time, Vector<BMPlayer> players)
 	{
 		this.board = board;
 		this.time = time;
 		this.players = players;
-		
+		boardPanel.setupMap(board, time, players , username);
+
+		BMClientPanel.this.removeAll();
+		BMClientPanel.this.add(boardPanel);		
+		BMClientPanel.this.revalidate();
 	}
 	
-	void set_join(Vector<TreeMap<String, Object>> players, int hp, int time)
+	void set_join(Vector<BMPlayer> players, int hp, int time)
 	{
 		this.players = players;
 		this.time = time;
@@ -187,6 +183,4 @@ public class BMClientPanel extends JPanel{
 		BMClientPanel.this.add(roomPanel);		
 		BMClientPanel.this.revalidate();
 	}
-	
-	
 }

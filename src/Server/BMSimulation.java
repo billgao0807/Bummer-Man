@@ -101,7 +101,7 @@ public class BMSimulation extends Thread {
 	public void startGame(int type){
 		Vector<BMClient> clients = hs.getClients();
 		for (int i = 0; i < clients.size(); i++){
-			BMPlayer player = new BMRealPlayer(i,totalHP);
+			BMPlayer player = new BMRealPlayer(i,totalHP, clients.get(i).getName());
 			clients.get(i).setPlayer(player);
 			players.add(player);
 		}
