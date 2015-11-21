@@ -38,4 +38,8 @@ public class ServerConstants {
 	public static final String portErrorString = "<html><font color=\"red\">Please enter a valid port<br />between " + lowPort + " and " + highPort + "</font></html>";
 	public static final String portAlreadyInUseString = "<html><font color=\"red\">Port already in use.  Select another port<br />between " + lowPort + " and " + highPort + "</font></html>";
 	
+	public static final String startClientConnectedString = "Client with IP address ";
+	public static final String endClientConnectedString = " connected.";
+	public static final String clientDisconnected = "BMClient disconnected.";
+	
 }

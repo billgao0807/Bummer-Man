@@ -76,13 +76,11 @@ public class MySQLDriver {
 	}
 	
 	/*
-	 * Checks if username and password match
+	 * Checks if username and password match/exist
 	 */
 	public boolean doesMatch(String userName, String password) {
 		try {
-			PreparedStatement ps = con.prepareStatement(selectUser);
-			ps.setString(1, userName);
-			ResultSet result = ps.executeQuery();
+			ResultSet result = getUsernameResults(userName);
 			while (result.next()) {
 				System.out.println(result.getString(2)+ " exists");
 				if (result.getString(3).equals(password))
@@ -93,6 +91,26 @@ public class MySQLDriver {
 		}
 		System.out.println("Invalid username and password combination for: " + userName);
 		return false;
+	}
+	public boolean doesExist(String userName) {
+		try {
+			ResultSet result = getUsernameResults(userName);
+			while (result.next()) {
+				System.out.println("The username, " + result.getString(2)+ ", already exists");
+				return true;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	//Helper Funciton
+	public ResultSet getUsernameResults(String userName) throws SQLException {
+		PreparedStatement ps = con.prepareStatement(selectUser);
+		ps.setString(1, userName);
+		return ps.executeQuery();
 	}
 	
 	/*
