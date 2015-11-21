@@ -118,7 +118,7 @@ public class MySQLDriver {
 		return false;
 	}
 	
-	//Helper Funciton
+	//Helper Function
 	public ResultSet getUsernameResults(String userName) throws SQLException {
 		PreparedStatement ps = con.prepareStatement(selectUser);
 		ps.setString(1, userName);

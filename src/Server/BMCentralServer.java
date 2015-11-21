@@ -80,6 +80,7 @@ public class BMCentralServer extends Thread {
 					try {
 						if (ss != null)
 							ss.close();
+						msqlDriver.stop();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
