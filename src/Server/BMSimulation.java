@@ -79,10 +79,10 @@ public class BMSimulation extends Thread {
 		}
 		return HPs;
 	}
-	public Vector<BMResult> getResult(){
-		Vector<BMResult> results = new Vector<BMResult>();
+	public Vector<TreeMap<String,Object>> getResult(){
+		Vector<TreeMap<String,Object>> results = new Vector<TreeMap<String,Object>>();
 		for (BMPlayer player : players){
-			BMResult result = player.getResult();
+			TreeMap<String,Object> result = player.getResult();
 			results.add(result);
 		}
 		return results;

@@ -9,10 +9,10 @@ public class BMBomb extends BMNode{
 	private final int timeToLive;
 	private final BMPlayer mPlayer;
 
-	public BMBomb(int x, int y, BMNode[][] board, int timeToLive, BMPlayer player) {
+	public BMBomb(int x, int y, BMNode[][] board, BMPlayer player) {
 		super(x, y, BMNodeType.bomb, false, board);
 		this.power = player.getPower();
-		this.timeToLive = timeToLive;
+		this.timeToLive = player.getDetonatedTime();
 		mPlayer = player;
 		start();
 	}
@@ -53,7 +53,7 @@ public class BMBomb extends BMNode{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
+		vanish();
 	}
 	
 	public int getPower() {
