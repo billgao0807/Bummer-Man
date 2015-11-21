@@ -22,10 +22,9 @@ public class BMLibrary {
 	}
 	
 	public static Image readImages(String path){
-		System.out.println("path "+ path);
 		Image img = null;
 		try {
-			img = ImageIO.read(new File(path));
+			img = ImageIO.read(new File(BMLibrary.path+path));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -50,8 +50,8 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	private static final int normalDetonatedTime = 5;
 	private static final int reducedDetonatedTime = 3;
 	//Inclusive small coordinates limit:7, 247
-	private static final int smallCoordinateUpperLimit = 247;
-	private static final int smallCoordinateLowerLimit = 7;
+	private static final int smallCoordinateUpperLimit = 988;
+	private static final int smallCoordinateLowerLimit = 28;
 	//Inclusive big coordinates limit:0, 15
 	private static final int bigCoordinateUpperLimit = 15;
 	private static final int bigCoordinateLowerLimit = 0;
@@ -63,7 +63,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	protected int coolingTime;
 	protected int detonatedTime;
 	//protected Queue<BMItem> itemQueue;
-	protected Vector<BMItem> items;
+	protected Vector<Integer> items;
 	protected int deaths;
 	protected int initialHP;
 	protected int HP;
@@ -100,32 +100,20 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		this.ID = ID;
 		this.initialHP = initialLives;
 		location = new Point(-1, -1);
+		setInitialLocation(ID);
 		speed = normalSpeed;
 		power = normalPower;
 		coolingTime = normalCoolingTime;
 		detonatedTime = normalDetonatedTime;
 		//itemQueue = new LinkedList<BMItem>();
-		items = new Vector<BMItem>();
+		items = new Vector<Integer>();
 		HP = initialLives;
 		kills = 0;
 		lost = false;
 		mLock = new ReentrantLock();
 		respawning = false;
-		new Thread(new Runnable(){
-
-			@Override
-			public void run() {
-				while (true){
-					try {
-						Thread.sleep(100/speed);
-					} catch (InterruptedException e) {
-						System.out.println("Run " + e.getMessage());;
-					}
-					BMPlayer.this.enableMove = true;
-				}
-			}
-			
-		}).start();
+		items.add(-1);
+		items.add(-1);
 	}
 	
 	public void setSimulation(BMSimulation simulation){
@@ -151,15 +139,15 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		return location;
 	}
 	
-	public Vector<BMItem> getItemsProcessed(){
+	public Vector<Integer> getItemsProcessed(){
 		itemCount++;
-		Vector<BMItem> returnVector = new Vector<BMItem>();
+		Vector<Integer> returnVector = new Vector<Integer>();
 		//Object [] array = itemQueue.toArray();
 		
 		if (items.size() > 2 || items.size() < 0)
 			System.out.println("Player has " + items.size() + " items. Error in BMPlayer getItemsProcessed.");
 		for(int i=0; i< items.size(); i++){
-			returnVector.addElement((BMItem) items.get(i));
+			returnVector.add(items.get(i));
 		}
 		return returnVector;
 	}
@@ -198,15 +186,15 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	private void addItem(BMItem item){
 		if(item.getValue()%2 == 0){
 			if(items.size() == 2){
-				BMItem toBeRemovedItem = items.remove(0);
-				switch(toBeRemovedItem.getValue()){
+				Integer toBeRemovedItem = items.remove(0);
+				switch(toBeRemovedItem){
 					case 0: speed = normalSpeed;
 					case 2: power = normalPower;
 					case 4: coolingTime = normalCoolingTime;
 					case 6: detonatedTime = normalDetonatedTime;
 				}
 			}
-				items.add(item);
+				items.add(item.getValue());
 			switch(item.getValue()){
 				case 0: speed = increasedSpeed;
 				case 2: power = increasedPower;
@@ -223,7 +211,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 				case 7: detonatedTime = normalDetonatedTime;
 			}
 			for (int i=0; i< items.size(); i++){
-				if(item.getValue() - items.get(i).getValue() == 0){
+				if(item.getValue() - items.get(i) == 0){
 					items.remove(i);
 				}
 			}
@@ -231,13 +219,9 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	
 	}
 	public void startMove(int moveType){
-		if (enableMove){
-			enableMove = false;
 			if (canMove(moveType)) moveHelper(moveType);
-		}
 	}
 	protected void moveHelper(int moveType){
-		
 		int initX = location.x;
 		int initY = location.y;
 		switch(moveType){
@@ -257,11 +241,11 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			case 4: location.setLocation(initX+1, initY);
 					break;
 			//Drop a bomb
-			case 5: simulation.dropBomb(initX/16, initY/16, this);
+			case 5: simulation.dropBomb(initX/64, initY/64, this);
 					cooling = true;
 					break;
 		}
-		BMNode nextNode = simulation.getNode(location.x/16, location.y/16);
+		BMNode nextNode = simulation.getNode(location.x/64, location.y/64);
 		if (nextNode instanceof BMBombing){
 			killed(((BMBombing)nextNode).getID());
 		}
@@ -312,7 +296,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			}
 			else return false;*/
 			if (pointInSmallBounds(new Point(finalSmallX, finalSmallY))){
-				BMNode nextNode = simulation.getNode(finalSmallX, finalSmallY);
+				BMNode nextNode = simulation.getNode(finalSmallX/64, finalSmallY/64);
 				if (nextNode instanceof BMWall || nextNode instanceof BMTile) return false;
 				else return true;
 			}
@@ -373,6 +357,20 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		return resultMap;
 	}
 
+	protected String username = "";
+	public TreeMap<String,Object> getInfo(){
+		TreeMap<String,Object> info = new TreeMap<String,Object>();
+		info.put("username",username);
+		info.put("posX", location.x);
+		info.put("posY", location.y);
+		info.put("hp", HP);
+		info.put("speed", speed);
+		info.put("power", power);
+		info.put("item1", items.get(0));
+		info.put("item2", items.get(1));
+		System.out.println("Info " +info);
+		return info;
+	}
 	public void addKill() {
 		kills++;
 	}

@@ -14,8 +14,8 @@ private static final long serialVersionUID = 5147395078473323173L;
 	{
 		setTitle("Bomberman");
 		setSize(minSize);
-		setMinimumSize(minSize);
-		setMaximumSize(maxSize);
+//		setMinimumSize(minSize);
+//		setMaximumSize(maxSize);
 //		this.setFocusable(true);
 //		this.requestFocusInWindow();
 		add(new BMClientPanel());

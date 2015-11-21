@@ -30,10 +30,12 @@ public class BMClient extends Thread {
 
 	public void sendMap(TreeMap<String,Object> output) {
 		try {
+//			System.out.println("Output " + output);
 			oos.writeObject(output);
 			oos.flush();
 		} catch (IOException e) {
 			System.out.println("BMClient sendMap IOE: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -59,7 +61,8 @@ public class BMClient extends Thread {
 					}
 					else if (type.equals("move")){
 						player.startMove((Integer)(map.get("move")));
-						mSimulation.getGameBoard();
+//						mSimulation.getGameBoard();
+						mSimulation.sendMove();
 					}
 					else if (type.equals("msg")){
 						sendMsgMap(map);

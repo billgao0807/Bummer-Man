@@ -20,9 +20,9 @@ public class BMSimulation extends Thread {
 	private BMNode[][] board = new BMNode[16][16];
 	private Vector<BMPlayer> players;
 	private BMPlayer host;
-	private int timeLeft;
+	private int timeLeft = 1000;
 	private BMHostServer hs;
-	private int totalHP;
+	private int totalHP = 3;
 	private int numPlayer;
 	
 	public final static int start_game = 0;
@@ -36,7 +36,7 @@ public class BMSimulation extends Thread {
 		loadBoard(BMLibrary.getGameMap());
 	}
 	private void loadBoard(int[][] board){
-		System.out.println("Board " +board[0][0] );
+//		System.out.println("Board " +board[0][0] );
 		for (int i = 0; i < 16; i++){
 			for (int j = 0; j < 16; j++){
 				this.board[i][j] = initNode(i,j,board[i][j]);
@@ -103,6 +103,7 @@ public class BMSimulation extends Thread {
 		for (int i = 0; i < clients.size(); i++){
 			BMPlayer player = new BMRealPlayer(i,totalHP, clients.get(i).getName());
 			clients.get(i).setPlayer(player);
+			player.setSimulation(this);
 			players.add(player);
 		}
 		if (type == start_with_AI){
@@ -114,7 +115,7 @@ public class BMSimulation extends Thread {
 		map.put("type", "start");
 		map.put("time", timeLeft);
 		map.put("board", getBoard());
-		map.put("players", players);
+		map.put("players", playersInfo());
 		hs.sendMapToClients(map);
 		startTimer();
 	}
@@ -149,13 +150,27 @@ public class BMSimulation extends Thread {
 		map.put("type", "game");
 		map.put("board", getBoard());
 		map.put("time", timeLeft);
-		map.put("players", players);
+		map.put("players", playersInfo());
 		hs.sendMapToClients(map);
 	}
 	public Vector<BMPlayer> getAllPlayers(){
 		return players;
 	}
+	public Vector<TreeMap<String,Object>> playersInfo(){
+		Vector<TreeMap<String, Object>> info = new Vector<TreeMap<String,Object>>();
+		for (BMPlayer player : players){
+			info.add(player.getInfo());
+		}
+		return info;
+	}
 	public void addKill(int id) {
 		players.get(id).addKill();
+	}
+	public void sendMove() {
+		TreeMap<String, Object> info = new TreeMap<String,Object>();
+		info.put("type", "move");
+		info.put("time", timeLeft);
+		info.put("players", playersInfo());
+		hs.sendMapToClients(info);
 	}
 }

@@ -72,6 +72,10 @@ public class HostClientListener  extends Thread{
 		 tempMap.put("type", "move");
 		 tempMap.put("move", key);		 
 	        try {
+//	        	System.out.println("Send move");
+
+	    		System.out.println("Send " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
+	    		BMBoardPanel.a=System.currentTimeMillis();
 	        	oos.writeObject(tempMap);
 				oos.flush();
 	        } catch (Exception e) {
@@ -112,7 +116,7 @@ public class HostClientListener  extends Thread{
 					if (((String)map.get("type")).equals("join")){
 						int time = (int )map.get("time");
 						int hp = (int) map.get("hp");
-						Vector<BMPlayer> player = (Vector<BMPlayer>) map.get("player");				
+						Vector<TreeMap<String,Object>> player = (Vector<TreeMap<String,Object>>) map.get("player");				
 						
 						clientpanel.set_join(player, hp, time);
 					}
@@ -123,15 +127,16 @@ public class HostClientListener  extends Thread{
 						//receive { type = start, board = 2D array of integers represent the board, time = xxx, players =  (Vector<Dictionary>) [ { username = xxx, posX =  x, posY = y, hp = xxx, speed = xxx, power = xxx, item1 = xxx, item2 = xxx } ] }
 						Integer [][] board = (Integer[][]) map.get("board");
 						int time = (int) map.get("time");
-						Vector<BMPlayer> players =  (Vector<BMPlayer>) map.get("players");
+						Vector<TreeMap<String, Object>> players =  (Vector<TreeMap<String, Object>>) map.get("players");
 						clientpanel.set_start(board, time, players);
 					}
 					else if (((String)map.get("type")).equals("move")){
-						
-						int [][] board = (int[][]) map.get("board");
+//						int [][] board = (int[][]) map.get("board");
+				    		System.out.println("Receive " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
+				    		BMBoardPanel.a=System.currentTimeMillis();
 						int time = (int) map.get("time");
-						Vector<TreeMap<String,Object>> players =  (Vector<TreeMap<String,Object>>) map.get("players");
-						clientpanel.boardPanel.set_move(board, time, players);
+						Vector<TreeMap<String, Object>> players =  (Vector<TreeMap<String, Object>>) map.get("players");
+						clientpanel.boardPanel.set_move(time, players);
 					
 					}
 					else if (((String)map.get("type")).equals("msg")){
