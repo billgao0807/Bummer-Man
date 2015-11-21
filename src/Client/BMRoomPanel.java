@@ -46,11 +46,15 @@ public class BMRoomPanel extends PaintedPanel{
 		
 		start =  new PaintedButton("Start", null ,null, 20);		
 		startPanel.add(start);
+		start.addActionListener(startP);
 		
 		startAI = new PaintedButton("Start(AI)", null, null, 20);
 		startAIP.add(startAI);
+		startAI.addActionListener(startB);
+		
 		quitG = new PaintedButton("Quit", null, null, 20);
 		quitP.add(quitG);
+		quitG.addActionListener(quit);
 		
 		setLayout(new GridLayout(0,3));
 		//temp stands for the player pic

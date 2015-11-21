@@ -38,7 +38,7 @@ public class BMLibrary {
 		
 		List<String[]> data = new ArrayList<>();		 
 		try {
-						Scanner in = new Scanner(new File(path+"map1"));
+			Scanner in = new Scanner(new File(path+"map1.txt"));
 		 
 		    while (in.hasNextLine()) {
 		           String str = in.nextLine();
@@ -57,7 +57,7 @@ public class BMLibrary {
 				gamemap[i][j] = Integer.parseInt(result[i][j]);
 			}
 		}
-		
+
 		return gamemap;
 	}
 }

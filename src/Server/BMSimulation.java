@@ -17,7 +17,7 @@ import node.BMTile;
 import node.BMWall;
 
 public class BMSimulation extends Thread {
-	private BMNode[][] board;
+	private BMNode[][] board = new BMNode[16][16];
 	private Vector<BMPlayer> players;
 	private BMPlayer host;
 	private int timeLeft;
@@ -28,7 +28,7 @@ public class BMSimulation extends Thread {
 	public final static int start_game = 0;
 	public final static int start_with_AI = 1;
 	
-	public BMSimulation(BMPlayer host, int port, int numPlayer){
+	public BMSimulation(int port, int numPlayer){
 		this.numPlayer = numPlayer; 
 		players = new Vector<BMPlayer>();
 		hs = new BMHostServer(port,numPlayer);
@@ -36,6 +36,7 @@ public class BMSimulation extends Thread {
 		loadBoard(BMLibrary.getGameMap());
 	}
 	private void loadBoard(int[][] board){
+		System.out.println("Board " +board[0][0] );
 		for (int i = 0; i < 16; i++){
 			for (int j = 0; j < 16; j++){
 				this.board[i][j] = initNode(i,j,board[i][j]);

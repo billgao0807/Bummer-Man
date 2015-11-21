@@ -62,11 +62,8 @@ public class BMBoardPanel extends JPanel{
 	private int time;
 	private Vector<TreeMap<String,Object>> players;
 
-	
-	public BMBoardPanel(ActionListener playingGame,HostClientListener clientListener, int time,int[][]map, Vector<TreeMap<String,Object>> players , String username){
+	public void setupMap(int[][] map, int time, Vector<TreeMap<String,Object>> players , String username){
 
-//Panel initialize
-		this.clientListener = clientListener;
 		this.map=map;
 		this.time =time;
 		location = new Vector<int[]>();
@@ -78,6 +75,29 @@ public class BMBoardPanel extends JPanel{
 				total_hp=local_hp;
 			}
 		}
+		//boardPanel initialize
+				boardPanel.setLayout(new GridLayout(boardSize,boardSize));
+				for(int y = 0; y < boardSize; ++y) {
+					for(int x = 0; x < boardSize; ++x) {
+						if(map[x][y]==1) {
+							nodeGrid[x][y] = new NodePanel(1); }
+						else if (map[x][y]==2) {
+							nodeGrid[x][y] = new NodePanel(2);}
+						else if (map[x][y]==0) {
+							nodeGrid[x][y] = new NodePanel (0);
+						}
+						else {System.out.println("wrong read from input");}
+						boardPanel.add(nodeGrid[x][y]);
+					}
+				}
+				
+				
+	}
+	
+	public BMBoardPanel(ActionListener playingGame,HostClientListener clientListener){
+
+//Panel initialize
+		this.clientListener = clientListener;
 //		for (int i = 0; i<players.size(); i++) {
 //			
 //			int x = (int)players.get(i).get("posX");
@@ -96,23 +116,7 @@ public class BMBoardPanel extends JPanel{
 		keylistener = null;
 		nodeGrid = new NodePanel[boardSize][boardSize];
 
-//boardPanel initialize
-		boardPanel.setLayout(new GridLayout(boardSize,boardSize));
-		for(int y = 0; y < boardSize; ++y) {
-			for(int x = 0; x < boardSize; ++x) {
-				if(map[x][y]==1) {
-					nodeGrid[x][y] = new NodePanel(1); }
-				else if (map[x][y]==2) {
-					nodeGrid[x][y] = new NodePanel(2);}
-				else if (map[x][y]==0) {
-					nodeGrid[x][y] = new NodePanel (0);
-				}
-				else {System.out.println("wrong read from input");}
-				boardPanel.add(nodeGrid[x][y]);
-			}
-		}
-		
-		
+
 //chatPanel initialize
 		
 		chatPanel.setLayout(new BorderLayout());
@@ -139,7 +143,20 @@ public class BMBoardPanel extends JPanel{
 		PowerButton.setPreferredSize(new Dimension(60, 50));
 		//QuitButton.setPreferredSize(new Dimension(60, 50));
 
-		
+		boardPanel.setLayout(new GridLayout(boardSize,boardSize));
+		for(int y = 0; y < boardSize; ++y) {
+			for(int x = 0; x < boardSize; ++x) {
+//				if(map[x][y]==1) {
+//					nodeGrid[x][y] = new NodePanel(1); }
+//				else if (map[x][y]==2) {
+//					nodeGrid[x][y] = new NodePanel(2);}
+//				else if (map[x][y]==0) {
+//					nodeGrid[x][y] = new NodePanel (0);
+//				}
+//				else {System.out.println("wrong read from input");}
+				boardPanel.add(new NodePanel(0));
+			}
+		}
 //playerPanel add component
 		gbc.gridx = 0;
 		gbc.gridy = 0;
@@ -207,13 +224,13 @@ public class BMBoardPanel extends JPanel{
 	@Override 
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		for (int i=0; i<players.size(); i++) {
-			int x =(Integer)players.get(i).get("posX");
-			int y =(Integer)players.get(i).get("poxY");
-			Image image= BMLibrary.readImages("bin/Utilities/images/player" + i + ".png");
-			g.drawImage(image, x*this.boardPanel.getWidth()/256, y*this.boardPanel.getHeight()/256, this.boardPanel);
-
-		}
+//		for (int i=0; i<players.size(); i++) {
+//			int x =(Integer)players.get(i).get("posX");
+//			int y =(Integer)players.get(i).get("poxY");
+//			Image image= BMLibrary.readImages("bin/Utilities/images/player" + i + ".png");
+//			g.drawImage(image, x*this.boardPanel.getWidth()/256, y*this.boardPanel.getHeight()/256, this.boardPanel);
+//
+//		}
 //		for (TreeMap<String,Object> player : players){
 //			int x = (Integer)(player.get("posX"));
 //			int y = (Integer)(player.get("posY"));
@@ -320,7 +337,7 @@ public class BMBoardPanel extends JPanel{
 			if(new_type == -1) return;
 			else if(new_type == 0){
 				//road
-				setImage(BMLibrary.readImages("road"));
+				setImage(BMLibrary.readImages(BMLibrary.path+"wall0.png"));
 				
 			}
 			if(new_type == 1){
