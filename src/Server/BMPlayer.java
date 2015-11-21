@@ -2,6 +2,7 @@ package Server;
 
 import java.awt.Point;
 import java.io.Serializable;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Vector;
@@ -10,10 +11,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import node.BMBomb;
 import node.BMBombing;
-import node.BMItem;
 import node.BMNode;
+import node.BMNodeItem;
 import node.BMTile;
 import node.BMWall;
+
+import Utilities.BMItem;
 
 public abstract class BMPlayer extends Thread implements Serializable{
 //	Store all the information of a player. The functions support all possible actions of the player.
@@ -44,9 +47,12 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	//Wait 5 or 3 seconds between a bomb is dropped and it detonates
 	private static final int normalDetonatedTime = 5;
 	private static final int reducedDetonatedTime = 3;
-	//Inclusive Coordinates limit:0, 255
-	private static final int coordinateUpperLimit = 248;
-	private static final int coordinateLowerLimit = 8;
+	//Inclusive small coordinates limit:7, 247
+	private static final int smallCoordinateUpperLimit = 247;
+	private static final int smallCoordinateLowerLimit = 7;
+	//Inclusive big coordinates limit:0, 15
+	private static final int bigCoordinateUpperLimit = 15;
+	private static final int bigCoordinateLowerLimit = 0;
 	
 	protected Point initialLocation;
 	protected Point location;
@@ -54,7 +60,8 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	protected int power;
 	protected int coolingTime;
 	protected int detonatedTime;
-	protected Queue<BMItem> itemQueue;
+	//protected Queue<BMItem> itemQueue;
+	protected Vector<BMItem> items;
 	protected int deaths;
 	protected int initialHP;
 	protected int HP;
@@ -64,8 +71,10 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	protected BMSimulation simulation;
 	
 	private Lock mLock;
-	private volatile boolean respawning;
-	private volatile boolean cooling;
+	protected volatile boolean respawning;
+	protected volatile boolean cooling;
+	
+	
 //	Functions:
 //		+ BMPlayer(int ID, int initialLives, boolean isVIP)
 //		+ setSimulation(BMSimulation simulation)
@@ -83,6 +92,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 //		protected getCoolingTime() : int
 //		protected getDetonatedTime() : int
 //		- canMove() : Boolean
+	private boolean enableMove = true;
 	public BMPlayer(int ID, int initialLives){
 		this.ID = ID;
 		this.initialHP = initialLives;
@@ -91,12 +101,28 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		power = normalPower;
 		coolingTime = normalCoolingTime;
 		detonatedTime = normalDetonatedTime;
-		itemQueue = new LinkedList<BMItem>();
+		//itemQueue = new LinkedList<BMItem>();
+		items = new Vector<BMItem>();
 		HP = initialLives;
 		kills = 0;
 		lost = false;
 		mLock = new ReentrantLock();
 		respawning = false;
+		new Thread(new Runnable(){
+
+			@Override
+			public void run() {
+				while (true){
+					try {
+						Thread.sleep(100/speed);
+					} catch (InterruptedException e) {
+						System.out.println("Run " + e.getMessage());;
+					}
+					BMPlayer.this.enableMove = true;
+				}
+			}
+			
+		}).start();
 	}
 	
 	public void setSimulation(BMSimulation simulation){
@@ -123,17 +149,18 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	
 	public Vector<BMItem> getItemsProcessed(){
 		Vector<BMItem> returnVector = new Vector<BMItem>();
-		Object [] array = itemQueue.toArray();
-		if (array.length > 2 || array.length < 0)
-			System.out.println("Player has " + array.length + " items. Error in BMPlayer getItemsProcessed.");
-		for(int i=0; i< array.length; i++){
-			returnVector.addElement((BMItem) array[i]);
+		//Object [] array = itemQueue.toArray();
+		
+		if (items.size() > 2 || items.size() < 0)
+			System.out.println("Player has " + items.size() + " items. Error in BMPlayer getItemsProcessed.");
+		for(int i=0; i< items.size(); i++){
+			returnVector.addElement((BMItem) items.get(i));
 		}
 		return returnVector;
 	}
 	
 	public int getNumOfItemsAcquired(){
-		return itemQueue.size();
+		return items.size();
 	}
 	
 	public int getHP(){
@@ -163,8 +190,49 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	public boolean isRealPlayer(){
 		return ID >= 0;
 	}
-	public void startMove(int moveType){
-		if (!canMove(moveType)) return;
+	private void addItem(BMItem item){
+		if(item.getValue()%2 == 0){
+			if(items.size() == 2){
+				BMItem toBeRemovedItem = items.remove(0);
+				switch(toBeRemovedItem.getValue()){
+					case 0: speed = normalSpeed;
+					case 2: power = normalPower;
+					case 4: coolingTime = normalCoolingTime;
+					case 6: detonatedTime = normalDetonatedTime;
+				}
+			}
+				items.add(item);
+			switch(item.getValue()){
+				case 0: speed = increasedSpeed;
+				case 2: power = increasedPower;
+				case 4: coolingTime = reducedCoolingTime;
+				case 6: detonatedTime = reducedDetonatedTime;
+			
+			}
+		}
+		else{
+			switch(item.getValue()){
+				case 1: speed = normalSpeed;
+				case 3: power = normalPower;
+				case 5: coolingTime = normalCoolingTime;
+				case 7: detonatedTime = normalDetonatedTime;
+			}
+			for (int i=0; i< items.size(); i++){
+				if(item.getValue() - items.get(i).getValue() == 0){
+					items.remove(i);
+				}
+			}
+		}
+	
+	}
+	public synchronized void startMove(int moveType){
+		if (enableMove){
+			if (canMove(moveType)) moveHelper(moveType);
+			enableMove = false;
+		}
+	}
+	protected void moveHelper(int moveType){
+		
 		int initX = location.x;
 		int initY = location.y;
 		switch(moveType){
@@ -192,11 +260,14 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		if (nextNode instanceof BMBombing){
 			killed();
 		}
-		else if (nextNode instanceof BMItemNode){
+		else if (nextNode instanceof BMNodeItem){
+			BMNodeItem itemNode = (BMNodeItem)nextNode;
+			int value = itemNode.getValue();
+			addItem(new BMItem(value));
 			
 		}
 	}
-
+	
 	protected boolean canMove(int moveType) {
 		if (hasLost()) return false;
 		if (moveType < 0 || moveType > 5){
@@ -206,23 +277,35 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		else if (moveType == 0) return true;
 		else if (moveType == 5){
 			if (cooling) return false;
-			BMNode node = simulation.getNode(new Point(location.x/16, location.y/16));
+			BMNode node = simulation.getNode(location.x/16, location.y/16);
 			if (node instanceof BMBombing || node instanceof BMBomb){
 				return false;
 			}
 			else return true;
 		}
 		else{
-			int initX = location.x;
-			int initY = location.y;
+			//int initBigX = location.x/16;
+			//int initBigY = location.y/16;
+			int initSmallX = location.x;
+			int initSmallY = location.y;
 			switch(moveType){
-				case 0: initY--; break;
-				case 1: initY++; break;
-				case 2: initX--; break;
-				case 3: initX++; break;
+				case 0: initSmallY--; break;
+				case 1: initSmallY++; break;
+				case 2: initSmallX--; break;
+				case 3: initSmallX++; break;
 			}
-			if (pointInBounds(new Point(initX, initY))){
-				BMNode nextNode = simulation.getNode(new Point(initX/16, initY/16));
+			//int finalBigX = initBigX;
+			//int finalBigY = initBigY;
+			int finalSmallX = initSmallX;
+			int finalSmallY = initSmallY;
+			/*if (pointInBigBounds(finalBigX, finalBigY)){
+				BMNode nextNode = simulation.getNode(finalBigX, finalBigY);
+				if (nextNode instanceof BMWall || nextNode instanceof BMTile) return false;
+				else return true;
+			}
+			else return false;*/
+			if (pointInSmallBounds(new Point(finalSmallX, finalSmallY))){
+				BMNode nextNode = simulation.getNode(finalSmallX, finalSmallY);
 				if (nextNode instanceof BMWall || nextNode instanceof BMTile) return false;
 				else return true;
 			}
@@ -230,32 +313,40 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			//System.out.println("Error in BMPlayer canMove");			
 		}
 	}
-	protected boolean pointInBounds(Point p){
-		return inBounds(p.x) && inBounds(p.y);
+	//Note that Point stores small coordinates. Use ints for big coordinates
+	protected boolean pointInSmallBounds(Point p){
+		return inSmallBounds(p.x) && inSmallBounds(p.y);
 	}
-	private boolean inBounds(int x){
-		return x >= coordinateLowerLimit && x <= coordinateUpperLimit; 
+	private boolean inSmallBounds(int x){
+		return x >= smallCoordinateLowerLimit && x <= smallCoordinateUpperLimit; 
 	}
+	protected boolean pointInBigBounds(int bigX, int bigY){
+		return inBigBounds(bigX) && inBigBounds(bigY); 
+	}
+	private boolean inBigBounds(int bigC){
+		return bigC >= bigCoordinateLowerLimit && bigC <= bigCoordinateUpperLimit;
+	}
+	
 	
 	public void setInitialLocation(int playerNumber){
 		if (playerNumber > 3 || playerNumber < 0) System.out.println("Input out of bounds, needs 0 to 3. In BMPlayer setInitialLocation.");
 		switch(playerNumber){
 		
 			case 0:
-				location.x = coordinateLowerLimit;
-				location.y = coordinateLowerLimit;
+				location.x = smallCoordinateLowerLimit;
+				location.y = smallCoordinateLowerLimit;
 				break;
 			case 1:
-				location.x = coordinateUpperLimit;
-				location.y = coordinateUpperLimit;
+				location.x = smallCoordinateUpperLimit;
+				location.y = smallCoordinateUpperLimit;
 				break;
 			case 2:
-				location.x = coordinateUpperLimit;
-				location.y = coordinateLowerLimit;
+				location.x = smallCoordinateUpperLimit;
+				location.y = smallCoordinateLowerLimit;
 				break;
 			case 3:
-				location.x = coordinateLowerLimit;
-				location.y = coordinateUpperLimit;
+				location.x = smallCoordinateLowerLimit;
+				location.y = smallCoordinateUpperLimit;
 				break;
 		}
 		initialLocation = new Point(location.x, location.y);
