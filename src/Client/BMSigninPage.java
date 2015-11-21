@@ -5,9 +5,11 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,8 +23,9 @@ public class BMSigninPage extends JFrame{
 private static final long serialVersionUID = 5147395078473323173L;
 	
 	private final static Dimension minSize = new Dimension(320,480);
-	private final static Dimension maxSize = new Dimension(960,640);
+//	private final static Dimension maxSize = new Dimension(960,640);
 	public JTextField nameInput;
+	public JTextField passwordInput;
 	
 	public BMSigninPage(ActionListener signup, ActionListener quickG, ActionListener login)
 	{
@@ -38,7 +41,11 @@ private static final long serialVersionUID = 5147395078473323173L;
 class signIn extends PaintedPanel
 {
 	
-	private JTextField passwordInput;
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
 	private JButton signupB;
 	private JButton quickGameB;
 	private JButton loginB;
@@ -53,6 +60,12 @@ class signIn extends PaintedPanel
 		nameInput.setText("Username: ");
 		nameInput.setForeground(Color.GRAY);
 		nameInput.setPreferredSize(new Dimension(100, 20));
+		nameInput.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                nameInput.setText("");
+            }
+        });
 		JPanel userName = new JPanel();
 		userName.setOpaque(false);
 		userName.add(nameInput);
@@ -61,6 +74,12 @@ class signIn extends PaintedPanel
 		passwordInput.setText("Password:");
 		passwordInput.setForeground(Color.GRAY);
 		passwordInput.setPreferredSize(new Dimension(100, 20));
+		passwordInput.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                passwordInput.setText("");
+            }
+        });
 		JPanel password = new JPanel();
 		password.setOpaque(false);
 		password.add(passwordInput);
