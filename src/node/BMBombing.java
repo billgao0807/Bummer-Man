@@ -1,16 +1,19 @@
 package node;
 
+import Server.BMPlayer;
 import Utilities.BMNodeType;
 
 public class BMBombing extends BMNode{
 
 	private int afterBombingType;
 	private int timeToSleep;
+	private final BMPlayer mPlayer;
 
-	public BMBombing(int x, int y, BMNode[][] board, int afterBombingType) {
+	public BMBombing(int x, int y, BMNode[][] board, int afterBombingType, BMPlayer player) {
 		super(x, y, BMNodeType.bombing, true, board);
 		this.afterBombingType = afterBombingType;
 		timeToSleep = 30;
+		mPlayer = player;
 		start();
 	}
 
@@ -40,6 +43,11 @@ public class BMBombing extends BMNode{
 		} else {
 			board[x][y] = new BMNodeItem(x, y, board, afterBombingType);
 		}
+	}
+	
+	public String getPlayerName() {
+		if (mPlayer == null) return null;
+		return mPlayer.getName();
 	}
 
 }
