@@ -1,4 +1,4 @@
-package Server;
+package centralServer;
 
 public class ServerConstants {
 	

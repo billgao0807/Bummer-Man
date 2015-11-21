@@ -1,4 +1,4 @@
-package Server;
+package centralServer;
 
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
