@@ -30,7 +30,45 @@ public class BMClientPanel extends JPanel{
 	
 	{
 		players = new Vector<TreeMap<String,Object>>();
-		detailSignin = new BMSigninPage();
+//		detailSignin = new BMSigninPage(new ActionListener() {
+//			@Override
+//			
+//			public void actionPerformed(ActionEvent ae) {
+//				BMClientPanel.this.removeAll();
+//				detailSignin.setVisible(false);
+//				/*Signup
+//				BMClientPanel.this.add(roomPanel);
+//				*/
+//				BMClientPanel.this.revalidate();
+//				BMClientPanel.this.repaint();
+//			}
+//		},
+//				new ActionListener(){
+//				@Override
+//			public void actionPerformed(ActionEvent ae) {
+//				BMClientPanel.this.removeAll();
+//				detailSignin.setVisible(false);
+//				/*QuickGame
+//				BMClientPanel.this.add(roomPanel);
+//				*/
+//				BMClientPanel.this.revalidate();
+//				BMClientPanel.this.repaint();
+//			}
+//		},
+//				new ActionListener(){
+//				@Override				
+//			public void actionPerformed(ActionEvent ae) {
+//					/*add check the correctness of the username and password*/
+//					username = detailSignin.nameInput.getText().trim();
+//					
+//				BMClientPanel.this.removeAll();				
+//				BMClientPanel.this.add(menuPanel);
+//				BMClientPanel.this.revalidate();
+//				BMClientPanel.this.repaint();
+//				System.out.println("CLosing jframe");
+//				detailSignin.closeMe();
+//			}}
+//				);
 		loginPanel = new BMLoginPanel(new ActionListener() {
 			@Override
 			
@@ -41,6 +79,8 @@ public class BMClientPanel extends JPanel{
 				*/
 				BMClientPanel.this.revalidate();
 				BMClientPanel.this.repaint();
+				System.out.println("login 1");
+//				detailSignin.closeMe();
 			}
 		},
 				new ActionListener(){
@@ -52,17 +92,22 @@ public class BMClientPanel extends JPanel{
 				*/
 				BMClientPanel.this.revalidate();
 				BMClientPanel.this.repaint();
+				System.out.println("login 2");
+//				detailSignin.closeMe();
 			}
 		},
 				new ActionListener(){
 				@Override				
 			public void actionPerformed(ActionEvent ae) {
 					/*add check the correctness of the username and password*/
-					username = loginPanel.nameInput.getText().trim();
+					username = loginPanel.getSignin().nameInput.getText().trim();
 				BMClientPanel.this.removeAll();				
 				BMClientPanel.this.add(menuPanel);
 				BMClientPanel.this.revalidate();
 				BMClientPanel.this.repaint();
+				System.out.println("login 3");
+				loginPanel.closeSignup();
+//				detailSignin.closeMe();
 			}}, BMLibrary.readImages("menu.png"));
 		
 		

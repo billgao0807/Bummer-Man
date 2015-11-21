@@ -22,20 +22,22 @@ private static final long serialVersionUID = 5147395078473323173L;
 	
 	private final static Dimension minSize = new Dimension(320,480);
 	private final static Dimension maxSize = new Dimension(960,640);
+	public JTextField nameInput;
 	
+	public BMSigninPage(ActionListener signup, ActionListener quickG, ActionListener login)
 	{
 		setTitle("Bomberman Sign In");
 		setSize(minSize);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		signIn si = new signIn(null, null, null, BMLibrary.readImages("background4.png"));
+		signIn si = new signIn(signup, quickG, login, BMLibrary.readImages("background4.png"));
 		add(si);
 		
 
 	}
 class signIn extends PaintedPanel
 {
-	public JTextField nameInput;
+	
 	private JTextField passwordInput;
 	private JButton signupB;
 	private JButton quickGameB;
@@ -91,5 +93,9 @@ class signIn extends PaintedPanel
 		add(loginP,gbc);
 		
 	}
+}
+public void closeMe() {
+	this.setVisible(false);
+	
 }
 }
