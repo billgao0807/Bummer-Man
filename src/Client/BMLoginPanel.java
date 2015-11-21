@@ -40,7 +40,7 @@ public class BMLoginPanel extends PaintedPanel{
 	
 		//titlePanel.add(title);
 		Image titleImage = BMLibrary.readImages("bin/Utilities/images/logo.png");
-		PaintedPanel titlePanel = new PaintedPanel(titleImage);
+		titlePanel = new PaintedPanel(titleImage);
 		
 		
 		nameInput = new JTextField();
@@ -68,7 +68,7 @@ public class BMLoginPanel extends PaintedPanel{
 		
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
-		//gbc.insets = new Insets(40,40,40,40);
+		
 		
 		gbc.ipadx = titleImage.getWidth(null);
 		gbc.ipady = titleImage.getHeight(null);
