@@ -1,19 +1,18 @@
 package Client;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionListener;
-import javax.swing.AbstractButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import customUI.PaintedButton;
-import customUI.PaintedPanel;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
+
+import customUI.PaintedPanel;
 public class BMMenuPanel extends PaintedPanel{
 	private JLabel title;
 	private JButton start;
@@ -33,12 +32,24 @@ public class BMMenuPanel extends PaintedPanel{
 	{
 		super(image,true);
 		ipField = new JTextField();
-		ipField.setText("ip");
+		ipField.setText("localhost");
 		ipField.setColumns(10);
+		ipField.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                ipField.setText("");
+            }
+        });
 		
 		portField = new JTextField();
-		portField.setText("port");
+		portField.setText("6666");
 		portField.setColumns(10);
+		portField.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                portField.setText("");
+            }
+        });
 		
 		JButton btnStart = new JButton("start");
 		
