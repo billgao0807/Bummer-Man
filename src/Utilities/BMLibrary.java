@@ -40,7 +40,7 @@ public class BMLibrary {
 		
 		List<String[]> data = new ArrayList<>();		 
 		try {
-			//			Scanner in = new Scanner(new File("   ??"));
+						Scanner in = new Scanner(new File("bin/map1"));
 		 
 		    while (in.hasNextLine()) {
 		           String str = in.nextLine();

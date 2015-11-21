@@ -88,6 +88,7 @@ public class BMClientPanel extends JPanel{
 			public void actionPerformed(ActionEvent e)
 			{
 			//joinGame
+			hostClient.sendJoin(username);
 			BMClientPanel.this.removeAll();
 			BMClientPanel.this.add(roomPanel);		
 			BMClientPanel.this.revalidate();
