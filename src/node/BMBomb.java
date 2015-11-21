@@ -1,16 +1,19 @@
 package node;
 
+import Server.BMPlayer;
 import Utilities.BMNodeType;
 
 public class BMBomb extends BMNode{
 
 	private final int power; 
 	private final int timeToLive;
+	private final BMPlayer mPlayer;
 
-	public BMBomb(int x, int y, BMNode[][] board, int power, int timeToLive) {
+	public BMBomb(int x, int y, BMNode[][] board, BMPlayer player) {
 		super(x, y, BMNodeType.bomb, false, board);
-		this.power = power;
-		this.timeToLive = timeToLive;
+		this.power = player.getPower();
+		this.timeToLive = player.getDetonatedTime();
+		mPlayer = player;
 		start();
 	}
 
@@ -50,11 +53,16 @@ public class BMBomb extends BMNode{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
+		vanish();
 	}
 	
 	public int getPower() {
 		return power;
+	}
+	
+	public String getPlayerName() {
+		if (mPlayer == null) return null;
+		return mPlayer.getName();
 	}
 
 }

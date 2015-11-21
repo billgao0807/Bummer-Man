@@ -31,7 +31,7 @@ public class BMSimulation extends Thread {
 	public BMSimulation(BMPlayer host, int port, int numPlayer){
 		this.numPlayer = numPlayer; 
 		players = new Vector<BMPlayer>();
-		BMHostServer hs = new BMHostServer(port,numPlayer);
+		hs = new BMHostServer(port,numPlayer);
 		hs.setSimulation(this);
 		loadBoard(BMLibrary.getGameMap());
 	}
@@ -74,15 +74,15 @@ public class BMSimulation extends Thread {
 	public Vector<String> getHPs(){
 		Vector<String> HPs = new Vector<String>();
 		for (BMPlayer player : players){
-			String hp = player.getHP();
+			String hp = player.getHP() + "/" + totalHP;
 			HPs.add(hp);
 		}
 		return HPs;
 	}
-	public Vector<BMResult> getResult(){
-		Vector<BMResult> results = new Vector<BMResult>();
+	public Vector<TreeMap<String,Object>> getResult(){
+		Vector<TreeMap<String,Object>> results = new Vector<TreeMap<String,Object>>();
 		for (BMPlayer player : players){
-			BMResult result = player.getResult();
+			TreeMap<String,Object> result = player.getResult();
 			results.add(result);
 		}
 		return results;
@@ -94,18 +94,18 @@ public class BMSimulation extends Thread {
 		return board[x][y];
 	}
 	public void dropBomb(int x, int y, BMPlayer player){
-		board[x][y] = new BMBomb(x,y,board,player.power,player.detonatedTime);
+		board[x][y] = new BMBomb(x,y,board,player);
 	}
 	public void startGame(int type){
 		Vector<BMClient> clients = hs.getClients();
 		for (int i = 0; i < clients.size(); i++){
-			BMPlayer player = new BMRealPlayer();
+			BMPlayer player = new BMRealPlayer(i,totalHP);
 			clients.get(i).setPlayer(player);
 			players.add(player);
 		}
 		if (type == start_with_AI){
 			for (int i = 0; i < numPlayer-clients.size(); i++){
-				players.add(new BMAIPlayer());
+				players.add(new BMAIPlayer(totalHP));
 			}
 		}
 		TreeMap<String,Object> map = new TreeMap<String,Object>();

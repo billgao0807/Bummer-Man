@@ -18,7 +18,7 @@ public abstract class BMNode extends Thread{
 		}
 		
 		public boolean vanish() {
-			board[x][y] = new BMBombing(x, y, board, BMNodeType.road);
+			board[x][y] = new BMBombing(x, y, board, BMNodeType.road, null);
 			return false;
 		}
 		

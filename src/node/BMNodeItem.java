@@ -6,4 +6,8 @@ public class BMNodeItem extends BMNode {
 		super(x, y, type, true, board);
 	}
 
+	public int getValue() {
+		return type;
+	}
+
 }

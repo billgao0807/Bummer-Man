@@ -24,9 +24,9 @@ public class BMTile extends BMNode {
 			tempItemID = tempItemID % 4;
 			tempItemID += 5;
 			// Let this tile be the randomly generated item type after bombing
-			board[x][y] = new BMBombing(x, y, board, tempItemID);
+			board[x][y] = new BMBombing(x, y, board, tempItemID, null);
 		} else {
-			board[x][y] = new BMBombing(x, y, board, BMNodeType.road);
+			board[x][y] = new BMBombing(x, y, board, BMNodeType.road, null);
 		}
 		return false;
 	}
