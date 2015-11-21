@@ -77,7 +77,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	protected volatile boolean respawning;
 	protected volatile boolean cooling;
 	
-	
+	private int itemCount = 0;
 //	Functions:
 //		+ BMPlayer(int ID, int initialLives, boolean isVIP)
 //		+ setSimulation(BMSimulation simulation)
@@ -95,7 +95,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 //		protected getCoolingTime() : int
 //		protected getDetonatedTime() : int
 //		- canMove() : Boolean
-	private boolean enableMove = true;
+	private volatile boolean enableMove = true;
 	public BMPlayer(int ID, int initialLives){
 		this.ID = ID;
 		this.initialHP = initialLives;
@@ -132,7 +132,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		this.simulation = simulation;
 	}
 	
-	public void killed(){
+	public void killed(int id){
 		if (respawning) return;
 		respawning = true;
 		HP--;
@@ -144,6 +144,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			ie.printStackTrace();
 		}
 		respawning = false;
+		simulation.addKill(id);
 	}
 	
 	public Point getLocation(){
@@ -151,6 +152,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	}
 	
 	public Vector<BMItem> getItemsProcessed(){
+		itemCount++;
 		Vector<BMItem> returnVector = new Vector<BMItem>();
 		//Object [] array = itemQueue.toArray();
 		
@@ -228,10 +230,10 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		}
 	
 	}
-	public synchronized void startMove(int moveType){
+	public void startMove(int moveType){
 		if (enableMove){
-			if (canMove(moveType)) moveHelper(moveType);
 			enableMove = false;
+			if (canMove(moveType)) moveHelper(moveType);
 		}
 	}
 	protected void moveHelper(int moveType){
@@ -261,7 +263,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		}
 		BMNode nextNode = simulation.getNode(location.x/16, location.y/16);
 		if (nextNode instanceof BMBombing){
-			killed();
+			killed(((BMBombing)nextNode).getID());
 		}
 		else if (nextNode instanceof BMNodeItem){
 			BMNodeItem itemNode = (BMNodeItem)nextNode;
@@ -270,6 +272,8 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			
 		}
 	}
+	
+	public int getid(){return ID;}
 	
 	protected boolean canMove(int moveType) {
 		if (hasLost()) return false;
@@ -362,13 +366,14 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	public TreeMap<String,Object> getResult() {
 		TreeMap<String,Object> resultMap = new TreeMap<String,Object>();
 		resultMap.put("ID", ID);
-		resultMap.put("Points", new Integer(calculatePoints()));
+		resultMap.put("points", new Integer(calculatePoints()));
 		resultMap.put("Kill", kills);
-		resultMap.put("Death", new Integer(initialHP-HP));
-		for(int i=0; i<items.size(); i++){
-			resultMap.put("Item " + (i+1), items.get(i));
-		}
+		resultMap.put("death", new Integer(initialHP-HP));
+		resultMap.put("item", itemCount);
 		return resultMap;
-		
+	}
+
+	public void addKill() {
+		kills++;
 	}
 }

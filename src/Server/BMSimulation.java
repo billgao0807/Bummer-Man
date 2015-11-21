@@ -83,6 +83,7 @@ public class BMSimulation extends Thread {
 		Vector<TreeMap<String,Object>> results = new Vector<TreeMap<String,Object>>();
 		for (BMPlayer player : players){
 			TreeMap<String,Object> result = player.getResult();
+			result.put("username", hs.getClients().get(player.getid()).getName());
 			results.add(result);
 		}
 		return results;
@@ -152,5 +153,8 @@ public class BMSimulation extends Thread {
 	}
 	public Vector<BMPlayer> getAllPlayers(){
 		return players;
+	}
+	public void addKill(int id) {
+		players.get(id).addKill();
 	}
 }

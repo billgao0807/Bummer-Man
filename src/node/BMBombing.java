@@ -7,19 +7,20 @@ public class BMBombing extends BMNode{
 
 	private int afterBombingType;
 	private int timeToSleep;
-	private final BMPlayer mPlayer;
+	private int id;
 
-	public BMBombing(int x, int y, BMNode[][] board, int afterBombingType, BMPlayer player) {
+	public BMBombing(int x, int y, BMNode[][] board, int afterBombingType, int id) {
 		super(x, y, BMNodeType.bombing, true, board);
 		this.afterBombingType = afterBombingType;
 		timeToSleep = 30;
-		mPlayer = player;
+		this.id = id;
 		start();
 	}
 
 	@Override
-	public boolean vanish() {
+	public boolean vanish(int id) {
 		timeToSleep = 30;
+		this.id = id;
 		return true;
 	}
 
@@ -45,9 +46,8 @@ public class BMBombing extends BMNode{
 		}
 	}
 	
-	public String getPlayerName() {
-		if (mPlayer == null) return null;
-		return mPlayer.getName();
+	public int getID() {
+		return id;
 	}
 
 }

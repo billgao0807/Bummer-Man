@@ -9,7 +9,7 @@ public class BMRoad extends BMNode {
 	}
 
 	@Override
-	public boolean vanish() {
+	public boolean vanish(int id) {
 		return false;
 	}
 }

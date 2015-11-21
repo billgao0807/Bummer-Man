@@ -1,22 +1,7 @@
 package Utilities;
 
-<<<<<<< HEAD
 import java.io.Serializable;
 
-public class BMResult implements Serializable{
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 5689908122734189437L;
-//	Function:
-//		+ Result(Rating winner, Rating loser)
-//		+ Result(Rating player1, Rating player2, boolean isDraw)
-//	Variable:
-//		- boolean isDraw
-//		- Rating winner
-//		- Rating loser
-=======
 /*
  * Copyright (C) 2013 Jeremy Gooch <http://www.linkedin.com/in/jeremygooch/>
  *
@@ -71,8 +56,6 @@ public class BMResult {
 		this.isDraw = true;
 	}
 
->>>>>>> 58cecb529fc40dedb901642157dd88422e149f09
-	
 	/**
 	 * Check that we're not doing anything silly like recording a match with only one player.
 	 * 

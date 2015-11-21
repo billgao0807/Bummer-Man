@@ -14,7 +14,7 @@ public class BMTile extends BMNode {
 	}
 	
 	@Override
-	public boolean vanish() {
+	public boolean vanish(int id) {
 		int temp = rn.nextInt();
 		
 		// 30% get item, 70% get nothing(just become road)
@@ -24,9 +24,9 @@ public class BMTile extends BMNode {
 			tempItemID = tempItemID % 4;
 			tempItemID += 5;
 			// Let this tile be the randomly generated item type after bombing
-			board[x][y] = new BMBombing(x, y, board, tempItemID, null);
+			board[x][y] = new BMBombing(x, y, board, tempItemID, id);
 		} else {
-			board[x][y] = new BMBombing(x, y, board, BMNodeType.road, null);
+			board[x][y] = new BMBombing(x, y, board, BMNodeType.road, id);
 		}
 		return false;
 	}
