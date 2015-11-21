@@ -60,7 +60,7 @@ public class BMBoardPanel extends JPanel{
 	private PaintedButton SpeedButton, PowerButton, Item1Button, Item2Button , QuitButton;
 	private int[][]map;
 	private KeyListener keylistener;
-	private ClientListener clientListener;
+	private HostClientListener clientListener;
 	private String local_username;
 	private int local_hp;
 	private int total_hp;
@@ -69,10 +69,10 @@ public class BMBoardPanel extends JPanel{
 	private Vector<TreeMap<String,Object>> players;
 
 	
-	public BMBoardPanel(ActionListener playingGame,int time,int[][]map, Vector<TreeMap<String,Object>> players , String username){
+	public BMBoardPanel(ActionListener playingGame,HostClientListener clientListener, int time,int[][]map, Vector<TreeMap<String,Object>> players , String username){
 
 //Panel initialize
-		//this.clientListener = clientListener;
+		this.clientListener = clientListener;
 		this.map=map;
 		this.time =time;
 		location = new Vector<int[]>();
@@ -213,11 +213,19 @@ public class BMBoardPanel extends JPanel{
 	@Override 
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		for (TreeMap<String,Object> player : players){
-			int x = (Integer)(player.get("posX"));
-			int y = (Integer)(player.get("posY"));
-			g.drawImage(img, x*this.boardPanel.getWidth()/256, y*this.boardPanel.getHeight()/256, this.boardPanel);
+		for (int i=0; i<players.size(); i++) {
+			int x =(Integer)players.get(i).get("posX");
+			int y =(Integer)players.get(i).get("poxY");
+			Image image= BMLibrary.readImage("bin/Utilities/images/player" + i + ".png");
+			g.drawImage(image, x*this.boardPanel.getWidth()/256, y*this.boardPanel.getHeight()/256, this.boardPanel);
+
 		}
+//		for (TreeMap<String,Object> player : players){
+//			int x = (Integer)(player.get("posX"));
+//			int y = (Integer)(player.get("posY"));
+//			Image image= BMLibrary.readImage("bin/Utilities/images/player" + i + ".png");
+//			g.drawImage(image, x*this.boardPanel.getWidth()/256, y*this.boardPanel.getHeight()/256, this.boardPanel);
+//		}
 		
 	}
 	

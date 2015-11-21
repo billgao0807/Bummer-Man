@@ -91,17 +91,15 @@ public class ServerClientListener  extends Thread{
 	        }
 	    }
 	 
-	 public void sendworld_rank(String ){
-//		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
-//		 tempMap.put("type", "world_rank");
-//		 tempMap.put("username", username);		
-//		 tempMap.put("password", password);	 
-//	        try {
-//	        	oos.writeObject(tempMap);
-//				oos.flush();
-//	        } catch (Exception e) {
-//	            System.out.println(e.toString());
-//	        }
+	 public void sendworld_rank(){
+		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
+		 tempMap.put("type", "world_rank");
+	        try {
+	        	oos.writeObject(tempMap);
+				oos.flush();
+	        } catch (Exception e) {
+	            System.out.println(e.toString());
+	        }
 	 }
 	 	 
 	 public void sendgame_result(Vector<Dictionary<String, Object>> game_result) {
