@@ -74,8 +74,8 @@ public class HostClientListener  extends Thread{
 	        try {
 //	        	System.out.println("Send move");
 
-	    		System.out.println("Send " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
-	    		BMBoardPanel.a=System.currentTimeMillis();
+//	    		System.out.println("Send " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
+//	    		BMBoardPanel.a=System.currentTimeMillis();
 	        	oos.writeObject(tempMap);
 				oos.flush();
 	        } catch (Exception e) {
@@ -132,8 +132,8 @@ public class HostClientListener  extends Thread{
 					}
 					else if (((String)map.get("type")).equals("move")){
 //						int [][] board = (int[][]) map.get("board");
-				    		System.out.println("Receive " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
-				    		BMBoardPanel.a=System.currentTimeMillis();
+//				    		System.out.println("Receive " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
+//				    		BMBoardPanel.a=System.currentTimeMillis();
 						int time = (int) map.get("time");
 						Vector<TreeMap<String, Object>> players =  (Vector<TreeMap<String, Object>>) map.get("players");
 						clientpanel.boardPanel.set_move(time, players);

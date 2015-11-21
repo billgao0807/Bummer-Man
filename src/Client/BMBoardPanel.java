@@ -11,8 +11,11 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.Point;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
@@ -58,7 +61,7 @@ public class BMBoardPanel extends JPanel{
 	private JLabel TimeLabel, HPLabel,AbilityLabel;
 	private PaintedButton SpeedButton, PowerButton, Item1Button, Item2Button , QuitButton;
 	private Integer[][]map;
-	private KeyListener keylistener;
+	private KeyAdapter keylistener;
 	private HostClientListener clientListener;
 	private String local_username;
 	private int local_hp;
@@ -67,7 +70,7 @@ public class BMBoardPanel extends JPanel{
 	private int time;
 	private Vector<TreeMap<String, Object>> players;
 
-	int keyPressed = 0;
+	volatile int keyPressed = 0;
 	private Thread sending;
 	public static long a;
 
@@ -208,20 +211,23 @@ public class BMBoardPanel extends JPanel{
 	}
 	
 
-	@Override 
-	public void paintComponent(Graphics g){
-		super.paintComponent(g);
-		if (players == null) return;
-//		System.out.println("Player size " + players.size());
-		for (int i=0; i<players.size(); i++) {
-			int x = (int)(players.get(i).get("posX"));
-			int y = (int)(players.get(i).get("posY"));
-			Image image= BMLibrary.readImages("player" + i + ".png");
-			g.drawImage(image, (x-64)*boardPanel.getWidth()/1280+boardPanel.getX(), (y-64)*boardPanel.getHeight()/1280+boardPanel.getY(),boardPanel.getWidth()/16, boardPanel.getHeight()/16, boardPanel);
-		}
-	}
+//	@Override 
+//	public void paintComponent(Graphics g){
+//		super.paintComponent(g);
+//		if (players == null) return;
+////		System.out.println("Player size " + players.size());
+//		for (int i=0; i<players.size(); i++) {
+//			int x = (int)(players.get(i).get("posX"));
+//			int y = (int)(players.get(i).get("posY"));
+//			Image image= BMLibrary.readImages("player" + i + ".png");
+//			g.drawImage(image, (x-64)*boardPanel.getWidth()/1024+boardPanel.getX(), (y-64)*boardPanel.getHeight()/1024+boardPanel.getY(),boardPanel.getWidth()/16, boardPanel.getHeight()/16, boardPanel);
+//		}
+//	}
 	@Override 
 	public void paint(Graphics g){
+
+		  System.out.println("Paint " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
+  			BMBoardPanel.a=System.currentTimeMillis();
 		super.paint(g);
 		if (players == null) return;
 //		System.out.println("Player size " + players.size());
@@ -229,18 +235,18 @@ public class BMBoardPanel extends JPanel{
 			int x = (int)(players.get(i).get("posX"));
 			int y = (int)(players.get(i).get("posY"));
 			Image image= BMLibrary.readImages("player" + i + ".png");
-			g.drawImage(image, (x-64)*boardPanel.getWidth()/1280+boardPanel.getX(), (y-64)*boardPanel.getHeight()/1280+boardPanel.getY(),boardPanel.getWidth()/16, boardPanel.getHeight()/16, boardPanel);
+			g.drawImage(image, (x-64)*boardPanel.getWidth()/1024+boardPanel.getX(), (y-64)*boardPanel.getHeight()/1024+boardPanel.getY(),boardPanel.getWidth()/16, boardPanel.getHeight()/16, boardPanel);
 		}
 	}
 	
 	public void set_move(int time, Vector<TreeMap<String, Object>>  players_){
 		this.players = players_;
 //		paintComponent(this.getGraphics());
-		System.out.println("Start Repaint " +(System.currentTimeMillis()-a) + " ms");
+//		System.out.println("Start Repaint " +(System.currentTimeMillis()-a) + " ms");
 		a=System.currentTimeMillis();
 		this.repaint();
 		validate();	
-		System.out.println("After Repaint " + (System.currentTimeMillis()-a) + " ms");
+//		System.out.println("After Repaint " + (System.currentTimeMillis()-a) + " ms");
 		a=System.currentTimeMillis();
 	}
 	
@@ -251,7 +257,7 @@ public class BMBoardPanel extends JPanel{
 			public void run() {
 				try {
 					while (true){
-						Thread.sleep(10);
+			 			Thread.sleep(10);
 						clientListener.sendMove(keyPressed);
 					}
 				} catch (InterruptedException e) {
@@ -266,18 +272,46 @@ public class BMBoardPanel extends JPanel{
 	
 	//public void set_move( Vector<Dictionary> board,  )
 	public void addAction(){
-		keylistener = new KeyListener(){
+//		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
+//
+//            @Override
+//            public boolean dispatchKeyEvent(KeyEvent ke) {
+//            		int c = ke.getID();
+//            	synchronized (this) {
+//                    if(c == KeyEvent.VK_LEFT)
+//    				    {
+//						clientListener.sendMove(BMMove.left);
+//
+//    				    }
+//    				  else if(c == KeyEvent.VK_RIGHT)
+//    				    {						
+//    					  clientListener.sendMove(BMMove.right);
+//
+//    				    }
+//    				  else if (c == KeyEvent.VK_UP){
+//  						clientListener.sendMove(BMMove.up);
+//
+//    				  }
+//    				  else if (c == KeyEvent.VK_DOWN){
+//  						clientListener.sendMove(BMMove.down);
+//    				  }
+//    				  else if (c == KeyEvent.VK_SPACE){
+//  						clientListener.sendMove(BMMove.bomb);
+//    				  }	 
+//                    return false;
+//                }
+//            }
+//        });
+//		
+//		
+//		
+		
+		this.addKeyListener(new KeyAdapter(){
 
-			@Override
-			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
-			}
-
-			@Override
-			public void keyPressed(KeyEvent e) {
-				// TODO Auto-generated method stub	
-				int c = e.getKeyCode();
-				System.out.println("Press key");
+	        @Override
+	        public void keyPressed(KeyEvent e) {
+	        	int c = e.getKeyCode();
+//				System.out.println("Press key " + c);
 				  if(c == KeyEvent.VK_LEFT)
 				    {
 					  if (keyPressed == 0){
@@ -309,16 +343,27 @@ public class BMBoardPanel extends JPanel{
 						  keyPressed = BMMove.bomb;
 						  startSending();
 					  }
-				  }	    	
-				  System.out.println("Key press " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
-		    			BMBoardPanel.a=System.currentTimeMillis();
-			}
+				  }
+//				  System.out.println("Key press " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
+//		    			BMBoardPanel.a=System.currentTimeMillis();
+//		        		char ch = event.getKeyChar();
+//		
+//			      	System.out.println(event.getKeyChar());
+	        	
+	        }
+	        @Override
+	        public void keyReleased(KeyEvent e) {
+//				  System.out.println("Key release " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
+//	    			BMBoardPanel.a=System.currentTimeMillis();
+//	        		char ch = e.getKeyChar();
+//	
+//		      	System.out.println(e.getKeyChar());
 
-			@Override
-			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub	
 				int c = e.getKeyCode();
-//				System.out.println("Press key");
+//				System.out.println("Release key");
+//				  System.out.println("Key release " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
+//	    			BMBoardPanel.a=System.currentTimeMillis();
+	
 				  if(c == KeyEvent.VK_LEFT)
 				    {
 					  if (keyPressed == BMMove.left){
@@ -356,11 +401,107 @@ public class BMBoardPanel extends JPanel{
 						  sending = null;
 					  }
 				  }	    	
-			}
-			
-		};
-		this.addKeyListener(keylistener);
-		boardPanel.addKeyListener(keylistener);
+	        }
+		});
+//		
+//		keylistener = new KeyAdapter(){
+//			@Override
+//			public void keyPressed(KeyEvent e) {
+//				// TODO Auto-generated method stub	
+//				int c = e.getKeyCode();
+//				System.out.println("Press key");
+//				  if(c == KeyEvent.VK_LEFT)
+//				    {
+//					  if (keyPressed == 0){
+//						  keyPressed = BMMove.left;
+//						  startSending();
+//					  }
+//				    }
+//				  else if(c == KeyEvent.VK_RIGHT)
+//				    {
+//					  if (keyPressed == 0){
+//						  keyPressed = BMMove.right;
+//						  startSending();
+//					  }
+//				    }
+//				  else if (c == KeyEvent.VK_UP){
+//					  if (keyPressed == 0){
+//						  keyPressed = BMMove.up;
+//						  startSending();
+//					  }
+//				  }
+//				  else if (c == KeyEvent.VK_DOWN){
+//					  if (keyPressed == 0){
+//						  keyPressed = BMMove.down;
+//						  startSending();
+//					  }
+//				  }
+//				  else if (c == KeyEvent.VK_SPACE){
+//					  if (keyPressed == 0){
+//						  keyPressed = BMMove.bomb;
+//						  startSending();
+//					  }
+//				  }	    	
+//				  else {
+//
+//					  sending.interrupt();
+//					  keyPressed = 0;
+//					  sending = null;
+//				  }
+//				  System.out.println("Key press " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
+//		    			BMBoardPanel.a=System.currentTimeMillis();
+//			}
+//
+//			@Override
+//			public void keyReleased(KeyEvent e) {
+//				// TODO Auto-generated method stub	
+//				int c = e.getKeyCode();
+//				System.out.println("Release key");
+//				  System.out.println("Key release " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
+//	    			BMBoardPanel.a=System.currentTimeMillis();
+//	
+//				  if(c == KeyEvent.VK_LEFT)
+//				    {
+//					  if (keyPressed == BMMove.left){
+//						  sending.interrupt();
+//						  keyPressed = 0;
+//						  sending = null;
+//					  }
+//				    }
+//				  else if(c == KeyEvent.VK_RIGHT)
+//				    {
+//					  if (keyPressed == BMMove.right){
+//						  sending.interrupt();
+//						  keyPressed = 0;
+//						  sending = null;
+//					  }
+//				    }
+//				  else if (c == KeyEvent.VK_UP){
+//					  if (keyPressed == BMMove.up){
+//						  sending.interrupt();
+//						  keyPressed = 0;
+//						  sending = null;
+//					  }
+//				  }
+//				  else if (c == KeyEvent.VK_DOWN){
+//					  if (keyPressed == BMMove.down){
+//						  sending.interrupt();
+//						  keyPressed = 0;
+//						  sending = null;
+//					  }
+//				  }
+//				  else if (c == KeyEvent.VK_SPACE){
+//					  if (keyPressed == BMMove.bomb){
+//						  sending.interrupt();
+//						  keyPressed = 0;
+//						  sending = null;
+//					  }
+//				  }	    	
+//			}
+//			
+//		};
+//		this.addKeyListener(keylistener);
+//		boardPanel.addKeyListener(keylistener);
 	}
 	
 	public static void set_chat_text(String name, String content){
