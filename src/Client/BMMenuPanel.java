@@ -60,15 +60,16 @@ public class BMMenuPanel extends PaintedPanel{
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(151)
+							.addGap(99)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnStart)
 								.addComponent(portField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(ipField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(141)
-							.addComponent(btnJoin)))
-					.addContainerGap(169, Short.MAX_VALUE))
+							.addGap(133)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnJoin)
+								.addComponent(btnStart))))
+					.addContainerGap(217, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -77,11 +78,11 @@ public class BMMenuPanel extends PaintedPanel{
 					.addComponent(ipField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(portField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(31)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnStart)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnJoin)
-					.addContainerGap(100, Short.MAX_VALUE))
+					.addContainerGap(121, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 //		super(null, true);
