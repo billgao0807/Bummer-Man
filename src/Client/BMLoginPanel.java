@@ -1,31 +1,19 @@
 package Client;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
+import java.awt.Font;
 import java.awt.Image;
-import java.awt.Insets;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Scanner;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
+
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import Utilities.BMLibrary;
-import customUI.PaintedButton;
-import customUI.PaintedPanel;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.SwingConstants;
-import java.awt.Font;
+
+import customUI.PaintedPanel;
 public class BMLoginPanel extends PaintedPanel implements KeyListener{
 	
 	
@@ -39,6 +27,10 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 	private JPanel panel;
 	private JLabel label;
 	private JPanel panel_1;
+	ActionListener signup;
+	ActionListener quickG;
+	ActionListener login;
+	 BMSigninPage signin;
 	
 	BMLoginPanel (ActionListener signup, ActionListener quickG, ActionListener login, Image image)
 	{
@@ -48,6 +40,9 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 		this.addKeyListener(this);
 		Image buttonImage = null;//BMLibrary.readImages(BMLibrary.path+"button.png");
 		setLayout(new BorderLayout(0, 0));
+		this.signup = signup;
+		this.quickG = quickG;
+		this.login = login;
 		
 
 		
@@ -93,7 +88,8 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		System.out.println("Hello2");
-		 BMSigninPage signin = new BMSigninPage();
+		
+		signin = new BMSigninPage(signup,quickG,login);
 		signin.setVisible(true);
 		
 	}
@@ -102,5 +98,13 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 		// TODO Auto-generated method stub
 		System.out.println("Hello3");
 		
+	}
+	public void closeSignup() {
+		signin.setVisible(false);
+		
+	}
+	public BMSigninPage getSignin() {
+		// TODO Auto-generated method stub
+		return signin;
 	}
 }
