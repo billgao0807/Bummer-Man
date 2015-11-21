@@ -28,8 +28,17 @@ public class ServerClientListener  extends Thread{
 
 	//private FactoryClientGUI mFClientGUI;
 	
-	public ServerClientListener(BMClientPanel clientpanel, Socket inSocket) {
-		mSocket = inSocket;
+	public ServerClientListener(BMClientPanel clientpanel, String ip, int host) {
+		try
+		{
+			mSocket = new Socket(ip,host);
+			
+		}
+		catch(IOException ioe)
+		{
+			System.out.println("IOE in SorryClient constructor: " + ioe.getMessage());
+		}
+		
 		//mGManager = inGManager;
 		//mFClientGUI = inFClientGUI;
 		boolean socketReady = initializeVariables();
@@ -144,16 +153,16 @@ public class ServerClientListener  extends Thread{
 						boolean status 	= (boolean) map.get("status");
 						String errMsg = (String) map.get("errMsg");
 						TableModel rank_table = (TableModel) map.get("table");
-						if (status)BMRankPanel.set_my_rank(rank_table);
-						else {System.out.println("my_rank error " + errMsg);}
+//						if (status)BMRankPanel.set_my_rank(rank_table);
+//						else {System.out.println("my_rank error " + errMsg);}
 						
 					}
 					else if (((String)map.get("type")).equals("world_rank")){
 						boolean status 	= (boolean) map.get("status");
 						String errMsg = (String) map.get("errMsg");
 						TableModel rank_table = (TableModel) map.get("table");
-						if (status)BMRankPanel.set_world_rank(rank_table);
-						else {System.out.println("world_rank error " + errMsg);}
+//						if (status)BMRankPanel.set_world_rank(rank_table);
+//						else {System.out.println("world_rank error " + errMsg);}
 
 						
 					}

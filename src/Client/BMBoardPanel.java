@@ -232,10 +232,10 @@ public class BMBoardPanel extends JPanel{
 	public void set_move(int[][]board, int time, Vector<TreeMap<String,Object>>  players_){
 		this.players = players_;
 		revalidate();
-		repaint();
-		
+		repaint();		
 		repaintBoard(board);
-	}						
+	}	
+	
 
 	
 	//public void set_move( Vector<Dictionary> board,  )
@@ -320,17 +320,18 @@ public class BMBoardPanel extends JPanel{
 			
 			if(node_type == 0){
 				//road
-				setImage(BMLibrary.getImages("road"));
+				setImage(Utilities.BMLibrary.readImages("bin/Utilities/images/wall0.jpg"));
+
 				
 			}
 			else if(node_type == 1){
 				//wall
-				setImage(BMLibrary.getImages("wall"));
+				setImage(Utilities.BMLibrary.readImages("bin/Utilities/images/wall1.jpg"));
 
 			}
 			else if(node_type == 2){
 				//tile
-				setImage(BMLibrary.getImages("tile"));
+				setImage(Utilities.BMLibrary.readImages("bin/Utilities/images/wall2.jpg"));
 
 			}
 			else if(node_type == 3){

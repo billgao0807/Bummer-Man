@@ -26,9 +26,18 @@ public class HostClientListener  extends Thread{
 	private BMClientPanel clientpanel;
 
 	
-	public HostClientListener(BMClientPanel clientpanel, Socket inSocket) {
-		mSocket = inSocket;
-		//mFClientGUI = inFClientGUI;
+	public HostClientListener(BMClientPanel clientpanel, String ip, int host) {		
+		try
+		{
+			mSocket = new Socket(ip,host);
+			
+		}
+		catch(IOException ioe)
+		{
+			System.out.println("IOE in SorryClient constructor: " + ioe.getMessage());
+		}
+	
+		this.clientpanel = clientpanel;
 		boolean socketReady = initializeVariables();
 		if (socketReady) {
 			start();
@@ -95,9 +104,12 @@ public class HostClientListener  extends Thread{
 					if (((String)map.get("type")).equals("join")){
 						int time = (int )map.get("time");
 						int hp = (int) map.get("hp");
-						Vector<String> player = (Vector<String>) map.get("player");				
+						boolean status 	= (boolean) map.get("status");
+						String errMsg = (String) map.get("errMsg");
+						Vector<TreeMap<String,Object>> player = (Vector<TreeMap<String,Object>>) map.get("player");				
 						
-						BMRoomPanel.set_player(player);
+						if (status) clientpanel.set_join(player, hp, time);
+						else System.out.println("join error" + errMsg);
 						
 						
 					}
@@ -109,15 +121,16 @@ public class HostClientListener  extends Thread{
 						//receive { type = start, board = 2D array of integers represent the board, time = xxx, players =  (Vector<Dictionary>) [ { username = xxx, posX =  x, posY = y, hp = xxx, speed = xxx, power = xxx, item1 = xxx, item2 = xxx } ] }
 						int [][] board = (int[][]) map.get("board");
 						int time = (int) map.get("time");
-						Vector<Dictionary> players =  (Vector<Dictionary>) map.get("players");
-	?					BMClientPanel.set_start(board, time, players);
+						
+						Vector<TreeMap<String,Object>> players =  (Vector<TreeMap<String,Object>>) map.get("players");
+						clientpanel.set_start(board, time, players);
 					}
 					else if (((String)map.get("type")).equals("move")){
 						
 						int [][] board = (int[][]) map.get("board");
 						int time = (int) map.get("time");
-						Vector<Dictionary> players =  (Vector<Dictionary>) map.get("players");
-						BMBoardPanel.set_move(board, time, players);
+						Vector<TreeMap<String,Object>> players =  (Vector<TreeMap<String,Object>>) map.get("players");
+						clientpanel.boardPanel.set_move(board, time, players);
 					
 					}
 					else if (((String)map.get("type")).equals("msg")){
