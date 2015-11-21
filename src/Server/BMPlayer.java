@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.TreeMap;
 import java.util.Vector;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -17,6 +18,7 @@ import node.BMTile;
 import node.BMWall;
 
 import Utilities.BMItem;
+import Utilities.BMResult;
 
 public abstract class BMPlayer extends Thread implements Serializable{
 //	Store all the information of a player. The functions support all possible actions of the player.
@@ -68,6 +70,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	protected int kills;
 	protected int ID;
 	protected boolean lost;
+	protected int playerNumber;
 	protected BMSimulation simulation;
 	
 	private Lock mLock;
@@ -256,7 +259,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 					cooling = true;
 					break;
 		}
-		BMNode nextNode = simulation.getNode(new Point(location.x/16, location.y/16));
+		BMNode nextNode = simulation.getNode(location.x/16, location.y/16);
 		if (nextNode instanceof BMBombing){
 			killed();
 		}
@@ -350,7 +353,22 @@ public abstract class BMPlayer extends Thread implements Serializable{
 				break;
 		}
 		initialLocation = new Point(location.x, location.y);
+		this.playerNumber = playerNumber;
 	}
 	
-	
+	private int calculatePoints(){
+		return 10*kills - 5*(initialHP-HP);
+	}
+	public TreeMap<String,Object> getResult() {
+		TreeMap<String,Object> resultMap = new TreeMap<String,Object>();
+		resultMap.put("ID", ID);
+		resultMap.put("Points", new Integer(calculatePoints()));
+		resultMap.put("Kill", kills);
+		resultMap.put("Death", new Integer(initialHP-HP));
+		for(int i=0; i<items.size(); i++){
+			resultMap.put("Item " + (i+1), items.get(i));
+		}
+		return resultMap;
+		
+	}
 }

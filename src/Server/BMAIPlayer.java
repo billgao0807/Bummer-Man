@@ -269,7 +269,7 @@ public class BMAIPlayer extends BMPlayer {
 	private int potentialBombing(Point point) {
 		int sum = 0;
 		BMNode node = simulation.getNode(point.x, point.y);
-		if (node instanceof BMBomb) sum += ((BMNode)node).getPower()*potentialBombingMultiplier;
+		if (node instanceof BMBomb) sum += ((BMBomb)node).getPower()*potentialBombingMultiplier;
 		
 		int upX = point.x;
 		int upY = point.y;

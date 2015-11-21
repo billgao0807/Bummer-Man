@@ -94,7 +94,7 @@ public class BMSimulation extends Thread {
 		return board[x][y];
 	}
 	public void dropBomb(int x, int y, BMPlayer player){
-		board[x][y] = new BMBomb(x,y,board,player.power,player.detonatedTime);
+		board[x][y] = new BMBomb(x,y,board,player);
 	}
 	public void startGame(int type){
 		Vector<BMClient> clients = hs.getClients();
