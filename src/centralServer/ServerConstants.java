@@ -6,17 +6,17 @@ public class ServerConstants {
 	public static final String SIGNUP = "signup";
 	public static final String LOGOUT = "logout";
 	public static final String DISCONNECT = "disconnect";
-	public static final String SUCCESSFULLOGIN = " SUCCESFULLY LOGGED IN |";
-	public static final String LOGINFAILED = " LOGIN FAILED |";
-	public static final String SUCCESSFULLOGOUT = " SUCCESFULLY LOGGED OUT |";
-	public static final String LOGOUTFAILED = " LOGOUT FAILED |";
-	public static final String SUCCESSFULSIGNUP = " SUCCESFULLY SIGNED UP |";
-	public static final String SIGNUPFAILED = " SIGNUP FAILED |";
+	public static final String SUCCESSFULLOGIN = " SUCCESFULLY LOGGED IN | ";
+	public static final String LOGINFAILED = " LOGIN FAILED | ";
+	public static final String SUCCESSFULLOGOUT = " SUCCESFULLY LOGGED OUT | ";
+	public static final String LOGOUTFAILED = " LOGOUT FAILED | ";
+	public static final String SUCCESSFULSIGNUP = " SUCCESFULLY SIGNED UP | ";
+	public static final String SIGNUPFAILED = " SIGNUP FAILED | ";
 	
 	public static final String REQUESTPERSONALRECORD = "Request for Personal Record";
 	public static final String REQUESTWORLDRANKING = "Request for World Rankings";
-	public static final String SENDINGPERSONALRECORD = "Sending Personal Record |";
-	public static final String SENDINGWORLDRANKING = "Sending World Ranking |s";
+	public static final String SENDINGPERSONALRECORD = "Sending Personal Record | ";
+	public static final String SENDINGWORLDRANKING = "Sending World Ranking | ";
 	
 	public static final String WorldRankingFetchFailure = "Error retrieving World Ranking";
 	public static final String PersonalRankingFetchFailure = "Error retrieving Personal Record";
@@ -25,13 +25,13 @@ public class ServerConstants {
 	public static final String NotConnected = "Not Connected to Server";
 	
 	
-	public static final String VIPSTATUSREQUEST = "VIP Status Request";
+	public static final String VIPSTATUSREQUEST = "VIP Status Request Received | ";
 	public static final String VIPSTATUSTRUE = "User is a VIP";
 	public static final String VIPSTATUSFALSE = "User is not a VIP";
 	
 	
 	/*
-	 * PortGUI Constants (copied from Factory code)
+	 * PortGUI and other GUI Constants (copied from Factory code)
 	 */
 	public static final int lowPort = 0;
 	public static final int highPort = 65535;
@@ -49,6 +49,8 @@ public class ServerConstants {
 	
 	public static final String startClientConnectedString = "Client with IP address ";
 	public static final String endClientConnectedString = " connected.";
-	public static final String clientDisconnected = "BMClient disconnected.";
+	public static final String clientDisconnected = "BMClient disconnected | ";
 	
+	public static final String connectionToMySQL = "Successful Connection to MySQL | ";
+	public static final String failedConnectionToMySQL = "Failed to Connect to MySQL | ";
 }

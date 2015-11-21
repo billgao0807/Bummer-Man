@@ -13,10 +13,11 @@ public class MySQLDriver {
 	private Connection con;
 	private final static String selectUser = "SELECT * FROM USERS WHERE USERNAME=?";
 	private final static String deleteUser = "DELETE FROM USERS WHERE USERNAME=? AND PASS=?";
-	private final static String selectRank = "SELECT * FROM WORLDRANKS WHERE RANK=?";
+	//private final static String selectRank = "SELECT * FROM WORLDRANKS WHERE RANK=?";
 	private final static String addUser = "INSERT INTO USERS(USERNAME,PASS,VIP,RATING,RATINGDEVIATION,VOLATIVITY) VALUES(?,?,?,?,?,?)";
+	private final static String sortByRank = "ALTER TABLE USERS ORDER BY RATING DESC";
 	
-	private final static String connectionString = "jdbc:mysql://localhost:3306/bomberman?user=root&password=";
+	private final static String connectionString = "jdbc:mysql://localhost:3306/bomberman?user=root&password=root";
 	
 	public MySQLDriver() {
 		try {
@@ -33,8 +34,10 @@ public class MySQLDriver {
 	public void connect() {
 		try {
 			con = DriverManager.getConnection(connectionString);
+			BMCentralServerGUI.addMessage(ServerConstants.connectionToMySQL + connectionString);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			BMCentralServerGUI.addMessage(ServerConstants.failedConnectionToMySQL + connectionString);
 		}
 	}
 	public void stop() {
@@ -59,6 +62,9 @@ public class MySQLDriver {
 			ps.setDouble(6, 0);
 			ps.executeUpdate();
 			System.out.println("Adding User:" + userName);
+			
+			ps = con.prepareStatement(sortByRank);
+			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

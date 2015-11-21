@@ -53,8 +53,9 @@ public class BMCentralServerClient extends Thread {
 			running = true;
 			start();
 		} catch(IOException ioe) {
-			ioe.printStackTrace();
+			//ioe.printStackTrace();
 			running = false;
+			System.out.println(ServerConstants.CannotCompleteRequest + "Can't a connect to localhost" + ":" + port);
 		}
 	}
 	
@@ -66,8 +67,9 @@ public class BMCentralServerClient extends Thread {
 			running = true;
 			start();
 		} catch(IOException ioe) {
-			ioe.printStackTrace();
+			//ioe.printStackTrace();
 			running = false;
+			System.out.println(ServerConstants.CannotCompleteRequest + "Can't a connect to localhost" + ":" + port);
 		}
 	}
 	
@@ -80,9 +82,10 @@ public class BMCentralServerClient extends Thread {
 		UserPasswordInfo upi = new UserPasswordInfo(username, password, ServerConstants.LOGIN);
 		try {
 			sendObject(upi);
-			loginResult.await();
-		} catch (IOException e) {
-			e.printStackTrace();
+			if (running) loginResult.await();
+		} catch (IOException | NullPointerException e) {
+			//e.printStackTrace();
+			System.out.println(ServerConstants.CannotCompleteRequest + ServerConstants.NotLoggedIn);
 		} catch (InterruptedException ie) {
 			System.out.println("LOGIN INTERRUPTED");
 		}
@@ -98,9 +101,12 @@ public class BMCentralServerClient extends Thread {
 		try {
 			sendObject(upi);
 			signupResult.await();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException | NullPointerException e) {
+			//e.printStackTrace();
+			signupSuccess = false;
+			System.out.println(ServerConstants.CannotCompleteRequest + ServerConstants.NotLoggedIn);
 		} catch (InterruptedException ie) {
+			signupSuccess = false;
 			System.out.println("SIGNUP INTERRUPTED");
 		}
 		mLock.unlock();
@@ -113,12 +119,13 @@ public class BMCentralServerClient extends Thread {
 			System.out.println(ServerConstants.CannotCompleteRequest + ServerConstants.NotLoggedIn);
 			return null;
 		}
+		
 		mLock.lock();
 		try {
 			sendObject(ServerConstants.VIPSTATUSREQUEST);
 			vipResult.await();
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			//ioe.printStackTrace();
 			System.out.println(ServerConstants.CannotCompleteRequest + ServerConstants.NotConnected);
 		} catch (InterruptedException ie) {
 			ie.printStackTrace();
@@ -127,20 +134,20 @@ public class BMCentralServerClient extends Thread {
 		
 		mLock.unlock();
 		return vipStatus;
-		
-		
 	}
 	
 	/*
 	 * Logs out of the server
 	 */
 	public void logout() {
-		System.out.println("**LOGGING OUT**");
-		try {
-			sendObject(ServerConstants.LOGOUT);
-		} catch (IOException e) {
-			//e.printStackTrace();
-			System.out.println(ServerConstants.LOGOUTFAILED);
+		if (running) {
+			System.out.println("**LOGGING OUT**");
+			try {
+				sendObject(ServerConstants.LOGOUT);
+			} catch (IOException e) {
+				//e.printStackTrace();
+				System.out.println(ServerConstants.LOGOUTFAILED);
+			}
 		}
 	}
 	public void disconnect() {
@@ -176,10 +183,9 @@ public class BMCentralServerClient extends Thread {
 	/*
 	 * Helper Methods
 	 */
-	private synchronized boolean sendObject(Object obj) throws IOException {
+	private synchronized boolean sendObject(Object obj) throws IOException, NullPointerException {
 		oos.writeObject(obj);
 		oos.flush();
-		
 		return true;
 	}
 	/*
@@ -235,8 +241,8 @@ public class BMCentralServerClient extends Thread {
 				}
 			}
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
-			System.out.println("Can't connect to Central Server at " + s.getInetAddress() + ":" + s.getPort());
+			//ioe.printStackTrace();
+			System.out.println("Lost connection to Central Server at " + s.getInetAddress() + ":" + s.getPort());
 		} finally {
 			if (s != null) {
 				try {
@@ -246,6 +252,22 @@ public class BMCentralServerClient extends Thread {
 					System.out.println(ServerConstants.LOGOUTFAILED);
 				}
 			}
+		}
+	}
+	
+	
+	/*
+	 * For debugging
+	 */
+	public static void main(String args[]) {
+		try {
+			BMCentralServerClient csc = new BMCentralServerClient(6789);
+			csc.login("TurdFerguson", "hello");
+			csc.signup("TurdFerguson", "hello");
+			csc.login("TurdFerguson", "hello");
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 }

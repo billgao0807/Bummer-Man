@@ -21,6 +21,7 @@ public class BMCentralServer extends Thread {
 	{
 		csccVector = new Vector<BMCentralServerClientCommunicator>();
 		msqlDriver = new MySQLDriver();
+		new BMCentralServerGUI();
 		//sqlLock = new ReentrantLock();
 	}
 	
@@ -63,7 +64,7 @@ public class BMCentralServer extends Thread {
 		try {
 			while(true) {
 				Socket s = ss.accept();
-				System.out.println(ServerConstants.startClientConnectedString + s.getInetAddress() + ServerConstants.endClientConnectedString);
+				BMCentralServerGUI.addMessage(ServerConstants.startClientConnectedString + s.getInetAddress() + ServerConstants.endClientConnectedString);
 				try {
 					// this line can throw an IOException
 					// if it does, we won't start the thread

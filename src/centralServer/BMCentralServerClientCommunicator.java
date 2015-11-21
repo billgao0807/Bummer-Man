@@ -37,9 +37,13 @@ public class BMCentralServerClientCommunicator extends Thread {
 				currentUPI = upi;
 				if (bmcs.isVIP(currentUPI.getUsername())) currentUPI.setVIPStatus(ServerConstants.VIPSTATUSTRUE);
 				sendObject(ServerConstants.SUCCESSFULLOGIN);
+				
+				BMCentralServerGUI.addMessage(ServerConstants.SUCCESSFULLOGIN + upi.getUsername());
 			} else {
 				currentUPI = null;
 				sendObject(ServerConstants.LOGINFAILED);
+				
+				BMCentralServerGUI.addMessage(ServerConstants.LOGINFAILED + upi.getUsername());
 			}
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -50,7 +54,9 @@ public class BMCentralServerClientCommunicator extends Thread {
 		try {
 			if (bmcs.signup(upi.getUsername(), upi.getPassword())) {
 				sendObject(ServerConstants.SUCCESSFULSIGNUP);
+				BMCentralServerGUI.addMessage(ServerConstants.SUCCESSFULSIGNUP + upi.getUsername());
 			} else {
+				BMCentralServerGUI.addMessage(ServerConstants.SIGNUPFAILED + upi.getUsername());
 				sendObject(ServerConstants.SIGNUPFAILED);
 			}
 		} catch (IOException ioe) {
@@ -85,14 +91,18 @@ public class BMCentralServerClientCommunicator extends Thread {
 					if (obj instanceof String) {
 						String str = (String) obj;
 						if (str.equals(ServerConstants.LOGOUT)) {
+							BMCentralServerGUI.addMessage(ServerConstants.SUCCESSFULLOGOUT + currentUPI.getUsername());
+							
 							currentUPI = null;
 							sendObject(ServerConstants.SUCCESSFULLOGOUT);
 						}
 						else if (str.equals(ServerConstants.VIPSTATUSREQUEST)) {
 							if (currentUPI != null) {
 								sendObject(currentUPI.getVIPStatus());
+								BMCentralServerGUI.addMessage(ServerConstants.VIPSTATUSREQUEST + currentUPI.getUsername());
 							}
 						} else if (str.equals(ServerConstants.DISCONNECT)) {
+							BMCentralServerGUI.addMessage(ServerConstants.clientDisconnected);
 							running = false;
 						}
 					}
@@ -111,7 +121,7 @@ public class BMCentralServerClientCommunicator extends Thread {
 			System.out.println("Trouble connecting to client");
 		} finally {
 			bmcs.removeServerClientCommunicator(this);
-			System.out.println(s.getInetAddress() + ":" + s.getPort() + " - " + ServerConstants.clientDisconnected);
+			BMCentralServerGUI.addMessage(s.getInetAddress() + ":" + s.getPort() + " - " + ServerConstants.clientDisconnected);
 			// this means that the socket is closed since no more lines are being received
 			try {
 				s.close();
