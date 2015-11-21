@@ -34,7 +34,7 @@ public class BMLibrary {
 		}
 		return img;
 	}
-	public int[ ][ ] getGameMap(){
+	public static int[ ][ ] getGameMap(){
 		int [][] gamemap = new int[16][16];
 		
 		
