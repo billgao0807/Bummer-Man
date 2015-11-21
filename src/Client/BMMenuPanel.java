@@ -22,7 +22,8 @@ public class BMMenuPanel extends PaintedPanel{
 	private JPanel b1 = new JPanel();
 	private JPanel b2 = new JPanel();
 	private JPanel b3 = new JPanel();
-	
+	public JTextField port;
+	public JTextField IP;
 	
 	
 	BMMenuPanel(ActionListener host, ActionListener join, ActionListener rank)
@@ -32,8 +33,12 @@ public class BMMenuPanel extends PaintedPanel{
 		titlePanel.add(title);
 		start = new PaintedButton("Start", null, null, 20);
 		
-		JTextField port = new JTextField(30);
+		port = new JTextField(30);
+		IP = new JTextField(40);
+		
+		
 		b1.add(port);
+		b1.add(IP);
 		start.addActionListener(host);
 		b1.add(start);
 		joinG = new PaintedButton("Join", null, null, 20);

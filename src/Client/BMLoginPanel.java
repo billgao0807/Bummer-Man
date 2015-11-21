@@ -38,7 +38,7 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 	private JLabel title;
 	private JLabel username;
 	private JLabel password;
-	private JTextField nameInput;
+	public JTextField nameInput;
 	private JTextField passwordInput;
 	private JButton signupB;
 	private JButton quickGameB;
