@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
@@ -28,9 +29,9 @@ public class BMRoomPanel extends PaintedPanel{
 	private JPanel startAIP = new JPanel();
 	private JPanel quitP = new JPanel();
 	
-	BMRoomPanel(ActionListener startP, ActionListener startB, ActionListener quit)
+	BMRoomPanel(ActionListener startP, ActionListener startB, ActionListener quit,Image image)
 	{
-		super(null, true);
+		super(image, true);
 		time = new JLabel("Time:");
 		HP = new JLabel("HP:");
 		

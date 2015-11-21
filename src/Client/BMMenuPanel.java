@@ -2,6 +2,7 @@ package Client;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionListener;
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -13,7 +14,7 @@ import customUI.PaintedPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
-public class BMMenuPanel extends JPanel{
+public class BMMenuPanel extends PaintedPanel{
 	private JLabel title;
 	private JButton start;
 	private JButton joinG;
@@ -28,9 +29,9 @@ public class BMMenuPanel extends JPanel{
 	public JTextField portField;
 	
 	
-	BMMenuPanel(ActionListener host, ActionListener join, ActionListener rank)
+	BMMenuPanel(ActionListener host, ActionListener join, ActionListener rank, Image image)
 	{
-		
+		super(image,true);
 		ipField = new JTextField();
 		ipField.setText("ip");
 		ipField.setColumns(10);

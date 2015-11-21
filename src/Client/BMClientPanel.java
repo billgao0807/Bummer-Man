@@ -107,7 +107,7 @@ public class BMClientPanel extends JPanel{
 				BMClientPanel.this.revalidate();
 				
 			}
-		}
+		}, BMLibrary.readImages("menu.png")
 	);
 
 		boardPanel = new BMBoardPanel(new ActionListener(){
@@ -147,7 +147,7 @@ public class BMClientPanel extends JPanel{
 					BMClientPanel.this.revalidate();
 					
 				}
-			}
+			},BMLibrary.readImages("menu.png")
 			);
 		
 	rankPanel = new BMRankPanel(new ActionListener(){
