@@ -31,7 +31,7 @@ public class BMSimulation extends Thread {
 	public BMSimulation(BMPlayer host, int port, int numPlayer){
 		this.numPlayer = numPlayer; 
 		players = new Vector<BMPlayer>();
-		BMHostServer hs = new BMHostServer(port,numPlayer);
+		hs = new BMHostServer(port,numPlayer);
 		hs.setSimulation(this);
 		loadBoard(BMLibrary.getGameMap());
 	}
@@ -74,7 +74,7 @@ public class BMSimulation extends Thread {
 	public Vector<String> getHPs(){
 		Vector<String> HPs = new Vector<String>();
 		for (BMPlayer player : players){
-			String hp = player.getHP();
+			String hp = player.getHP() + "/" + totalHP;
 			HPs.add(hp);
 		}
 		return HPs;
@@ -99,13 +99,13 @@ public class BMSimulation extends Thread {
 	public void startGame(int type){
 		Vector<BMClient> clients = hs.getClients();
 		for (int i = 0; i < clients.size(); i++){
-			BMPlayer player = new BMRealPlayer();
+			BMPlayer player = new BMRealPlayer(i,totalHP);
 			clients.get(i).setPlayer(player);
 			players.add(player);
 		}
 		if (type == start_with_AI){
 			for (int i = 0; i < numPlayer-clients.size(); i++){
-				players.add(new BMAIPlayer());
+				players.add(new BMAIPlayer(totalHP));
 			}
 		}
 		TreeMap<String,Object> map = new TreeMap<String,Object>();
