@@ -9,6 +9,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.Scanner;
 
 import javax.swing.Box;
@@ -31,7 +33,7 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 
 
-public class BMLoginPanel extends PaintedPanel{
+public class BMLoginPanel extends PaintedPanel implements KeyListener{
 	
 	private JLabel title;
 	private JLabel username;
@@ -47,10 +49,12 @@ public class BMLoginPanel extends PaintedPanel{
 	private JLabel label;
 	private JPanel panel_1;
 	
-	
 	BMLoginPanel (ActionListener signup, ActionListener quickG, ActionListener login, Image image)
 	{
 		super(image);
+		this.setFocusable(true);
+		this.requestFocusInWindow();
+		this.addKeyListener(this);
 		Image buttonImage = BMLibrary.readImages("bin/Utilities/images/button.png");
 		setLayout(new BorderLayout(0, 0));
 		
@@ -60,6 +64,7 @@ public class BMLoginPanel extends PaintedPanel{
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		
 		nameInput = new JTextField();
+		nameInput.setVisible(false);
 		panel.add(nameInput);
 		nameInput.setText("Username: ");
 		nameInput.setForeground(Color.GRAY);
@@ -67,6 +72,7 @@ public class BMLoginPanel extends PaintedPanel{
 		
 		
 		passwordInput = new JTextField();
+		passwordInput.setVisible(false);
 		panel.add(passwordInput);
 		passwordInput.setText("Password:");
 		passwordInput.setForeground(Color.GRAY);
@@ -74,10 +80,13 @@ public class BMLoginPanel extends PaintedPanel{
 
 		panel.add(Box.createHorizontalStrut(100));
 		signupB = new PaintedButton("Sign up", buttonImage, buttonImage, 20);
+		signupB.setVisible(false);
 		panel.add(signupB);
 		quickGameB = new PaintedButton("Quick Game", buttonImage, buttonImage, 20);
+		quickGameB.setVisible(false);
 		panel.add(quickGameB);
 		loginB = new PaintedButton("Log In", buttonImage, buttonImage, 20);
+		loginB.setVisible(false);
 		panel.add(loginB);
 		
 		panel_1 = new JPanel();
@@ -92,6 +101,7 @@ public class BMLoginPanel extends PaintedPanel{
 		quickGameB.addActionListener(quickG);
 		signupB.addActionListener(signup);
 		
+		/*
 		Scanner keyboard = new Scanner(System.in);
 		if (keyboard.nextLine() != null)
 		{
@@ -104,6 +114,7 @@ public class BMLoginPanel extends PaintedPanel{
 			
 			
 		}
+		*/
 		
 		new Thread(new Runnable(){
 			@Override
@@ -125,6 +136,27 @@ public class BMLoginPanel extends PaintedPanel{
 				}
 			}			
 		}).start();
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("Hello1");
+		
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("Hello2");
+		
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("Hello3");
+		
 	}
 
 }
