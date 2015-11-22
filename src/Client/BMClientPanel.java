@@ -216,6 +216,7 @@ public class BMClientPanel extends JPanel{
 				BMClientPanel.this.removeAll();
 				BMClientPanel.this.add(menuPanel);
 				BMClientPanel.this.revalidate();
+				BMClientPanel.this.repaint();
 			}
 		});
 	roomPanel = new BMRoomPanel(identity,
