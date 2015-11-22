@@ -29,7 +29,9 @@ public class BMSimulation extends Thread {
 	public final static int start_with_AI = 1;
 	
 	public BMSimulation(int port, int numPlayer){
+		System.out.println("num of player "+ numPlayer);
 		this.numPlayer = numPlayer; 
+		if (this.numPlayer > 4) numPlayer = 4;
 		players = new Vector<BMPlayer>();
 		hs = new BMHostServer(port,numPlayer);
 		hs.setSimulation(this);
@@ -99,6 +101,7 @@ public class BMSimulation extends Thread {
 		board[x][y] = new BMBomb(x,y,board,player);
 	}
 	public void startGame(int type){
+		if (numPlayer > 4) numPlayer = 4;
 		Vector<BMClient> clients = hs.getClients();
 		for (int i = 0; i < clients.size(); i++){
 			System.out.println("Client name");
@@ -108,8 +111,10 @@ public class BMSimulation extends Thread {
 			players.add(player);
 		}
 		if (type == start_with_AI){
-			for (int i = 0; i < numPlayer-clients.size(); i++){
-				players.add(new BMAIPlayer(totalHP));
+			for (int i = clients.size(); i < numPlayer; i++){
+				BMAIPlayer player = new BMAIPlayer(i,totalHP);
+				player.setSimulation(this);
+				players.add(player);
 			}
 		}
 		TreeMap<String,Object> map = new TreeMap<String,Object>();
