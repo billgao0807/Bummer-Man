@@ -95,24 +95,24 @@ class signIn extends PaintedPanel
 		password.setOpaque(false);
 		password.add(passwordInput, gbc1);
 		
-		signupB = new PaintedButton("Sign up",BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 20);
+		signupB = new PaintedButton("Sign up",BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 18);
 		signupB.addActionListener(signup);
-		signupB.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 30));
+		signupB.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		JPanel signupP = new JPanel();
 		signupP.add(new ClearPanel());
 		signupP.add(signupB);
 		signupP.setOpaque(false);
-		quickGameB = new PaintedButton("Quick Game", BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 20);
+		quickGameB = new PaintedButton("Quick Game", BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 18);
 		quickGameB.addActionListener(quickG);
-		quickGameB.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 30));
+		quickGameB.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		JPanel quickGame = new JPanel();
 		quickGame.setOpaque(false);
 		quickGame.add(quickGameB);
-		loginB = new PaintedButton("Log In", BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 20);
+		loginB = new PaintedButton("Log In", BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 18);
 		//loginB.addActionListener(
 			//	);
 		loginB.addActionListener(login);
-		loginB.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 30));
+		loginB.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		JPanel loginP = new JPanel();
 		loginP.setOpaque(false);
 		loginP.add(loginB);

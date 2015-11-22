@@ -1,5 +1,7 @@
 package Client;
 
+import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionListener;
@@ -12,9 +14,11 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import Utilities.BMFontLibrary;
 import Utilities.BMLibrary;
 import customUI.PaintedButton;
 import customUI.PaintedPanel;
+import javax.swing.SwingConstants;
 
 public class BMRoomPanel extends PaintedPanel{
 	private JLabel time;
@@ -76,12 +80,34 @@ public class BMRoomPanel extends PaintedPanel{
 		left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
 		left.setBounds(0, 0, this.getWidth()/3, this.getHeight()/2);
 
+		JPanel lt = new JPanel();
+		lt.setLayout(new BorderLayout());
+		lt.setOpaque(false);
+		JLabel username0 = new JLabel("player0");
+		username0.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
+		username0.setHorizontalAlignment(SwingConstants.CENTER);
+		username0.setOpaque(false);
+		username0.setAlignmentY(CENTER_ALIGNMENT);
 		player0 = new PaintedPanel(BMLibrary.readImages("player0.png"));
-		left.add(player0);
+		lt.add(username0, BorderLayout.NORTH);
+		lt.add(player0,BorderLayout.CENTER);
+		left.add(lt);
 		player0.setLayout(new GridLayout(1, 0, 0, 0));
-
+		
+		JPanel ll = new JPanel();
+		ll.setLayout(new BorderLayout());
+		ll.setOpaque(false);
+		JLabel username1 = new JLabel("player1");
+		username1.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
+		username1.setHorizontalAlignment(SwingConstants.CENTER);
+		username1.setOpaque(false);
+		username1.setAlignmentY(CENTER_ALIGNMENT);
 		player1 = new PaintedPanel(BMLibrary.readImages("player1.png"));
-		left.add(player1);
+		ll.add(username1, BorderLayout.NORTH);
+		ll.add(player1, BorderLayout.CENTER);
+		left.add(ll);
+
+		
 
 		JPanel mid = new JPanel();
 
@@ -97,12 +123,15 @@ public class BMRoomPanel extends PaintedPanel{
 		}
 		comboBox_1.setBorder(BorderFactory.createEmptyBorder(0, 0, 60, 0));
 		JButton btnPlay = new JButton("Play");
+		btnPlay.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		btnPlay.setAlignmentX(CENTER_ALIGNMENT);
 		btnPlay.addActionListener(startP);
 		JButton btnPlayai = new JButton("Play(AI)");
 		btnPlayai.addActionListener(startB);
 		btnPlayai.setAlignmentX(CENTER_ALIGNMENT);
+		btnPlayai.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		JButton btnQuit = new JButton("Quit");
+		btnQuit.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		btnQuit.addActionListener(quit);
 		btnQuit.setAlignmentX(CENTER_ALIGNMENT);
 		mid.setLayout(new BoxLayout(mid, BoxLayout.Y_AXIS));
@@ -120,41 +149,7 @@ public class BMRoomPanel extends PaintedPanel{
 		add(mid);
 
 
-		//		GroupLayout gl_mid = new GroupLayout(mid);
-		//		gl_mid.setHorizontalGroup(
-		//			gl_mid.createParallelGroup(Alignment.LEADING)
-		//				.addGroup(gl_mid.createSequentialGroup()
-		//					.addGap(30)
-		//					.addComponent(comboBox, 0, 90, Short.MAX_VALUE)
-		//					.addGap(30))
-		//				.addGroup(gl_mid.createSequentialGroup()
-		//					.addGap(30)
-		//					.addComponent(comboBox_1, 0, 90, Short.MAX_VALUE)
-		//					.addGap(30))
-		//				.addGroup(gl_mid.createSequentialGroup()
-		//					.addGap(37)
-		//					.addComponent(btnPlay, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-		//					.addGap(38))
-		//				.addGroup(gl_mid.createSequentialGroup()
-		//					.addGap(30)
-		//					.addComponent(btnPlayai, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-		//					.addGap(30))
-		//		);
-		//		gl_mid.setVerticalGroup(
-		//			gl_mid.createParallelGroup(Alignment.LEADING)
-		//				.addGroup(gl_mid.createSequentialGroup()
-		//					.addGap(24)
-		//					.addComponent(comboBox, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
-		//					.addGap(5)
-		//					.addComponent(comboBox_1, GroupLayout.DEFAULT_SIZE, 27, Short.MAX_VALUE)
-		//					.addGap(125)
-		//					.addComponent(btnPlay, GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
-		//					.addGap(5)
-		//					.addComponent(btnPlayai, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-		//					.addGap(29))
-		//		);
-		//		mid.setLayout(gl_mid);
-		//		
+		
 
 		JPanel right = new JPanel();
 		right.setOpaque(false);
@@ -162,12 +157,32 @@ public class BMRoomPanel extends PaintedPanel{
 		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
 		right.setBounds(0, 0, this.getWidth()/3, this.getHeight()/2);
 
+		JPanel rt = new JPanel();
+		rt.setLayout(new BorderLayout());
+		rt.setOpaque(false);
+		JLabel username2 = new JLabel("player2");
+		username2.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
+		username2.setHorizontalAlignment(SwingConstants.CENTER);
+		username2.setOpaque(false);
+		username2.setAlignmentY(CENTER_ALIGNMENT);
 		player2 = new PaintedPanel(BMLibrary.readImages("player2.png"));
-		right.add(player2);
+		rt.add(username2, BorderLayout.NORTH);
+		rt.add(player2,BorderLayout.CENTER);
+		right.add(rt);
 		player2.setLayout(new GridLayout(1, 0, 0, 0));
 
+		JPanel rl = new JPanel();
+		rl.setLayout(new BorderLayout());
+		rl.setOpaque(false);
+		JLabel username3 = new JLabel("player3");
+		username3.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
+		username3.setHorizontalAlignment(SwingConstants.CENTER);
+		username3.setOpaque(false);
+		username3.setAlignmentY(CENTER_ALIGNMENT);
 		player3 = new PaintedPanel(BMLibrary.readImages("player3.png"));
-		right.add(player3);
+		rl.add(username3, BorderLayout.NORTH);
+		rl.add(player3, BorderLayout.CENTER);
+		right.add(rl);
 
 
 
