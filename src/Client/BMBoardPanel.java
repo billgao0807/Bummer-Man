@@ -80,7 +80,7 @@ public class BMBoardPanel extends JPanel{
 		this.map=map;
 		this.time =time;
 		location = new Vector<int[]>();
-		this.local_username = local_username;
+		this.local_username = username;
 //		System.out.println(players2);
 		for (int i = 0; i<players2.size(); i++) {
 			if (((String)players2.get(i).get("username")).equals(local_username))
@@ -235,7 +235,7 @@ public class BMBoardPanel extends JPanel{
 			int x = (int)(players.get(i).get("posX"));
 			int y = (int)(players.get(i).get("posY"));
 			Image image= BMLibrary.readImages("player" + i + ".png");
-			g.drawImage(image, (x-64)*boardPanel.getWidth()/1024+boardPanel.getX(), (y-64)*boardPanel.getHeight()/1024+boardPanel.getY(),boardPanel.getWidth()/16, boardPanel.getHeight()/16, boardPanel);
+			g.drawImage(image, (x-15)*boardPanel.getWidth()/1024+boardPanel.getX(), (y-15)*boardPanel.getHeight()/1024+boardPanel.getY(),boardPanel.getWidth()/16, boardPanel.getHeight()/16, boardPanel);
 		}
 	}
 	
@@ -270,48 +270,11 @@ public class BMBoardPanel extends JPanel{
 		sending.start();
 	}
 	
-	//public void set_move( Vector<Dictionary> board,  )
 	public void addAction(){
-//		KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(new KeyEventDispatcher() {
-//
-//            @Override
-//            public boolean dispatchKeyEvent(KeyEvent ke) {
-//            		int c = ke.getID();
-//            	synchronized (this) {
-//                    if(c == KeyEvent.VK_LEFT)
-//    				    {
-//						clientListener.sendMove(BMMove.left);
-//
-//    				    }
-//    				  else if(c == KeyEvent.VK_RIGHT)
-//    				    {						
-//    					  clientListener.sendMove(BMMove.right);
-//
-//    				    }
-//    				  else if (c == KeyEvent.VK_UP){
-//  						clientListener.sendMove(BMMove.up);
-//
-//    				  }
-//    				  else if (c == KeyEvent.VK_DOWN){
-//  						clientListener.sendMove(BMMove.down);
-//    				  }
-//    				  else if (c == KeyEvent.VK_SPACE){
-//  						clientListener.sendMove(BMMove.bomb);
-//    				  }	 
-//                    return false;
-//                }
-//            }
-//        });
-//		
-//		
-//		
-		
 		this.addKeyListener(new KeyAdapter(){
-
 	        @Override
 	        public void keyPressed(KeyEvent e) {
 	        	int c = e.getKeyCode();
-//				System.out.println("Press key " + c);
 				  if(c == KeyEvent.VK_LEFT)
 				    {
 					  if (keyPressed == 0){
@@ -344,26 +307,10 @@ public class BMBoardPanel extends JPanel{
 						  startSending();
 					  }
 				  }
-//				  System.out.println("Key press " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
-//		    			BMBoardPanel.a=System.currentTimeMillis();
-//		        		char ch = event.getKeyChar();
-//		
-//			      	System.out.println(event.getKeyChar());
-	        	
 	        }
 	        @Override
 	        public void keyReleased(KeyEvent e) {
-//				  System.out.println("Key release " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
-//	    			BMBoardPanel.a=System.currentTimeMillis();
-//	        		char ch = e.getKeyChar();
-//	
-//		      	System.out.println(e.getKeyChar());
-
 				int c = e.getKeyCode();
-//				System.out.println("Release key");
-//				  System.out.println("Key release " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
-//	    			BMBoardPanel.a=System.currentTimeMillis();
-	
 				  if(c == KeyEvent.VK_LEFT)
 				    {
 					  if (keyPressed == BMMove.left){
@@ -403,105 +350,6 @@ public class BMBoardPanel extends JPanel{
 				  }	    	
 	        }
 		});
-//		
-//		keylistener = new KeyAdapter(){
-//			@Override
-//			public void keyPressed(KeyEvent e) {
-//				// TODO Auto-generated method stub	
-//				int c = e.getKeyCode();
-//				System.out.println("Press key");
-//				  if(c == KeyEvent.VK_LEFT)
-//				    {
-//					  if (keyPressed == 0){
-//						  keyPressed = BMMove.left;
-//						  startSending();
-//					  }
-//				    }
-//				  else if(c == KeyEvent.VK_RIGHT)
-//				    {
-//					  if (keyPressed == 0){
-//						  keyPressed = BMMove.right;
-//						  startSending();
-//					  }
-//				    }
-//				  else if (c == KeyEvent.VK_UP){
-//					  if (keyPressed == 0){
-//						  keyPressed = BMMove.up;
-//						  startSending();
-//					  }
-//				  }
-//				  else if (c == KeyEvent.VK_DOWN){
-//					  if (keyPressed == 0){
-//						  keyPressed = BMMove.down;
-//						  startSending();
-//					  }
-//				  }
-//				  else if (c == KeyEvent.VK_SPACE){
-//					  if (keyPressed == 0){
-//						  keyPressed = BMMove.bomb;
-//						  startSending();
-//					  }
-//				  }	    	
-//				  else {
-//
-//					  sending.interrupt();
-//					  keyPressed = 0;
-//					  sending = null;
-//				  }
-//				  System.out.println("Key press " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
-//		    			BMBoardPanel.a=System.currentTimeMillis();
-//			}
-//
-//			@Override
-//			public void keyReleased(KeyEvent e) {
-//				// TODO Auto-generated method stub	
-//				int c = e.getKeyCode();
-//				System.out.println("Release key");
-//				  System.out.println("Key release " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
-//	    			BMBoardPanel.a=System.currentTimeMillis();
-//	
-//				  if(c == KeyEvent.VK_LEFT)
-//				    {
-//					  if (keyPressed == BMMove.left){
-//						  sending.interrupt();
-//						  keyPressed = 0;
-//						  sending = null;
-//					  }
-//				    }
-//				  else if(c == KeyEvent.VK_RIGHT)
-//				    {
-//					  if (keyPressed == BMMove.right){
-//						  sending.interrupt();
-//						  keyPressed = 0;
-//						  sending = null;
-//					  }
-//				    }
-//				  else if (c == KeyEvent.VK_UP){
-//					  if (keyPressed == BMMove.up){
-//						  sending.interrupt();
-//						  keyPressed = 0;
-//						  sending = null;
-//					  }
-//				  }
-//				  else if (c == KeyEvent.VK_DOWN){
-//					  if (keyPressed == BMMove.down){
-//						  sending.interrupt();
-//						  keyPressed = 0;
-//						  sending = null;
-//					  }
-//				  }
-//				  else if (c == KeyEvent.VK_SPACE){
-//					  if (keyPressed == BMMove.bomb){
-//						  sending.interrupt();
-//						  keyPressed = 0;
-//						  sending = null;
-//					  }
-//				  }	    	
-//			}
-//			
-//		};
-//		this.addKeyListener(keylistener);
-//		boardPanel.addKeyListener(keylistener);
 	}
 	
 	public static void set_chat_text(String name, String content){
