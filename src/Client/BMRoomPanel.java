@@ -28,13 +28,14 @@ public class BMRoomPanel extends PaintedPanel{
 	private JPanel startPanel = new JPanel();
 	private JPanel startAIP = new JPanel();
 	private JPanel quitP = new JPanel();
+	private boolean identity;
 	
-	BMRoomPanel(ActionListener startP, ActionListener startB, ActionListener quit,Image image)
+	BMRoomPanel(boolean identity,ActionListener startP, ActionListener startB, ActionListener quit,Image image)
 	{
 		super(image, true);
 		time = new JLabel("Time:");
 		HP = new JLabel("HP:");
-		
+		this.identity = identity;
 		String[] t = new String[]{"1 min", "2 min", "30 secs"};
 		timing = new JComboBox<>(t);
 		Integer[] hp = new Integer[]{1,2,3};
