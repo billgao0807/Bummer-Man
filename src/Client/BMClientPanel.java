@@ -11,6 +11,8 @@ import Server.BMHostServer;
 import Server.BMPlayer;
 import Server.BMSimulation;
 import Utilities.BMLibrary;
+import centralServer.BMCentralServer;
+import centralServer.BMCentralServerClient;
 public class BMClientPanel extends JPanel{
 	private static final long serialVersionUID = 6415716059554739910L;
 	private BMLoginPanel loginPanel;
@@ -22,65 +24,43 @@ public class BMClientPanel extends JPanel{
 	private Integer[][] board = null;
 	private int time = 0;	
 	HostClientListener hostClient;
+	BMCentralServerClient serverClient;
 	private Vector<TreeMap<String, Object>> players;
 	String username;
+	String password;
 	private int hp;
 	protected BMHostServer hs;
 	protected BMSimulation simulation;
 	
 	{
 		players = new Vector<TreeMap<String,Object>>();
-//		detailSignin = new BMSigninPage(new ActionListener() {
-//			@Override
-//			
-//			public void actionPerformed(ActionEvent ae) {
-//				BMClientPanel.this.removeAll();
-//				detailSignin.setVisible(false);
-//				/*Signup
-//				BMClientPanel.this.add(roomPanel);
-//				*/
-//				BMClientPanel.this.revalidate();
-//				BMClientPanel.this.repaint();
-//			}
-//		},
-//				new ActionListener(){
-//				@Override
-//			public void actionPerformed(ActionEvent ae) {
-//				BMClientPanel.this.removeAll();
-//				detailSignin.setVisible(false);
-//				/*QuickGame
-//				BMClientPanel.this.add(roomPanel);
-//				*/
-//				BMClientPanel.this.revalidate();
-//				BMClientPanel.this.repaint();
-//			}
-//		},
-//				new ActionListener(){
-//				@Override				
-//			public void actionPerformed(ActionEvent ae) {
-//					/*add check the correctness of the username and password*/
-//					username = detailSignin.nameInput.getText().trim();
-//					
-//				BMClientPanel.this.removeAll();				
-//				BMClientPanel.this.add(menuPanel);
-//				BMClientPanel.this.revalidate();
-//				BMClientPanel.this.repaint();
-//				System.out.println("CLosing jframe");
-//				detailSignin.closeMe();
-//			}}
-//				);
+
+
+		serverClient = new BMCentralServerClient ( "localhost", 5555 );
+		
+		
 		loginPanel = new BMLoginPanel(new ActionListener() {
 			@Override
 			
 			public void actionPerformed(ActionEvent ae) {
 				BMClientPanel.this.removeAll();
-				/*Signup
+				if (serverClient.signup(username, password))
+				{
+					BMClientPanel.this.add(roomPanel);
+					
+					BMClientPanel.this.revalidate();
+					BMClientPanel.this.repaint();
+				}
+				else
+				{
+					System.out.println("sign up failed");
+				}
+				
 				BMClientPanel.this.add(roomPanel);
-				*/
+			
 				BMClientPanel.this.revalidate();
 				BMClientPanel.this.repaint();
 				System.out.println("login 1");
-//				detailSignin.closeMe();
 			}
 		},
 				new ActionListener(){
@@ -93,7 +73,7 @@ public class BMClientPanel extends JPanel{
 				BMClientPanel.this.revalidate();
 				BMClientPanel.this.repaint();
 				System.out.println("login 2");
-//				detailSignin.closeMe();
+
 			}
 		},
 				new ActionListener(){
@@ -101,10 +81,19 @@ public class BMClientPanel extends JPanel{
 			public void actionPerformed(ActionEvent ae) {
 					/*add check the correctness of the username and password*/
 					username = loginPanel.getSignin().nameInput.getText().trim();
-				BMClientPanel.this.removeAll();				
-				BMClientPanel.this.add(menuPanel);
-				BMClientPanel.this.revalidate();
-				BMClientPanel.this.repaint();
+					password = loginPanel.getSignin().passwordInput.getText().trim();
+					if (serverClient.login(username, password))
+					{
+						BMClientPanel.this.removeAll();				
+						BMClientPanel.this.add(menuPanel);
+						BMClientPanel.this.revalidate();
+						BMClientPanel.this.repaint();
+					}
+					else
+					{
+						System.out.println("login in failed");
+					}
+				
 				System.out.println("login 3");
 				loginPanel.closeSignup();
 //				detailSignin.closeMe();
