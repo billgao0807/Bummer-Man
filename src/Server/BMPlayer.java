@@ -50,8 +50,8 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	private static final int normalDetonatedTime = 5;
 	private static final int reducedDetonatedTime = 3;
 	//Inclusive small coordinates limit:7, 247
-	private static final int smallCoordinateUpperLimit = 988;
-	private static final int smallCoordinateLowerLimit = 28;
+	private static final int smallCoordinateUpperLimit = 960;
+	private static final int smallCoordinateLowerLimit = 31;
 	//Inclusive big coordinates limit:0, 15
 	private static final int bigCoordinateUpperLimit = 15;
 	private static final int bigCoordinateLowerLimit = 0;
@@ -221,29 +221,32 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	
 	}
 	public void startMove(int moveType){
-			if (canMove(moveType)) moveHelper(moveType);
+			if (canMove(moveType)){
+				System.out.println("Move enabled");
+				moveHelper(moveType);
+			}
 	}
 	protected void moveHelper(int moveType){
 		int initX = location.x;
 		int initY = location.y;
 		switch(moveType){
 			//Stop
-			case 0: location.setLocation(initX, initY);
+			case BMMove.stop: location.setLocation(initX, initY);
 					break;
 			//Up
-			case 1: location.setLocation(initX, initY-1);
+			case BMMove.up: location.setLocation(initX, initY-1);
 					break;
 			//Down
-			case 2: location.setLocation(initX, initY+1);
+			case BMMove.down: location.setLocation(initX, initY+1);
 					break;
 			//Left
-			case 3: location.setLocation(initX-1, initY);
+			case BMMove.left: location.setLocation(initX-1, initY);
 					break;
 			//Right
-			case 4: location.setLocation(initX+1, initY);
+			case BMMove.right: location.setLocation(initX+1, initY);
 					break;
 			//Drop a bomb
-			case 5: simulation.dropBomb(initX/coordinatesRatio, initY/coordinatesRatio, this);
+			case BMMove.bomb: simulation.dropBomb(initX/coordinatesRatio, initY/coordinatesRatio, this);
 					cooling = true;
 					new Thread(new Runnable(){
 						@Override
@@ -283,7 +286,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		else if (moveType == 0) return true;
 		else if (moveType == 5){
 			if (cooling) return false;
-			BMNode node = simulation.getNode(location.x/16, location.y/16);
+			BMNode node = simulation.getNode(location.x/coordinatesRatio, location.y/coordinatesRatio);
 			if (node instanceof BMBombing || node instanceof BMBomb){
 				return false;
 			}
@@ -295,21 +298,16 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			int initSmallX = location.x;
 			int initSmallY = location.y;
 			switch(moveType){
-				case 0: initSmallY--; break;
-				case 1: initSmallY++; break;
-				case 2: initSmallX--; break;
-				case 3: initSmallX++; break;
+				case BMMove.up: initSmallY--; break;
+				case BMMove.down: initSmallY++; break;
+				case BMMove.left: initSmallX--; break;
+				case BMMove.right: initSmallX++; break;
 			}
 			//int finalBigX = initBigX;
 			//int finalBigY = initBigY;
 			int finalSmallX = initSmallX;
 			int finalSmallY = initSmallY;
-			/*if (pointInBigBounds(finalBigX, finalBigY)){
-				BMNode nextNode = simulation.getNode(finalBigX, finalBigY);
-				if (nextNode instanceof BMWall || nextNode instanceof BMTile) return false;
-				else return true;
-			}
-			else return false;*/
+			System.out.println("X " + finalSmallX + " Y " + finalSmallY);
 			if (pointInSmallBounds(new Point(finalSmallX, finalSmallY))){
 				BMNode nextNode = simulation.getNode(finalSmallX/64, finalSmallY/64);
 				if (nextNode instanceof BMWall || nextNode instanceof BMTile) return false;

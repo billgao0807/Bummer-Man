@@ -80,7 +80,7 @@ public class BMBoardPanel extends JPanel{
 		this.map=map;
 		this.time =time;
 		location = new Vector<int[]>();
-		this.local_username = local_username;
+		this.local_username = username;
 //		System.out.println(players2);
 		for (int i = 0; i<players2.size(); i++) {
 			if (((String)players2.get(i).get("username")).equals(local_username))
@@ -235,7 +235,7 @@ public class BMBoardPanel extends JPanel{
 			int x = (int)(players.get(i).get("posX"));
 			int y = (int)(players.get(i).get("posY"));
 			Image image= BMLibrary.readImages("player" + i + ".png");
-			g.drawImage(image, (x-64)*boardPanel.getWidth()/1024+boardPanel.getX(), (y-64)*boardPanel.getHeight()/1024+boardPanel.getY(),boardPanel.getWidth()/16, boardPanel.getHeight()/16, boardPanel);
+			g.drawImage(image, (x-15)*boardPanel.getWidth()/1024+boardPanel.getX(), (y-15)*boardPanel.getHeight()/1024+boardPanel.getY(),boardPanel.getWidth()/16, boardPanel.getHeight()/16, boardPanel);
 		}
 	}
 	
