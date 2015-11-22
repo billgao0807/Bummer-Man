@@ -107,9 +107,10 @@ public class HostClientListener  extends Thread{
 	    }
 	 
 	 public void run() {
-			try {
+
+			while(true) {
+				try {
 				
-				while(true) {
 					// in case the server sends another factory to us
 
 					Object obj = ois.readObject();
@@ -153,26 +154,13 @@ public class HostClientListener  extends Thread{
 						Vector<Dictionary> result = (Vector<Dictionary>)map.get("result");
 //						BMBoardPanel.set_result(result);
 					}
-					
-					
-				}
-			} catch (IOException ioe) {
-				//mFClientGUI.addMessage(Constants.serverCommunicationFailed);
-				System.out.println("serverCommunicationFailed");
-			} catch (ClassNotFoundException cnfe) {
-				System.out.println(cnfe);
-			}finally{
-				try{
-					if (oos != null) {
-						oos.close();
-					}
-					if (ois !=null) {
-						ois.close();
-					}
-				} catch(IOException ioe) {
-					System.out.println("lose connection");
+				} catch (IOException ioe) {
+					//mFClientGUI.addMessage(Constants.serverCommunicationFailed);
+					System.out.println("serverCommunicationFailed");
+				} catch (ClassNotFoundException cnfe) {
+					System.out.println(cnfe);
 				}
 			}
-		}
+	 }
 }
 	
