@@ -7,17 +7,21 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import Utilities.BMFontLibrary;
 import Utilities.BMLibrary;
 import customUI.PaintedButton;
 import customUI.PaintedLabel;
+import customUI.PaintedPanel;
 
-public class BMBoard_Player  extends JPanel {
+public class BMBoard_Player  extends PaintedPanel {
 	private JLabel TimeLabel, HPLabel,AbilityLabel,NameLabel;
 	private PaintedLabel SpeedLabel, PowerLabel, Item1Label, Item2Label,Item0Label,DetonatedTime_Label,CoolingTimeLabel ;
 	private PaintedButton QuitButton;
@@ -25,36 +29,69 @@ public class BMBoard_Player  extends JPanel {
 	private int total_hp;
 	private int curr_hp;
 	private String local_username;
-			public BMBoard_Player(){
+	
+			public BMBoard_Player(Image image){
+				super(	image,true);
 				setLayout(new GridBagLayout());
 				GridBagConstraints gbc = new GridBagConstraints();
 				NameLabel = new JLabel ("Name");
-				NameLabel.setFont(new Font("font.tff", Font.PLAIN, 15));
+				NameLabel.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 30));
 
 
-				TimeLabel = new JLabel("Time: "  );
+				TimeLabel = new JLabel("Time  "  );
+				TimeLabel.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 25));
+
 				HPLabel = new JLabel("HP ");
-				AbilityLabel = new JLabel("Ability:");
+				HPLabel.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 25));
+
+				AbilityLabel = new JLabel("Ability ");
+				AbilityLabel.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 25));
+
 				SpeedLabel = new PaintedLabel(null);
+				SpeedLabel.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 18));
+
 				PowerLabel = new PaintedLabel(null);
+				PowerLabel.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 18));
+
 				Item1Label= new PaintedLabel (null);
+				Item1Label.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 25));
+
 				Item2Label= new PaintedLabel (null);
+				Item2Label.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 25));
+
 				Item0Label= new PaintedLabel (null);
+				Item0Label.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 25));
+
 
 				CoolingTimeLabel = new PaintedLabel (null);
+				CoolingTimeLabel.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
+
+				
 				DetonatedTime_Label = new PaintedLabel (null);
+				DetonatedTime_Label.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
+
 				SpeedLabel.setText("Speed");
 				PowerLabel.setText("Power");
 				Item0Label.setText("Item");
 
-				Item1Label.setText("Item1");
-				Item2Label.setText("Item2");;
-
-				AbilityLabel.setText("Ability");
-				CoolingTimeLabel.setText("CoolingTime");
-				DetonatedTime_Label.setText("DetonatedTime_Label");
+				Item1Label.setText(" Empty");
+				Item2Label.setText(" Empty");;
+//
+//				AbilityLabel.setText("Ability");
+//				CoolingTimeLabel.setText("CoolingTime");
+//				DetonatedTime_Label.setText("DetonatedTime_Label");
 				
-				QuitButton = new PaintedButton ("Quit", null, null, 10);
+				QuitButton = new PaintedButton ("Quit", BMLibrary.readImages("button2.png"), BMLibrary.readImages("button2-0.png"), 10);
+				QuitButton.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 15));
+
+				QuitButton.addActionListener(new ActionListener(){
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						// TODO Auto-generated method stub
+					}
+					
+				});
 				
 				Item1Label.setPreferredSize(new Dimension(60, 50));
 				SpeedLabel.setPreferredSize(new Dimension(60, 50));
@@ -62,6 +99,7 @@ public class BMBoard_Player  extends JPanel {
 				PowerLabel.setPreferredSize(new Dimension(60, 50));
 				CoolingTimeLabel.setPreferredSize(new Dimension(120, 50));
 				DetonatedTime_Label.setPreferredSize(new Dimension(120, 50));
+				
 				//QuitButton.setPreferredSize(new Dimension(60, 50));
 
 

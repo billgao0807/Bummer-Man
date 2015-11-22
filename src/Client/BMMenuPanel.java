@@ -1,4 +1,5 @@
 package Client;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -12,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
 
+import Utilities.BMFontLibrary;
 import customUI.PaintedPanel;
 public class BMMenuPanel extends PaintedPanel{
 	private JLabel title;
@@ -34,6 +36,7 @@ public class BMMenuPanel extends PaintedPanel{
 		ipField = new JTextField();
 		ipField.setText("localhost");
 		ipField.setColumns(10);
+		ipField.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 10));
 		ipField.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
@@ -43,6 +46,7 @@ public class BMMenuPanel extends PaintedPanel{
 		
 		portField = new JTextField();
 		portField.setText("6666");
+		portField.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		portField.setColumns(10);
 		portField.addMouseListener(new MouseAdapter(){
             @Override
@@ -52,8 +56,9 @@ public class BMMenuPanel extends PaintedPanel{
         });
 		
 		JButton btnStart = new JButton("start");
-		
+		btnStart.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		JButton btnJoin = new JButton("join");
+		btnJoin.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
