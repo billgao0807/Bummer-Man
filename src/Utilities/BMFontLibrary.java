@@ -28,7 +28,7 @@ public class BMFontLibrary {
 			catch (IOException | FontFormatException e) { System.out.println("Error reading image: " + e); return null; }
 			fontMap.put(directory, font);
 		}
-		return font;
+		return font.deriveFont(style, size);
 	}
 	
 	//Clears out all the images from the library
