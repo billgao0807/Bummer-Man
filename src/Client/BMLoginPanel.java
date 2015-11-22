@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import Utilities.BMFontLibrary;
 import customUI.PaintedPanel;
 public class BMLoginPanel extends PaintedPanel implements KeyListener{
 	
@@ -50,8 +51,11 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 		add(panel_1, BorderLayout.SOUTH);
 		
 		label = new JLabel("Press Any Key To Proceed");
+		//String str = label.getText();
+		
+		
 		panel_1.add(label);
-		label.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
+		label.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 30));
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		
 		
