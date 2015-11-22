@@ -214,8 +214,8 @@ public class BMBoardPanel extends JPanel{
 	@Override 
 	public void paint(Graphics g){
 
-		  System.out.println("Paint " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
-  			BMBoardPanel.a=System.currentTimeMillis();
+//		  System.out.println("Paint " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
+//  			BMBoardPanel.a=System.currentTimeMillis();
 		super.paint(g);
 		if (players == null) return;
 //		System.out.println("Player size " + players.size());
@@ -228,15 +228,16 @@ public class BMBoardPanel extends JPanel{
 		}
 	}
 	
-	public void set_move(int time, Vector<TreeMap<String, Object>>  players_){
+	public void set_move(int time, Vector<TreeMap<String, Object>>  players_, Integer[][] board){
 		this.players = players_;
 //		paintComponent(this.getGraphics());
 //		System.out.println("Start Repaint " +(System.currentTimeMillis()-a) + " ms");
-		a=System.currentTimeMillis();
+//		a=System.currentTimeMillis();
 		this.repaint();
+		repaintBoard(board);
 		validate();	
 //		System.out.println("After Repaint " + (System.currentTimeMillis()-a) + " ms");
-		a=System.currentTimeMillis();
+//		a=System.currentTimeMillis();
 	}
 	
 	public void startSending(){
@@ -251,7 +252,7 @@ public class BMBoardPanel extends JPanel{
 					}
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					System.out.println("Exception " + e.getMessage());
+//					System.out.println("Exception " + e.getMessage());
 				}
 			}
 			
@@ -355,12 +356,12 @@ public class BMBoardPanel extends JPanel{
 		
 	}
 
-	public void repaintBoard(int[][] Board){
+	public void repaintBoard(Integer[][] board){
 //		nodeGrid
-		System.out.println("repaint board");
+//		System.out.println("repaint board");
 		for (int i = 0; i < 16; i++){
 			for (int j = 0; j < 16; j++){
-				if (Board != null && nodeGrid[i][j].node_type != Board[i][j]) nodeGrid[i][j].update(Board[i][j]);
+				if (board != null && nodeGrid[i][j].node_type != board[i][j]) nodeGrid[i][j].update(board[i][j]);
 			}
 		}
 	}
@@ -398,12 +399,12 @@ public class BMBoardPanel extends JPanel{
 			}
 			else if(new_type == 3){
 				//bomb
-				setImage(BMLibrary.readImages("bomb"));
+				setImage(BMLibrary.readImages("bomb.png"));
 
 			}
 			else if(new_type == 4){
 				//bombing
-				setImage(BMLibrary.readImages("bombing"));
+				setImage(BMLibrary.readImages("bombing.png"));
 
 			}
 			else if(new_type == 5){

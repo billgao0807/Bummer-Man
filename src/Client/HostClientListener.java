@@ -111,7 +111,10 @@ public class HostClientListener  extends Thread{
 				
 				while(true) {
 					// in case the server sends another factory to us
-					TreeMap<String,Object>map = (TreeMap<String,Object>)ois.readObject();
+
+					Object obj = ois.readObject();
+					if (!(obj instanceof TreeMap<?,?>)) continue;
+					TreeMap<String,Object>map = (TreeMap<String,Object>)obj;
 
 					if (((String)map.get("type")).equals("join")){
 						int time = (int )map.get("time");
@@ -136,7 +139,8 @@ public class HostClientListener  extends Thread{
 //				    		BMBoardPanel.a=System.currentTimeMillis();
 						int time = (int) map.get("time");
 						Vector<TreeMap<String, Object>> players =  (Vector<TreeMap<String, Object>>) map.get("players");
-						clientpanel.boardPanel.set_move(time, players);
+						Integer[][] board = (Integer[][])map.get("board");
+						clientpanel.boardPanel.set_move(time, players,board);
 					
 					}
 					else if (((String)map.get("type")).equals("msg")){
