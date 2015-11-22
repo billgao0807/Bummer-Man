@@ -46,8 +46,8 @@ public class BMClientPanel extends JPanel{
 				BMClientPanel.this.removeAll();
 				if (serverClient.signup(username, password))
 				{
-					BMClientPanel.this.add(roomPanel);
 					
+					BMClientPanel.this.add(loginPanel);				
 					BMClientPanel.this.revalidate();
 					BMClientPanel.this.repaint();
 				}
@@ -55,11 +55,12 @@ public class BMClientPanel extends JPanel{
 				{
 					System.out.println("sign up failed");
 				}
-				
+				/*
 				BMClientPanel.this.add(roomPanel);
 			
 				BMClientPanel.this.revalidate();
 				BMClientPanel.this.repaint();
+				*/
 				System.out.println("login 1");
 			}
 		},
@@ -96,8 +97,7 @@ public class BMClientPanel extends JPanel{
 				
 				System.out.println("login 3");
 				loginPanel.closeSignup();
-//				detailSignin.closeMe();
-			}}, BMLibrary.readImages("menu.png"));
+			}}, BMLibrary.readImages("menu.png"),serverClient );
 		
 		
 		//Set up the panel to display
@@ -115,7 +115,6 @@ public class BMClientPanel extends JPanel{
 				BMClientPanel.this.add(roomPanel);
 				BMClientPanel.this.revalidate();	
 				String temp = menuPanel.portField.getText();
-//				String ip = menuPanel.IP.getText();
 				int portNumber = Integer.parseInt(temp);
 				simulation = new BMSimulation(5555,5);
 
