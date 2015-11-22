@@ -52,14 +52,15 @@ public class BMBoardPanel extends JPanel{
 	private final static int boardSize = 16;
 	//private final TilePanel[][] tileGrid;
 
-	private PaintedPanel chatPanel, boardPanel, playerPanel;
+	private PaintedPanel chatPanel, boardPanel;
+
+	private BMBoard_Player playerPanel;
 	private static JTextPane chatPane;
 	private JTextField chatTF;
   	private final NodePanel[][] nodeGrid;
 
 	private PaintedButton chatButton;
-	private JLabel TimeLabel, HPLabel,AbilityLabel;
-	private PaintedButton SpeedButton, PowerButton, Item1Button, Item2Button , QuitButton;
+	
 	private Integer[][]map;
 	private KeyAdapter keylistener;
 	private HostClientListener clientListener;
@@ -90,6 +91,7 @@ public class BMBoardPanel extends JPanel{
 			}
 		}
 		//boardPanel initialize
+
 				boardPanel.setLayout(new GridLayout(boardSize,boardSize));
 				for(int y = 0; y < boardSize; ++y) {
 					for(int x = 0; x < boardSize; ++x) {
@@ -105,6 +107,7 @@ public class BMBoardPanel extends JPanel{
 					}
 				}
 		this.players = players2;
+		playerPanel.set_up(players2, username);
 		repaint();
 	}
 	
@@ -114,7 +117,9 @@ public class BMBoardPanel extends JPanel{
 		this.setLayout(new BorderLayout());
 		chatPanel= new PaintedPanel(null);
 		boardPanel = new PaintedPanel(null);
-		playerPanel = new PaintedPanel(null);
+		playerPanel = new BMBoard_Player( );
+		playerPanel.setPreferredSize(new Dimension(150, BMBoardPanel.this.getHeight()));
+
 		chatPanel.setPreferredSize(new Dimension(150, BMBoardPanel.this.getHeight()));
 		keylistener = null;
 		nodeGrid = new NodePanel[boardSize][boardSize];
@@ -129,68 +134,6 @@ public class BMBoardPanel extends JPanel{
 		chatPane.setPreferredSize(new Dimension(chatPanel.getWidth(), 450));
 		chatPane.setEditable(false);
 		
-//PlayerPanel initialize
-		playerPanel.setLayout(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-		TimeLabel = new JLabel("Time: " + time);
-		HPLabel = new JLabel("HP " + local_hp +"/" +total_hp);
-		AbilityLabel = new JLabel("Ability:");
-		SpeedButton = new PaintedButton("Speed", null, null, 10);
-		PowerButton = new PaintedButton("Power", null, null, 10);
-		Item1Button = new PaintedButton ("Item1", null, null, 10);
-		Item2Button = new PaintedButton ("Item2", null, null, 10);
-		QuitButton = new PaintedButton ("Quit", null, null, 10);
-		Item1Button.setPreferredSize(new Dimension(60, 50));
-		SpeedButton.setPreferredSize(new Dimension(60, 50));
-		Item2Button.setPreferredSize(new Dimension(60, 50));
-		PowerButton.setPreferredSize(new Dimension(60, 50));
-		//QuitButton.setPreferredSize(new Dimension(60, 50));
-
-		boardPanel.setLayout(new GridLayout(boardSize,boardSize));
-
-//playerPanel add component
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.gridwidth = 2;
-		gbc.insets = new Insets(15,0,15,0);
-		playerPanel.add(TimeLabel,gbc);
-		
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		playerPanel.add(HPLabel,gbc);
-		
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-		gbc.gridwidth = 1;
-		playerPanel.add(AbilityLabel,gbc);
-		
-		gbc.gridx = 0;
-		gbc.gridy = 3;
-		gbc.gridwidth = 1;
-		gbc.insets = new Insets(0,5,0,5);
-
-		playerPanel.add(SpeedButton,gbc);
-		
-		gbc.gridx = 1;
-		gbc.gridy = 3;
-		gbc.gridwidth = 1;
-		playerPanel.add(PowerButton,gbc);
-		
-		gbc.gridx = 0;
-		gbc.gridy = 4;
-		gbc.gridwidth = 1;
-		playerPanel.add(Item1Button,gbc);
-		
-		gbc.gridx = 1;
-		gbc.gridy = 4;
-		gbc.gridwidth = 1;
-		playerPanel.add(Item2Button,gbc);
-
-		gbc.gridx = 0;
-		gbc.gridy = 5;
-		gbc.gridwidth = 2;
-		gbc.insets = new Insets(15,0,15,0);
-		playerPanel.add(QuitButton,gbc);
 
 		
 //add component into chatPanel
@@ -230,6 +173,7 @@ public class BMBoardPanel extends JPanel{
 	
 	public void set_move(int time, Vector<TreeMap<String, Object>>  players_, Integer[][] board){
 		this.players = players_;
+		playerPanel.set_move(time, players_);
 //		paintComponent(this.getGraphics());
 //		System.out.println("Start Repaint " +(System.currentTimeMillis()-a) + " ms");
 //		a=System.currentTimeMillis();
@@ -245,16 +189,17 @@ public class BMBoardPanel extends JPanel{
 
 			@Override
 			public void run() {
-				try {
-					while (true){
-			 			Thread.sleep(10);
-						clientListener.sendMove(keyPressed);
+					try{
+						while (true){
+							Thread.sleep(10);
+							clientListener.sendMove(keyPressed);
+						}
 					}
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-//					System.out.println("Exception " + e.getMessage());
+					catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+//						System.out.println("Exception " + e.getMessage());
+					} 
 				}
-			}
 			
 		});
 		sending.start();

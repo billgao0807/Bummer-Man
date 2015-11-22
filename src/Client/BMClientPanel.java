@@ -179,6 +179,8 @@ public class BMClientPanel extends JPanel{
 				simulation = new BMSimulation(5555,5);
 				
 				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
+				hostClient.sendJoin(username);
+				
 			}
 		},
 		new ActionListener()
