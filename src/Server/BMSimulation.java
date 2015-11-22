@@ -188,4 +188,8 @@ public class BMSimulation extends Thread {
 		info.put("players", playersInfo());
 		hs.sendMapToClients(info);
 	}
+	public int getTime() {
+		
+		return timeLeft;
+	}
 }
