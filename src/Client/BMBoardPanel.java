@@ -43,6 +43,7 @@ import javax.swing.text.StyledDocument;
 import Server.BMPlayer;
 import Server.BMRealPlayer;
 import node.BMTile;
+import Utilities.BMFontLibrary;
 import Utilities.BMLibrary;
 import Utilities.BMMove;
 import Utilities.BMNodeType;
@@ -133,8 +134,13 @@ public class BMBoardPanel extends JPanel{
 		
 		chatPanel.setLayout(new BorderLayout());
 		chatPane = new JTextPane();
+		chatPane.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
+
 		chatTF = new JTextField();
-		chatButton = new PaintedButton("send" , null, null, 10);	
+		chatTF.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
+
+		chatButton = new PaintedButton("send" , BMLibrary.readImages("button2.png"), BMLibrary.readImages("button2-0.png"), 10);	
+		chatButton.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 15));
 		chatButton.addActionListener(new ActionListener(){
 
 			@Override
