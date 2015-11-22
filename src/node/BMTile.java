@@ -21,14 +21,14 @@ public class BMTile extends BMNode {
 		if (temp % 10 <3) {
 			// Generate random item type
 			int tempItemID = rn.nextInt();
-			tempItemID = tempItemID % 4;
-			tempItemID += 5;
+			tempItemID = tempItemID % 9;
+			tempItemID += 4;
 			// Let this tile be the randomly generated item type after bombing
 			board[x][y] = new BMBombing(x, y, board, tempItemID, id);
 		} else {
 			board[x][y] = new BMBombing(x, y, board, BMNodeType.road, id);
 		}
-		return false;
+		return true;
 	}
 
 }

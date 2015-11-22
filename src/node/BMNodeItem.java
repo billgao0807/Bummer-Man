@@ -10,4 +10,7 @@ public class BMNodeItem extends BMNode {
 		return type;
 	}
 
+	public void getItem(){
+		board[x][y] = new BMRoad(x,y,board);
+	}
 }

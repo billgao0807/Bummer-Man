@@ -17,7 +17,7 @@ import node.BMTile;
 import node.BMWall;
 
 public class BMSimulation extends Thread {
-	private BMNode[][] board = new BMNode[16][16];
+	volatile private BMNode[][] board = new BMNode[16][16];
 	private Vector<BMPlayer> players;
 	private BMPlayer host;
 	private int timeLeft = 1000;

@@ -377,82 +377,14 @@ public class BMBoardPanel extends JPanel{
 			setLayout(new GridBagLayout());
 			update(node_type);
 		}
-
 		
 		public void update(int new_type){
 			node_type =new_type;
-			if(new_type == -1) return;
-			else if(new_type == BMNodeType.road){
-				//road
-				setImage(BMLibrary.readImages("wall0.png"));
-				
-			}
-			if(new_type == 1){
-				//wall
-				setImage(BMLibrary.readImages("wall1.png"));
-
-			}
-			if(new_type == 2){
-				//tile
-				setImage(BMLibrary.readImages("wall2.png"));
-
-			}
-			else if(new_type == 3){
-				//bomb
-				setImage(BMLibrary.readImages("bomb.png"));
-
-			}
-			else if(new_type == 4){
-				//bombing
-				setImage(BMLibrary.readImages("bombing.png"));
-
-			}
-			else if(new_type == 5){
-				//niceShoes
-				setImage(BMLibrary.readImages("niceShoes"));
-
-			}
-			else if(new_type == 6){
-				//badShoes
-				setImage(BMLibrary.readImages("badShoes"));
-
-			}
-			else if(new_type == 7){
-				//improvePower
-				setImage(BMLibrary.readImages("improvePower"));
-
-			}
-			else if(new_type == 8){
-				//reducePower
-				setImage(BMLibrary.readImages("reducePower"));
-
-			}
-			else if(new_type == 9){
-				//reduceCoolingTime
-				setImage(BMLibrary.readImages("reduceCoolingTime"));
-
-			}
-			else if(new_type == 10){
-				//increaseCoolingTime
-				setImage(BMLibrary.readImages("increaseCoolingTime"));
-
-			}
-			else if(new_type == 11){
-				//increaseDetonatedTime
-				setImage(BMLibrary.readImages("increaseDetonatedTime"));
-
-			}
-			else if(new_type ==12) {
-				//reduceDenotatedTime
-				setImage(BMLibrary.readImages("reduceDenotatedTime"));
-
-			}
-		
+			System.out.println("node"+node_type+".png");
+			Image image = BMLibrary.readImages("node"+node_type+".png");
+			setImage(image);
 			revalidate();
 			repaint();
-		}
-		
-		
-		
+		}	
 	}
 }
