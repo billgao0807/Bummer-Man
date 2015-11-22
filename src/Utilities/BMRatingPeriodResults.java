@@ -116,8 +116,4 @@ public class BMRatingPeriodResults {
 	public void clear() {
 		results.clear();
 	}
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 4076c9f1e083b6b6ad4abe0e594430cac5114e65
