@@ -112,7 +112,7 @@ public class BMClientPanel extends JPanel{
 				@Override				
 			public void actionPerformed(ActionEvent ae) {
 					/*add check the correctness of the username and password*/
-					username = loginPanel.getSignin().nameInput.getText().trim();
+					username = loginPanel.getSignin().txtUsername.getText().trim();
 				BMClientPanel.this.removeAll();				
 				BMClientPanel.this.add(menuPanel);
 				BMClientPanel.this.revalidate();
