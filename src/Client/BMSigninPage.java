@@ -90,7 +90,7 @@ class signIn extends PaintedPanel
 		password.add(passwordInput);
 		
 		signupB = new PaintedButton("Sign up",BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 20);
-		signupB.addActionListener( serverclient.signup() );
+		signupB.addActionListener( signup );
 		JPanel signupP = new JPanel();
 		signupP.add(new ClearPanel());
 		signupP.add(signupB);

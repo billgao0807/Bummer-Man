@@ -36,7 +36,7 @@ public class BMClientPanel extends JPanel{
 		players = new Vector<TreeMap<String,Object>>();
 
 
-		serverClient = new BMCentralServerClient ( "localhost", 5555 );
+		serverClient = new BMCentralServerClient ( "localhost", 6789 );
 		
 		
 		loginPanel = new BMLoginPanel(new ActionListener() {
