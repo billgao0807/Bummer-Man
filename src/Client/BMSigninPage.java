@@ -177,6 +177,7 @@ class signIn extends PaintedPanel
 			}
 		});
 		signupB.addActionListener(signup);
+
 		JPanel signupP = new JPanel();
 		signupP.add(new ClearPanel());
 		signupP.add(signupB);

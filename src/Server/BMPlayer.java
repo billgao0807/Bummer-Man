@@ -19,6 +19,7 @@ import node.BMWall;
 
 import Utilities.BMItem;
 import Utilities.BMMove;
+import Utilities.BMNodeType;
 import Utilities.BMResult;
 
 public abstract class BMPlayer extends Thread implements Serializable{
@@ -45,11 +46,11 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	private static final int normalPower = 3;
 	private static final int increasedPower = 5;
 	//Wait 10 or 5 seconds before player dropping another bomb 
-	private static final int normalCoolingTime = 10;
-	private static final int reducedCoolingTime = 5;
+	private static final int normalCoolingTime = 6;
+	private static final int reducedCoolingTime = 3;
 	//Wait 5 or 3 seconds between a bomb is dropped and it detonates
-	private static final int normalDetonatedTime = 5;
-	private static final int reducedDetonatedTime = 3;
+	private static final int normalDetonatedTime = 2;
+	private static final int reducedDetonatedTime = 1;
 	//Inclusive small coordinates limit:7, 247
 	private static final int smallCoordinateUpperLimit = 960;
 	private static final int smallCoordinateLowerLimit = 31;
@@ -130,7 +131,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 						e.printStackTrace();
 					}
 					BMNode currentNode = simulation.getNode(location.x/coordinatesRatio,  location.y/coordinatesRatio);
-					if(currentNode instanceof BMBombing){
+					if(currentNode.getType() == BMNodeType.bombing){
 						BMPlayer.this.killed(((BMBombing)currentNode).getPlayerID());
 					}
 				}
@@ -143,18 +144,37 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	}
 	
 	public void killed(int id){
-		if (respawning) return;
-		respawning = true;
-		HP--;
-		if (HP < 0) lost = true;
-		location = initialLocation;
-		try{
-			Thread.sleep(3000);
-		} catch (InterruptedException ie){
-			ie.printStackTrace();
+//		if (respawning) return;
+//	respawning = true;
+		if(mLock.tryLock()){
+			try{
+				HP--;
+				if (HP < 0) lost = true;
+				location.x = initialLocation.x;
+				location.y = initialLocation.y;
+				simulation.addKill(id);
+				simulation.sendMove();
+				//System.out.println("hp is " + HP);
+				try{
+				Thread.sleep(3000);
+				} catch (InterruptedException ie){
+					ie.printStackTrace();
+				} finally{
+					System.out.println("Recovered " + HP);
+					respawning = false;
+				}				
+			}
+			finally{
+				mLock.unlock();
+			}
+			
 		}
-		respawning = false;
-		simulation.addKill(id);
+		//		new Thread(new Runnable(){
+//			@Override
+//			public void run() {
+//				
+//			}
+//		}).start();
 	}
 	
 	public Point getLocation(){
@@ -242,7 +262,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	}
 	public void startMove(int moveType){
 			if (canMove(moveType)){
-				System.out.println("Move enabled");
+//				System.out.println("Move enabled");
 				moveHelper(moveType);
 			}
 	}
@@ -283,6 +303,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 								e.printStackTrace();
 							}
 							finally {
+								System.out.println("Cooled");
 								cooling = false;
 							}
 						}
@@ -310,6 +331,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			if (cooling) return false;
 			BMNode node = simulation.getNode(location.x/coordinatesRatio, location.y/coordinatesRatio);
 			if (node instanceof BMBombing || node instanceof BMBomb){
+				System.out.println("cant drop bomb because tile is bomb or bombing");
 				return false;
 			}
 			else return true;
@@ -330,7 +352,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			//int finalBigY = initBigY;
 			int finalSmallX = initSmallX;
 			int finalSmallY = initSmallY;
-			System.out.println("X " + finalSmallX + " Y " + finalSmallY);
+//			System.out.println("X " + finalSmallX + " Y " + finalSmallY);
 			if (pointInSmallBounds(new Point(finalSmallX, finalSmallY))){
 				BMNode nextNode = simulation.getNode(finalSmallX/coordinatesRatio, finalSmallY/coordinatesRatio);
 				if (nextNode instanceof BMWall || nextNode instanceof BMTile)return false;
