@@ -30,7 +30,7 @@ public class BMBoard_Player  extends PaintedPanel {
 	private int curr_hp;
 	private String local_username;
 	
-			public BMBoard_Player(Image image){
+			public BMBoard_Player(Image image, ActionListener quit){
 				super(	image,true);
 				setLayout(new GridBagLayout());
 				GridBagConstraints gbc = new GridBagConstraints();
@@ -84,14 +84,7 @@ public class BMBoard_Player  extends PaintedPanel {
 				QuitButton = new PaintedButton ("Quit", BMLibrary.readImages("button2.png"), BMLibrary.readImages("button2-0.png"), 10);
 				QuitButton.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 15));
 
-				QuitButton.addActionListener(new ActionListener(){
-
-					@Override
-					public void actionPerformed(ActionEvent e) {
-						// TODO Auto-generated method stub
-					}
-					
-				});
+				QuitButton.addActionListener(quit);
 				
 				Item1Label.setPreferredSize(new Dimension(60, 50));
 				SpeedLabel.setPreferredSize(new Dimension(60, 50));

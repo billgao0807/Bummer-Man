@@ -32,6 +32,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
@@ -58,7 +59,7 @@ public class BMBoardPanel extends JPanel{
 	private PaintedPanel chatPanel, boardPanel;
 
 	private BMBoard_Player playerPanel;
-	private static JTextPane chatPane;
+	private static JTextArea chatArea ;
 	private JTextField chatTF;
   	private final NodePanel[][] nodeGrid;
 
@@ -122,7 +123,7 @@ public class BMBoardPanel extends JPanel{
 		this.setLayout(new BorderLayout());
 		chatPanel= new PaintedPanel(null);
 		boardPanel = new PaintedPanel( null);
-		playerPanel = new BMBoard_Player( BMLibrary.readImages("frame.png"));
+		playerPanel = new BMBoard_Player( BMLibrary.readImages("frame.png"), playingGame);
 		playerPanel.setPreferredSize(new Dimension(150, BMBoardPanel.this.getHeight()));
 
 		chatPanel.setPreferredSize(new Dimension(150, BMBoardPanel.this.getHeight()));
@@ -133,8 +134,8 @@ public class BMBoardPanel extends JPanel{
 //chatPanel initialize
 		
 		chatPanel.setLayout(new BorderLayout());
-		chatPane = new JTextPane();
-		chatPane.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
+		chatArea = new JTextArea();
+		chatArea.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
 
 		chatTF = new JTextField();
 		chatTF.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
@@ -152,10 +153,10 @@ public class BMBoardPanel extends JPanel{
 			}
 			
 		});
-		chatPane.setPreferredSize(new Dimension(chatPanel.getWidth(), 400));
-        jsp = new JScrollPane(chatPane);
+		chatArea.setPreferredSize(new Dimension(chatPanel.getWidth(), 400));
+        jsp = new JScrollPane(chatArea);
 
-		chatPane.setEditable(false);
+        chatArea.setEditable(false);
 		
 
 		
@@ -311,11 +312,11 @@ public class BMBoardPanel extends JPanel{
 	}
 	
 	public static void set_chat_text(String name, String content){
-		String orgin = chatPane.getText();
+		String orgin = chatArea.getText();
 	
-		chatPane.setText(orgin + '\n' +name + " : " + content);
+		chatArea.setText(orgin + '\n' +name + " : " + content);
 
-		chatPane.setCaretPosition(chatPane.getDocument().getLength());
+		chatArea.setCaretPosition(chatArea.getDocument().getLength());
 		
 	}
 
