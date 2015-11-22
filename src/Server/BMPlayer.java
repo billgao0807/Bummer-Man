@@ -49,7 +49,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	private static final int normalCoolingTime = 6;
 	private static final int reducedCoolingTime = 3;
 	//Wait 5 or 3 seconds between a bomb is dropped and it detonates
-	private static final int normalDetonatedTime = 2;
+	private static final int normalDetonatedTime = 4;
 	private static final int reducedDetonatedTime = 1;
 	//Inclusive small coordinates limit:7, 247
 	private static final int smallCoordinateUpperLimit = 960;
@@ -275,19 +275,19 @@ public abstract class BMPlayer extends Thread implements Serializable{
 					
 					break;
 			//Up
-			case BMMove.up: location.setLocation(initX, initY-1);
+			case BMMove.up: location.setLocation(initX, initY-speed);
 					direction = BMMove.face_up;
 					break;
 			//Down
-			case BMMove.down: location.setLocation(initX, initY+1);
+			case BMMove.down: location.setLocation(initX, initY+speed);
 					direction = BMMove.face_down;
 					break;
 			//Left
-			case BMMove.left: location.setLocation(initX-1, initY);
+			case BMMove.left: location.setLocation(initX-speed, initY);
 					direction = BMMove.face_left;
 					break;
 			//Right
-			case BMMove.right: location.setLocation(initX+1, initY);
+			case BMMove.right: location.setLocation(initX+speed, initY);
 					direction = BMMove.face_right;
 					break;
 			//Drop a bomb
@@ -314,7 +314,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			BMNodeItem itemNode = (BMNodeItem)nextNode;
 			int value = itemNode.getValue();
 			addItem(new BMItem(value));
-			itemNode.vanish(ID);
+			itemNode.getItem();
 		}
 	}
 	

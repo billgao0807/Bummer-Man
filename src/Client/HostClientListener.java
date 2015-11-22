@@ -159,6 +159,10 @@ public class HostClientListener  extends Thread{
 					System.out.println("serverCommunicationFailed");
 				} catch (ClassNotFoundException cnfe) {
 					System.out.println(cnfe);
+				} catch (ClassCastException e){
+					e.printStackTrace();
+				} catch (ArrayStoreException e){
+					e.printStackTrace();
 				}
 			}
 	 }

@@ -17,7 +17,7 @@ public class BMBomb extends BMNode{
 		start();
 	}
 
-	public boolean vanish() {
+	public boolean vanish(int id) {
 		System.out.println("Power " + power);
 		for (int i = 1; i <= power; i++) {
 			System.out.println((x+i) + " " + y);
@@ -49,7 +49,7 @@ public class BMBomb extends BMNode{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		vanish();
+		vanish(mPlayer.getid());
 	}
 	
 	public int getPower() {
