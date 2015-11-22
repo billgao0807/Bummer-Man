@@ -129,8 +129,10 @@ public class BMClientPanel extends JPanel{
 //				String ip = menuPanel.IP.getText();
 				int portNumber = Integer.parseInt(temp);
 				simulation = new BMSimulation(5555,5);
-
+				
 				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
+				hostClient.sendJoin(username);
+				
 			}
 		},
 		new ActionListener()

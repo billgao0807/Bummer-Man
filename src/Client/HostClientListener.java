@@ -97,7 +97,8 @@ public class HostClientListener  extends Thread{
 	 public void sendJoin(String username) {
 		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
 		 tempMap.put("type", "join");
-		 tempMap.put("username", username);		 
+		 tempMap.put("username", username);	
+		 System.out.println("This user's name " + username);
 	        try {
 	        	oos.writeObject(tempMap);
 				oos.flush();
@@ -132,6 +133,7 @@ public class HostClientListener  extends Thread{
 						Integer [][] board = (Integer[][]) map.get("board");
 						int time = (int) map.get("time");
 						Vector<TreeMap<String, Object>> players =  (Vector<TreeMap<String, Object>>) map.get("players");
+						System.out.println(players);
 						clientpanel.set_start(board, time, players);
 					}
 					else if (((String)map.get("type")).equals("move")){

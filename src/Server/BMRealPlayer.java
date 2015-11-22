@@ -16,5 +16,6 @@ public class BMRealPlayer extends BMPlayer {
 	public BMRealPlayer(int ID, int initialLives, String name){
 		super(ID, initialLives);
 		username = name;
+		System.out.println("USer's name " +username);
 	}
 }

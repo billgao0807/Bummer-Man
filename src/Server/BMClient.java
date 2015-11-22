@@ -82,4 +82,8 @@ public class BMClient extends Thread {
 		tempMap.put("content", (String)map.get("content"));
 		hs.sendMapToClients(tempMap);
 	}
+
+	public String getUserName() {
+		return userName;
+	}
 }
