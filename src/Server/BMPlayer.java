@@ -49,11 +49,11 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	private static final int increasedPower = 5;
 	//Wait 10 or 5 seconds before player dropping another bomb 
 	private static final int increasedCoolingTime = 8;
-	private static final int normalCoolingTime = 6;
+	private static final int normalCoolingTime = 4;
 	private static final int decreasedCoolingTime = 3;
 	//Wait 5 or 3 seconds between a bomb is dropped and it detonates
 	private static final int increasedDetonatedTime = 7;
-	private static final int normalDetonatedTime = 5;
+	private static final int normalDetonatedTime = 4;
 	private static final int decreasedDetonatedTime = 3;
 	//Inclusive small coordinates limit:7, 247
 	private static final int smallCoordinateUpperLimit = 988;
@@ -233,8 +233,8 @@ public abstract class BMPlayer extends Thread implements Serializable{
 				case BMItem.speeddown: speed--; break;
 				case BMItem.powerup: power++; break;
 				case BMItem.powerdown: power--; break;
-				case BMItem.coolingfast: coolingTime--; break;
-				case BMItem.coolingslow: coolingTime++; break;
+				case BMItem.coolingfast: coolingTime/=2; break;
+				case BMItem.coolingslow: coolingTime*=2; break;
 				case BMItem.detonatingfast: detonatedTime--; break;
 				case BMItem.detonatingslow: detonatedTime++; break;
 			}

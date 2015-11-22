@@ -165,6 +165,7 @@ public class HostClientListener  extends Thread{
 				} catch (IOException ioe) {
 					//mFClientGUI.addMessage(Constants.serverCommunicationFailed);
 					System.out.println("serverCommunicationFailed");
+					ioe.printStackTrace();
 				} catch (ClassNotFoundException cnfe) {
 					System.out.println(cnfe);
 					cnfe.printStackTrace();
