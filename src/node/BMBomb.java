@@ -17,28 +17,34 @@ public class BMBomb extends BMNode{
 		start();
 	}
 
-	public boolean vanish(int id) {
+	public boolean vanish(int id){
+		vanish();
+		this.interrupt();
+		return false;
+	}
+	
+	public boolean vanish() {
+		board[x][y] = new BMBombing(x, y, board, BMNodeType.road, mPlayer.getid());
 //		System.out.println("Power " + power);
 		for (int i = 1; i <= power; i++) {
-			System.out.println((x+i) + " " + y);
+//			System.out.println((x+i) + " " + y);
 			if (x + i >= 16 || (board[x+i][y].vanish(mPlayer.getid()))) break;
 		}
 		
 		for (int i = 1; i <= power; i++) {
-			System.out.println((x-i) + " " + y);
+//			System.out.println((x-i) + " " + y);
 			if (x - i < 0 || (board[x-i][y].vanish(mPlayer.getid()))) break;
 		}
 		
 		for (int i = 1; i <= power; i++) {
-			System.out.println(x + " " + (y+i));
+//			System.out.println(x + " " + (y+i));
 			if (y + i >= 16 || (board[x][y+i].vanish(mPlayer.getid()))) break;
 		}
 		
 		for (int i = 1; i <= power; i++) {
-			System.out.println(x + " " + (y-i));
+//			System.out.println(x + " " + (y-i));
 			if (y - i < 0 || (board[x][y-i].vanish(mPlayer.getid()))) break;
 		}
-		board[x][y] = new BMBombing(x, y, board, BMNodeType.road, mPlayer.getid());
 		return true;
 	}
 

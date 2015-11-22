@@ -18,7 +18,7 @@ public class BMTile extends BMNode {
 		int temp = Math.abs(rn.nextInt());
 		
 		// 30% get item, 70% get nothing(just become road)
-		if (temp % 10 <10) {
+		if (temp % 10 < 4) {
 			// Generate random item type
 			int tempItemID = Math.abs(rn.nextInt());
 			tempItemID = tempItemID % 8;
