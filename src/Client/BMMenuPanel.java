@@ -1,19 +1,19 @@
 package Client;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.event.ActionListener;
-import javax.swing.AbstractButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import customUI.PaintedButton;
-import customUI.PaintedPanel;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
-public class BMMenuPanel extends JPanel{
+
+import customUI.PaintedPanel;
+public class BMMenuPanel extends PaintedPanel{
 	private JLabel title;
 	private JButton start;
 	private JButton joinG;
@@ -28,16 +28,28 @@ public class BMMenuPanel extends JPanel{
 	public JTextField portField;
 	
 	
-	BMMenuPanel(ActionListener host, ActionListener join, ActionListener rank)
+	BMMenuPanel(ActionListener host, ActionListener join, ActionListener rank, Image image)
 	{
-		
+		super(image,true);
 		ipField = new JTextField();
-		ipField.setText("ip");
+		ipField.setText("localhost");
 		ipField.setColumns(10);
+		ipField.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                ipField.setText("");
+            }
+        });
 		
 		portField = new JTextField();
-		portField.setText("port");
+		portField.setText("6666");
 		portField.setColumns(10);
+		portField.addMouseListener(new MouseAdapter(){
+            @Override
+            public void mouseClicked(MouseEvent e){
+                portField.setText("");
+            }
+        });
 		
 		JButton btnStart = new JButton("start");
 		
@@ -48,15 +60,16 @@ public class BMMenuPanel extends JPanel{
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(151)
+							.addGap(99)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(btnStart)
 								.addComponent(portField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addComponent(ipField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(141)
-							.addComponent(btnJoin)))
-					.addContainerGap(169, Short.MAX_VALUE))
+							.addGap(133)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(btnJoin)
+								.addComponent(btnStart))))
+					.addContainerGap(217, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -65,11 +78,11 @@ public class BMMenuPanel extends JPanel{
 					.addComponent(ipField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(portField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(31)
+					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnStart)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnJoin)
-					.addContainerGap(100, Short.MAX_VALUE))
+					.addContainerGap(121, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 //		super(null, true);
