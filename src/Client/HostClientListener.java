@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.NotActiveException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
@@ -61,26 +62,31 @@ public class HostClientListener  extends Thread{
 			ois = new ObjectInputStream(mSocket.getInputStream());
 			System.out.println("Break123");
 		} catch (IOException ioe) {
-			System.out.println(ioe);
+//			System.out.println(ioe);
+			ioe.printStackTrace();
 			return false;
 		}
 		return true;
 	}
 	
-	 public void sendMove(int key ) {
+	 public synchronized void sendMove(int key ) {
 		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
 		 tempMap.put("type", "move");
-		 tempMap.put("move", key);		 
+		 tempMap.put("move", key);
 	        try {
 //	        	System.out.println("Send move");
-
-//	    		System.out.println("Send " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
-//	    		BMBoardPanel.a=System.currentTimeMillis();
-	        	oos.writeObject(tempMap);
+//	        		System.out.println(oos + "    " + tempMap);
+	        		oos.writeObject(tempMap);
 				oos.flush();
-	        } catch (Exception e) {
-	            System.out.println(e.toString());
-	        }
+	        } catch (ArrayIndexOutOfBoundsException e) {
+//	            System.out.println(e.toString())
+	        		e.printStackTrace();
+	        } catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (NullPointerException e){
+//				e.printStackTrace();
+			}
 	    }
 	 public void sendMsg(String msg) {
 		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
@@ -161,6 +167,7 @@ public class HostClientListener  extends Thread{
 					System.out.println("serverCommunicationFailed");
 				} catch (ClassNotFoundException cnfe) {
 					System.out.println(cnfe);
+					cnfe.printStackTrace();
 				} catch (ClassCastException e){
 					e.printStackTrace();
 				} catch (ArrayStoreException e){

@@ -113,24 +113,24 @@ public class BMBoard_Player  extends JPanel {
 			
 			public void set_up (Vector<TreeMap<String, Object>> players , String username){
 				this.local_username = username;
-				System.out.println("local_username" +username );
+//				System.out.println("local_username" +username );
 
 				for (int i = 0; i<players.size(); i++) {
-					System.out.println("all_user" +players.get(i).get("username") );
+//					System.out.println("all_user" +players.get(i).get("username") );
 
 					if (((String)players.get(i).get("username")).equals(username))
 					{
 						
 						curr_hp = (int)(players.get(i).get("hp"));
 						total_hp=curr_hp;
-						System.out.println("inside Current_hp" +curr_hp + "total_hp" +total_hp );
+//						System.out.println("inside Current_hp" +curr_hp + "total_hp" +total_hp );
 
 						
 					}
 				}
 				
 				HPLabel.setText("HP " + curr_hp+ '/' + total_hp);
-				System.out.println("Current_hp" +curr_hp + "total_hp" +total_hp );
+//				System.out.println("Current_hp" +curr_hp + "total_hp" +total_hp );
 				repaint();
 
 				
@@ -143,7 +143,7 @@ public class BMBoard_Player  extends JPanel {
 					{
 						
 						curr_hp = (int)(players.get(i).get("hp"));
-						System.out.println("inside Current_hp" +curr_hp + "total_hp" +total_hp );
+//						System.out.println("inside Current_hp" +curr_hp + "total_hp" +total_hp );
 						SpeedLabel.setText("Speed : " + (players.get(i).get("speed")) );
 						CoolingTimeLabel.setText("C : " + (players.get(i).get("coolingTime")) );
 						DetonatedTime_Label.setText("D : " + (players.get(i).get("denotated")) );
@@ -158,7 +158,7 @@ public class BMBoard_Player  extends JPanel {
 				HPLabel.setText("HP " + curr_hp+ '/' + total_hp);
 				
 				TimeLabel.setText("Time : " +(String)players.get(0).get("time"));
-				System.out.println("Current_hp" +curr_hp + "total_hp" +total_hp );
+//				System.out.println("Current_hp" +curr_hp + "total_hp" +total_hp );
 				repaint();
 			}
 			

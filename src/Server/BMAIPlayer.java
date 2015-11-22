@@ -52,13 +52,13 @@ public class BMAIPlayer extends BMPlayer {
 			}
 			//Move
 			else {
-				for(int i=0; i<16; i++){
+				for(int i=0; i<coordinatesRatio/speed; i++){
 					startMove(maxindex);
-					/*try{
-						Thread.sleep(63);
+					try{
+						Thread.sleep(10);
 					} catch(InterruptedException ie){
 						ie.printStackTrace();
-					}*/
+					}
 				}
 			}
 			//Drop bomb

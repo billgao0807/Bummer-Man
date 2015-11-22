@@ -67,6 +67,10 @@ public class BMClient extends Thread {
 					}
 				} catch (ClassNotFoundException e) {
 					System.out.println("BMClient Run CNFE: " + e.getMessage());
+				} catch (ClassCastException e){
+//					e.printStackTrace();
+				} catch (ArrayStoreException e){
+//					e.printStackTrace();
 				}
 			}
 		} catch (IOException ioe) {

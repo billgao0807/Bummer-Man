@@ -189,16 +189,17 @@ public class BMBoardPanel extends JPanel{
 
 			@Override
 			public void run() {
-				while (true){
 					try{
-			 			Thread.sleep(10);
-						clientListener.sendMove(keyPressed);
-					} catch (InterruptedException e) {
+						while (true){
+							Thread.sleep(10);
+							clientListener.sendMove(keyPressed);
+						}
+					}
+					catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 //						System.out.println("Exception " + e.getMessage());
-					}
+					} 
 				}
-			}
 			
 		});
 		sending.start();
