@@ -13,6 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
+import centralServer.BMCentralServer;
+import centralServer.BMCentralServerClient;
 import customUI.PaintedPanel;
 public class BMLoginPanel extends PaintedPanel implements KeyListener{
 	
@@ -30,15 +32,16 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 	ActionListener signup;
 	ActionListener quickG;
 	ActionListener login;
+	BMCentralServerClient serverClient;
 	 BMSigninPage signin;
 	
-	BMLoginPanel (ActionListener signup, ActionListener quickG, ActionListener login, Image image)
+	BMLoginPanel (ActionListener signup, ActionListener quickG, ActionListener login, Image image, BMCentralServerClient serverClient)
 	{
 		super(image);
 		this.setFocusable(true);
 		this.requestFocusInWindow();
 		this.addKeyListener(this);
-		Image buttonImage = null;//BMLibrary.readImages(BMLibrary.path+"button.png");
+		this.serverClient = serverClient;
 		setLayout(new BorderLayout(0, 0));
 		this.signup = signup;
 		this.quickG = quickG;
@@ -89,7 +92,7 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 		// TODO Auto-generated method stub
 		System.out.println("Hello2");
 		
-		signin = new BMSigninPage(signup,quickG,login);
+		signin = new BMSigninPage(signup,quickG,login, serverClient);
 		signin.setVisible(true);
 		
 	}

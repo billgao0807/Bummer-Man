@@ -17,43 +17,39 @@ public class BMBomb extends BMNode{
 		start();
 	}
 
-	public boolean vanish() {
-		for (int i = 0; i < power; i++) {
-			if (x + i < 16) {
-				if (board[x+i][y].vanish(mPlayer.getid()))
-					break;
-			}
-		}
-		for (int i = 0; i < power; i++) {
-			if (x - i < 16) {
-				if (board[x-i][y].vanish(mPlayer.getid()))
-					break;
-			}
-		}
-		for (int i = 0; i < power; i++) {
-			if (y + i < 16) {
-				if (board[x][y+i].vanish(mPlayer.getid()))
-					break;
-			}
+	public boolean vanish(int id) {
+		System.out.println("Power " + power);
+		for (int i = 1; i <= power; i++) {
+			System.out.println((x+i) + " " + y);
+			if (x + i >= 16 || (board[x+i][y].vanish(mPlayer.getid()))) break;
 		}
 		
-		for (int i = 0; i < power; i++) {
-			if (y - i < 16) {
-				if (board[x][y-i].vanish(mPlayer.getid()))
-					break;
-			}
+		for (int i = 1; i <= power; i++) {
+			System.out.println((x-i) + " " + y);
+			if (x - i < 0 || (board[x-i][y].vanish(mPlayer.getid()))) break;
 		}
+		
+		for (int i = 1; i <= power; i++) {
+			System.out.println(x + " " + (y+i));
+			if (y + i >= 16 || (board[x][y+i].vanish(mPlayer.getid()))) break;
+		}
+		
+		for (int i = 1; i <= power; i++) {
+			System.out.println(x + " " + (y-i));
+			if (y - i < 0 || (board[x][y-i].vanish(mPlayer.getid()))) break;
+		}
+		board[x][y] = new BMBombing(x, y, board, BMNodeType.road, mPlayer.getid());
 		return true;
 	}
 
 	@Override
 	public void run() {
 		try {
-			java.lang.Thread.sleep(timeToLive);
+			java.lang.Thread.sleep(timeToLive*1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		vanish();
+		vanish(mPlayer.getid());
 	}
 	
 	public int getPower() {

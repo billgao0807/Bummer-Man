@@ -17,7 +17,7 @@ import node.BMTile;
 import node.BMWall;
 
 public class BMSimulation extends Thread {
-	private BMNode[][] board = new BMNode[16][16];
+	volatile private BMNode[][] board = new BMNode[16][16];
 	private Vector<BMPlayer> players;
 	private BMPlayer host;
 	private int timeLeft = 1000;
@@ -118,6 +118,20 @@ public class BMSimulation extends Thread {
 		map.put("players", playersInfo());
 		hs.sendMapToClients(map);
 		startTimer();
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				while (true){
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					BMSimulation.this.sendMove();
+				}
+			}			
+		}).start();
 	}
 	public void endGame() {	
 		TreeMap<String,Object> map = new TreeMap<String,Object>();
@@ -170,6 +184,7 @@ public class BMSimulation extends Thread {
 		TreeMap<String, Object> info = new TreeMap<String,Object>();
 		info.put("type", "move");
 		info.put("time", timeLeft);
+		info.put("board", this.getBoard());
 		info.put("players", playersInfo());
 		hs.sendMapToClients(info);
 	}

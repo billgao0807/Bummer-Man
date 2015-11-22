@@ -107,11 +107,15 @@ public class HostClientListener  extends Thread{
 	    }
 	 
 	 public void run() {
-			try {
+
+			while(true) {
+				try {
 				
-				while(true) {
 					// in case the server sends another factory to us
-					TreeMap<String,Object>map = (TreeMap<String,Object>)ois.readObject();
+
+					Object obj = ois.readObject();
+					if (!(obj instanceof TreeMap<?,?>)) continue;
+					TreeMap<String,Object>map = (TreeMap<String,Object>)obj;
 
 					if (((String)map.get("type")).equals("join")){
 						int time = (int )map.get("time");
@@ -136,7 +140,8 @@ public class HostClientListener  extends Thread{
 //				    		BMBoardPanel.a=System.currentTimeMillis();
 						int time = (int) map.get("time");
 						Vector<TreeMap<String, Object>> players =  (Vector<TreeMap<String, Object>>) map.get("players");
-						clientpanel.boardPanel.set_move(time, players);
+						Integer[][] board = (Integer[][])map.get("board");
+						clientpanel.boardPanel.set_move(time, players,board);
 					
 					}
 					else if (((String)map.get("type")).equals("msg")){
@@ -149,26 +154,17 @@ public class HostClientListener  extends Thread{
 						Vector<Dictionary> result = (Vector<Dictionary>)map.get("result");
 //						BMBoardPanel.set_result(result);
 					}
-					
-					
-				}
-			} catch (IOException ioe) {
-				//mFClientGUI.addMessage(Constants.serverCommunicationFailed);
-				System.out.println("serverCommunicationFailed");
-			} catch (ClassNotFoundException cnfe) {
-				System.out.println(cnfe);
-			}finally{
-				try{
-					if (oos != null) {
-						oos.close();
-					}
-					if (ois !=null) {
-						ois.close();
-					}
-				} catch(IOException ioe) {
-					System.out.println("lose connection");
+				} catch (IOException ioe) {
+					//mFClientGUI.addMessage(Constants.serverCommunicationFailed);
+					System.out.println("serverCommunicationFailed");
+				} catch (ClassNotFoundException cnfe) {
+					System.out.println(cnfe);
+				} catch (ClassCastException e){
+					e.printStackTrace();
+				} catch (ArrayStoreException e){
+					e.printStackTrace();
 				}
 			}
-		}
+	 }
 }
 	

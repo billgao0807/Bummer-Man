@@ -135,7 +135,7 @@ public class BMBoardPanel extends JPanel{
 		TimeLabel = new JLabel("Time: " + time);
 		HPLabel = new JLabel("HP " + local_hp +"/" +total_hp);
 		AbilityLabel = new JLabel("Ability:");
-		SpeedButton = new PaintedButton("Speend", null, null, 10);
+		SpeedButton = new PaintedButton("Speed", null, null, 10);
 		PowerButton = new PaintedButton("Power", null, null, 10);
 		Item1Button = new PaintedButton ("Item1", null, null, 10);
 		Item2Button = new PaintedButton ("Item2", null, null, 10);
@@ -211,43 +211,33 @@ public class BMBoardPanel extends JPanel{
 	}
 	
 
-//	@Override 
-//	public void paintComponent(Graphics g){
-//		super.paintComponent(g);
-//		if (players == null) return;
-////		System.out.println("Player size " + players.size());
-//		for (int i=0; i<players.size(); i++) {
-//			int x = (int)(players.get(i).get("posX"));
-//			int y = (int)(players.get(i).get("posY"));
-//			Image image= BMLibrary.readImages("player" + i + ".png");
-//			g.drawImage(image, (x-64)*boardPanel.getWidth()/1024+boardPanel.getX(), (y-64)*boardPanel.getHeight()/1024+boardPanel.getY(),boardPanel.getWidth()/16, boardPanel.getHeight()/16, boardPanel);
-//		}
-//	}
 	@Override 
 	public void paint(Graphics g){
 
-		  System.out.println("Paint " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
-  			BMBoardPanel.a=System.currentTimeMillis();
+//		  System.out.println("Paint " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
+//  			BMBoardPanel.a=System.currentTimeMillis();
 		super.paint(g);
 		if (players == null) return;
 //		System.out.println("Player size " + players.size());
 		for (int i=0; i<players.size(); i++) {
 			int x = (int)(players.get(i).get("posX"));
 			int y = (int)(players.get(i).get("posY"));
-			Image image= BMLibrary.readImages("player" + i + ".png");
-			g.drawImage(image, (x-15)*boardPanel.getWidth()/1024+boardPanel.getX(), (y-15)*boardPanel.getHeight()/1024+boardPanel.getY(),boardPanel.getWidth()/16, boardPanel.getHeight()/16, boardPanel);
+			int d = (int)(players.get(i).get("direction"));
+			Image image= BMLibrary.readImages("player" + i + d + ".png");
+			g.drawImage(image, (x-25)*boardPanel.getWidth()/1024+boardPanel.getX(), (y-31)*boardPanel.getHeight()/1024+boardPanel.getY(),boardPanel.getWidth()/16, boardPanel.getHeight()/16, boardPanel);
 		}
 	}
 	
-	public void set_move(int time, Vector<TreeMap<String, Object>>  players_){
+	public void set_move(int time, Vector<TreeMap<String, Object>>  players_, Integer[][] board){
 		this.players = players_;
 //		paintComponent(this.getGraphics());
 //		System.out.println("Start Repaint " +(System.currentTimeMillis()-a) + " ms");
-		a=System.currentTimeMillis();
+//		a=System.currentTimeMillis();
 		this.repaint();
+		repaintBoard(board);
 		validate();	
 //		System.out.println("After Repaint " + (System.currentTimeMillis()-a) + " ms");
-		a=System.currentTimeMillis();
+//		a=System.currentTimeMillis();
 	}
 	
 	public void startSending(){
@@ -262,7 +252,7 @@ public class BMBoardPanel extends JPanel{
 					}
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
-					System.out.println("Exception " + e.getMessage());
+//					System.out.println("Exception " + e.getMessage());
 				}
 			}
 			
@@ -366,12 +356,12 @@ public class BMBoardPanel extends JPanel{
 		
 	}
 
-	public void repaintBoard(int[][] Board){
+	public void repaintBoard(Integer[][] board){
 //		nodeGrid
-		System.out.println("repaint board");
+//		System.out.println("repaint board");
 		for (int i = 0; i < 16; i++){
 			for (int j = 0; j < 16; j++){
-				if (Board != null && nodeGrid[i][j].node_type != Board[i][j]) nodeGrid[i][j].update(Board[i][j]);
+				if (board != null && nodeGrid[i][j].node_type != board[i][j]) nodeGrid[i][j].update(board[i][j]);
 			}
 		}
 	}
@@ -387,82 +377,14 @@ public class BMBoardPanel extends JPanel{
 			setLayout(new GridBagLayout());
 			update(node_type);
 		}
-
 		
 		public void update(int new_type){
 			node_type =new_type;
-			if(new_type == -1) return;
-			else if(new_type == BMNodeType.road){
-				//road
-				setImage(BMLibrary.readImages("wall0.png"));
-				
-			}
-			if(new_type == 1){
-				//wall
-				setImage(BMLibrary.readImages("wall1.png"));
-
-			}
-			if(new_type == 2){
-				//tile
-				setImage(BMLibrary.readImages("wall2.png"));
-
-			}
-			else if(new_type == 3){
-				//bomb
-				setImage(BMLibrary.readImages("bomb"));
-
-			}
-			else if(new_type == 4){
-				//bombing
-				setImage(BMLibrary.readImages("bombing"));
-
-			}
-			else if(new_type == 5){
-				//niceShoes
-				setImage(BMLibrary.readImages("niceShoes"));
-
-			}
-			else if(new_type == 6){
-				//badShoes
-				setImage(BMLibrary.readImages("badShoes"));
-
-			}
-			else if(new_type == 7){
-				//improvePower
-				setImage(BMLibrary.readImages("improvePower"));
-
-			}
-			else if(new_type == 8){
-				//reducePower
-				setImage(BMLibrary.readImages("reducePower"));
-
-			}
-			else if(new_type == 9){
-				//reduceCoolingTime
-				setImage(BMLibrary.readImages("reduceCoolingTime"));
-
-			}
-			else if(new_type == 10){
-				//increaseCoolingTime
-				setImage(BMLibrary.readImages("increaseCoolingTime"));
-
-			}
-			else if(new_type == 11){
-				//increaseDetonatedTime
-				setImage(BMLibrary.readImages("increaseDetonatedTime"));
-
-			}
-			else if(new_type ==12) {
-				//reduceDenotatedTime
-				setImage(BMLibrary.readImages("reduceDenotatedTime"));
-
-			}
-		
+			System.out.println("node"+node_type+".png");
+			Image image = BMLibrary.readImages("node"+node_type+".png");
+			setImage(image);
 			revalidate();
 			repaint();
-		}
-		
-		
-		
+		}	
 	}
 }

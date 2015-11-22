@@ -22,7 +22,7 @@ public class BMHostServer extends Thread {
 	public void removeChatThread(BMClient ct) {
 		ctVector.remove(ct);
 	}
-	public void sendMapToClients(TreeMap<String,Object> output) {
+	public synchronized void sendMapToClients(TreeMap<String,Object> output) {
 		for (BMClient ct : ctVector) {
 			ct.sendMap(output);
 		}
