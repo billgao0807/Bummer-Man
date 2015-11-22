@@ -135,7 +135,7 @@ public class BMBoardPanel extends JPanel{
 		TimeLabel = new JLabel("Time: " + time);
 		HPLabel = new JLabel("HP " + local_hp +"/" +total_hp);
 		AbilityLabel = new JLabel("Ability:");
-		SpeedButton = new PaintedButton("Speend", null, null, 10);
+		SpeedButton = new PaintedButton("Speed", null, null, 10);
 		PowerButton = new PaintedButton("Power", null, null, 10);
 		Item1Button = new PaintedButton ("Item1", null, null, 10);
 		Item2Button = new PaintedButton ("Item2", null, null, 10);
@@ -211,18 +211,6 @@ public class BMBoardPanel extends JPanel{
 	}
 	
 
-//	@Override 
-//	public void paintComponent(Graphics g){
-//		super.paintComponent(g);
-//		if (players == null) return;
-////		System.out.println("Player size " + players.size());
-//		for (int i=0; i<players.size(); i++) {
-//			int x = (int)(players.get(i).get("posX"));
-//			int y = (int)(players.get(i).get("posY"));
-//			Image image= BMLibrary.readImages("player" + i + ".png");
-//			g.drawImage(image, (x-64)*boardPanel.getWidth()/1024+boardPanel.getX(), (y-64)*boardPanel.getHeight()/1024+boardPanel.getY(),boardPanel.getWidth()/16, boardPanel.getHeight()/16, boardPanel);
-//		}
-//	}
 	@Override 
 	public void paint(Graphics g){
 
@@ -234,8 +222,9 @@ public class BMBoardPanel extends JPanel{
 		for (int i=0; i<players.size(); i++) {
 			int x = (int)(players.get(i).get("posX"));
 			int y = (int)(players.get(i).get("posY"));
-			Image image= BMLibrary.readImages("player" + i + ".png");
-			g.drawImage(image, (x-15)*boardPanel.getWidth()/1024+boardPanel.getX(), (y-15)*boardPanel.getHeight()/1024+boardPanel.getY(),boardPanel.getWidth()/16, boardPanel.getHeight()/16, boardPanel);
+			int d = (int)(players.get(i).get("direction"));
+			Image image= BMLibrary.readImages("player" + i + d + ".png");
+			g.drawImage(image, (x-25)*boardPanel.getWidth()/1024+boardPanel.getX(), (y-31)*boardPanel.getHeight()/1024+boardPanel.getY(),boardPanel.getWidth()/16, boardPanel.getHeight()/16, boardPanel);
 		}
 	}
 	

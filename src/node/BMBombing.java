@@ -46,7 +46,7 @@ public class BMBombing extends BMNode{
 		}
 	}
 	
-	public int getID() {
+	public int getPlayerID() {
 		return id;
 	}
 
