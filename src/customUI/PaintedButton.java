@@ -44,7 +44,7 @@ public class PaintedButton extends JButton{
 	@Override
 	protected void paintComponent(Graphics g) {
 		g.drawImage(toDraw, 0, 0, getWidth(), getHeight(), null);
-		g.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, mFontSize));
+		g.setFont(BMFontLibrary.getFont("src/Utilities/font/font.ttf", Font.PLAIN, mFontSize));
 		super.paintComponent(g);
 	}
 	
