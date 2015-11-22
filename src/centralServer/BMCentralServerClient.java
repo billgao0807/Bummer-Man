@@ -172,7 +172,7 @@ public class BMCentralServerClient extends Thread {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException ie) {
-			ie.printStackTrace();
+			ie.printStackTrace(); 
 		}
 		
 		System.out.println(ServerConstants.WorldRankingFetchFailure);

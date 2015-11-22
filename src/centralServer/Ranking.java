@@ -3,7 +3,7 @@ package centralServer;
 import java.io.Serializable;
 
 /*
- * Encapsulates the ranking data for a a single player
+ * Container class for the ranking data for a a single player
  */
 public class Ranking implements Serializable {
 	private static final long serialVersionUID = 6412772210281108230L;
