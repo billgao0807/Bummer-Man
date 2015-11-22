@@ -102,7 +102,9 @@ public class BMMenuPanel extends PaintedPanel{
 		btnJoin.addActionListener(join);
 //		b2.add(joinG);
 //		ranking = new PaintedButton ("Ranking", null, null, 20);
+		
 //		ranking.addActionListener(rank);
+		
 //		b3.add(ranking);
 //		setLayout(new GridBagLayout());
 //		GridBagConstraints gbc = new GridBagConstraints();
