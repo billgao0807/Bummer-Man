@@ -18,7 +18,7 @@ public class BMBomb extends BMNode{
 	}
 
 	public boolean vanish(int id) {
-		System.out.println("Power " + power);
+//		System.out.println("Power " + power);
 		for (int i = 1; i <= power; i++) {
 			System.out.println((x+i) + " " + y);
 			if (x + i >= 16 || (board[x+i][y].vanish(mPlayer.getid()))) break;

@@ -14,6 +14,7 @@ import java.awt.Insets;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -30,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
@@ -74,6 +76,8 @@ public class BMBoardPanel extends JPanel{
 	volatile int keyPressed = 0;
 	private Thread sending;
 	public static long a;
+	private JScrollPane jsp;
+
 
 	public void setupMap(Integer[][] map, int time, Vector<TreeMap<String, Object>> players2 , String username, HostClientListener clientListener){
 
@@ -116,8 +120,8 @@ public class BMBoardPanel extends JPanel{
 		setSize(1000,600);
 		this.setLayout(new BorderLayout());
 		chatPanel= new PaintedPanel(null);
-		boardPanel = new PaintedPanel(null);
-		playerPanel = new BMBoard_Player( );
+		boardPanel = new PaintedPanel( null);
+		playerPanel = new BMBoard_Player( BMLibrary.readImages("frame.png"));
 		playerPanel.setPreferredSize(new Dimension(150, BMBoardPanel.this.getHeight()));
 
 		chatPanel.setPreferredSize(new Dimension(150, BMBoardPanel.this.getHeight()));
@@ -131,14 +135,27 @@ public class BMBoardPanel extends JPanel{
 		chatPane = new JTextPane();
 		chatTF = new JTextField();
 		chatButton = new PaintedButton("send" , null, null, 10);	
-		chatPane.setPreferredSize(new Dimension(chatPanel.getWidth(), 450));
+		chatButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				clientListener.sendMsg(chatTF.getText());
+				chatTF.setText("");
+				
+			}
+			
+		});
+		chatPane.setPreferredSize(new Dimension(chatPanel.getWidth(), 400));
+        jsp = new JScrollPane(chatPane);
+
 		chatPane.setEditable(false);
 		
 
 		
 //add component into chatPanel
 		
-		chatPanel.add(chatPane, BorderLayout.NORTH);
+		chatPanel.add(jsp, BorderLayout.NORTH);
 		chatPanel.add(chatTF, BorderLayout.CENTER);
 		chatPanel.add(chatButton, BorderLayout.SOUTH);
 //add players
