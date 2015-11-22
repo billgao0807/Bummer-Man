@@ -20,6 +20,7 @@ import customUI.ClearPanel;
 import customUI.PaintedButton;
 import customUI.PaintedPanel;
 
+
 public class BMSigninPage extends JFrame{
 private static final long serialVersionUID = 5147395078473323173L;
 	
@@ -34,7 +35,7 @@ private static final long serialVersionUID = 5147395078473323173L;
 		setSize(minSize);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		signIn si = new signIn(signup, quickG, login, BMLibrary.readImages("background4.png"));
+		signIn si = new signIn(signup, quickG, login, BMLibrary.readImages("frame0.png"));
 		add(si);
 		
 
@@ -52,7 +53,7 @@ class signIn extends PaintedPanel
 	private PaintedButton loginB;
 	signIn(ActionListener signup, ActionListener quickG, ActionListener login, Image image)
 	{
-		super(image);
+		super(image, true);
 		setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		setVisible(true);
@@ -95,9 +96,14 @@ class signIn extends PaintedPanel
 		password.setOpaque(false);
 		password.add(passwordInput, gbc1);
 		
-		signupB = new PaintedButton("Sign up",BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 18);
+		signupB = new PaintedButton(
+				"Start",
+				BMLibrary.readImages("button0.png"),
+				BMLibrary.readImages("button0-0.png"),
+				22
+				);
 		signupB.addActionListener(signup);
-		signupB.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
+		//signupB.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		JPanel signupP = new JPanel();
 		signupP.add(new ClearPanel());
 		signupP.add(signupB);

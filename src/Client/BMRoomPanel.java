@@ -5,6 +5,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionListener;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -38,6 +40,10 @@ public class BMRoomPanel extends PaintedPanel{
 	private PaintedPanel player1;
 	private PaintedPanel player2;
 	private PaintedPanel player3;
+	public JPanel lt;
+	public JPanel ll;
+	public JPanel rt;
+	public JPanel rl;
 
 	BMRoomPanel(boolean identity,ActionListener startP, ActionListener startB, ActionListener quit,Image image)
 	{
@@ -80,7 +86,7 @@ public class BMRoomPanel extends PaintedPanel{
 		left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
 		left.setBounds(0, 0, this.getWidth()/3, this.getHeight()/2);
 
-		JPanel lt = new JPanel();
+		lt = new JPanel();
 		lt.setLayout(new BorderLayout());
 		lt.setOpaque(false);
 		JLabel username0 = new JLabel("player0");
@@ -94,7 +100,7 @@ public class BMRoomPanel extends PaintedPanel{
 		left.add(lt);
 		player0.setLayout(new GridLayout(1, 0, 0, 0));
 		
-		JPanel ll = new JPanel();
+		ll = new JPanel();
 		ll.setLayout(new BorderLayout());
 		ll.setOpaque(false);
 		JLabel username1 = new JLabel("player1");
@@ -116,10 +122,12 @@ public class BMRoomPanel extends PaintedPanel{
 		comboBox.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 		for (String str : t){
 			comboBox.addItem(str);
+			comboBox.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		}
 		JComboBox comboBox_1 = new JComboBox();
 		for (Integer Int : hp){
 			comboBox_1.addItem(Int);
+			comboBox_1.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		}
 		comboBox_1.setBorder(BorderFactory.createEmptyBorder(0, 0, 60, 0));
 		JButton btnPlay = new JButton("Play");
@@ -157,7 +165,7 @@ public class BMRoomPanel extends PaintedPanel{
 		right.setLayout(new BoxLayout(right, BoxLayout.Y_AXIS));
 		right.setBounds(0, 0, this.getWidth()/3, this.getHeight()/2);
 
-		JPanel rt = new JPanel();
+		rt = new JPanel();
 		rt.setLayout(new BorderLayout());
 		rt.setOpaque(false);
 		JLabel username2 = new JLabel("player2");
@@ -171,7 +179,7 @@ public class BMRoomPanel extends PaintedPanel{
 		right.add(rt);
 		player2.setLayout(new GridLayout(1, 0, 0, 0));
 
-		JPanel rl = new JPanel();
+		rl = new JPanel();
 		rl.setLayout(new BorderLayout());
 		rl.setOpaque(false);
 		JLabel username3 = new JLabel("player3");
@@ -184,10 +192,17 @@ public class BMRoomPanel extends PaintedPanel{
 		rl.add(player3, BorderLayout.CENTER);
 		right.add(rl);
 
-
-
-
-
-
+	}
+	public void repaintPlayer(TreeMap<Integer, String> treeMap)
+	{
+		lt.setVisible(false);
+		ll.setVisible(false);
+		rt.setVisible(false);
+		rl.setVisible(false);
+		for(Entry<Integer, String> entry : treeMap.entrySet()) {
+			 String value = entry.getValue();
+			 System.out.println(value);
+		}
+		
 	}
 }
