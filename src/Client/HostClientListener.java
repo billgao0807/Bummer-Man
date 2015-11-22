@@ -69,7 +69,7 @@ public class HostClientListener  extends Thread{
 		return true;
 	}
 	
-	 public synchronized void sendMove(int key ) {
+	 public void sendMove(int key ) {
 		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
 		 tempMap.put("type", "move");
 		 tempMap.put("move", key);

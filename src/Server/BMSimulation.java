@@ -165,14 +165,6 @@ public class BMSimulation extends Thread {
 		map.put("players", hs.getNames());
 		hs.sendMapToClients(map);
 	}
-	public void getGameBoard(){
-		TreeMap<String,Object> map = new TreeMap<String,Object>();
-		map.put("type", "game");
-		map.put("board", getBoard());
-		map.put("time", timeLeft);
-		map.put("players", playersInfo());
-		hs.sendMapToClients(map);
-	}
 	public Vector<BMPlayer> getAllPlayers(){
 		return players;
 	}

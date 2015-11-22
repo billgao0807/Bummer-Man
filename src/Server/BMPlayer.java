@@ -148,17 +148,13 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	}
 	
 	public void killed(int id){
-//		if (respawning) return;
-//	respawning = true;
-		if(mLock.tryLock()){
-			try{
+		if (respawning) return;
+		respawning = true;
 				HP--;
 				if (HP <= 0) lost = true;
 				location.x = initialLocation.x;
 				location.y = initialLocation.y;
 				simulation.addKill(id);
-				simulation.sendMove();
-				//System.out.println("hp is " + HP);
 				try{
 				Thread.sleep(3000);
 				} catch (InterruptedException ie){
@@ -166,13 +162,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 				} finally{
 					System.out.println("Recovered " + HP);
 					respawning = false;
-				}				
-			}
-			finally{
-				mLock.unlock();
-			}
-			
-		}
+				}
 		//		new Thread(new Runnable(){
 //			@Override
 //			public void run() {
@@ -334,8 +324,8 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			else return true;
 		}
 		else{
-			//int initBigX = location.x/16;
-			//int initBigY = location.y/16;
+			int initBigX = location.x/64;
+			int initBigY = location.y/64;
 			int initSmallX = location.x;
 			int initSmallY = location.y;
 			
@@ -354,8 +344,10 @@ public abstract class BMPlayer extends Thread implements Serializable{
 //			System.out.println("X " + finalSmallX + " Y " + finalSmallY);
 			if (pointInSmallBounds(new Point(finalSmallX, finalSmallY))){
 				BMNode nextNode = simulation.getNode(finalSmallX/coordinatesRatio, finalSmallY/coordinatesRatio);
-				if (nextNode instanceof BMWall || nextNode instanceof BMTile)return false;
 				
+				BMNode currNode = simulation.getNode(initBigX, initBigY);
+				if (currNode instanceof BMBomb) return true;
+				else if (nextNode instanceof BMWall || nextNode instanceof BMTile || nextNode instanceof BMBomb) return false;
 				else return true;
 			}
 			else return false;

@@ -325,7 +325,7 @@ public class BMBoardPanel extends JPanel{
 		
 		public void update(int new_type){
 			node_type =new_type;
-			System.out.println("node"+node_type+".png");
+//			System.out.println("node"+node_type+".png");
 			Image image = BMLibrary.readImages("node"+node_type+".png");
 			setImage(image);
 			revalidate();
