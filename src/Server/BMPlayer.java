@@ -56,6 +56,8 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	private static final int bigCoordinateUpperLimit = 15;
 	private static final int bigCoordinateLowerLimit = 0;
 	
+	private static final int coordinatesRatio = 64;
+	
 	protected Point initialLocation;
 	protected Point location;
 	protected int speed;
@@ -241,9 +243,22 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			case 4: location.setLocation(initX+1, initY);
 					break;
 			//Drop a bomb
-			case 5: simulation.dropBomb(initX/64, initY/64, this);
+			case 5: simulation.dropBomb(initX/coordinatesRatio, initY/coordinatesRatio, this);
 					cooling = true;
-					break;
+					new Thread(new Runnable(){
+						@Override
+						public void run() {
+							try {
+								Thread.sleep(1000*coolingTime);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							finally {
+								cooling = false;
+							}
+						}
+					}).start();
 		}
 		BMNode nextNode = simulation.getNode(location.x/64, location.y/64);
 		if (nextNode instanceof BMBombing){
@@ -368,7 +383,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		info.put("power", power);
 		info.put("item1", items.get(0));
 		info.put("item2", items.get(1));
-		System.out.println("Info " +info);
+//		System.out.println("Info " +info);
 		return info;
 	}
 	public void addKill() {
