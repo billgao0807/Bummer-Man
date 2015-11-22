@@ -176,10 +176,12 @@ public class BMClientPanel extends JPanel{
 				
 				
 				
-				simulation = new BMSimulation(5555,5);
-				
+				simulation = new BMSimulation(5555,4);
+				System.out.println("start server");
 				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
+				System.out.println("connect server");
 				hostClient.sendJoin(username);
+				System.out.println("Join game");
 				
 			}
 		},
@@ -244,7 +246,7 @@ public class BMClientPanel extends JPanel{
 					BMClientPanel.this.revalidate();
 					
 				}
-			},BMLibrary.readImages("background3.png")
+			},BMLibrary.readImages("vs.png")
 			);
 		
 	rankPanel = new BMRankPanel(new ActionListener(){
