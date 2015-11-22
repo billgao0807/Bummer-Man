@@ -38,6 +38,7 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 		this.setFocusable(true);
 		this.requestFocusInWindow();
 		this.addKeyListener(this);
+		Image buttonImage = null;//BMLibrary.readImages(BMLibrary.path+"button.png");
 		setLayout(new BorderLayout(0, 0));
 		this.signup = signup;
 		this.quickG = quickG;
