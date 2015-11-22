@@ -259,6 +259,7 @@ public class BMCentralServerClient extends Thread {
 	/*
 	 * For debugging
 	 */
+	/*
 	public static void main(String args[]) {
 		try {
 			BMCentralServerClient csc = new BMCentralServerClient(6789);
@@ -269,5 +270,5 @@ public class BMCentralServerClient extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	}*/
 }
