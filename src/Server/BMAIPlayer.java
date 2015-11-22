@@ -6,9 +6,11 @@ import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
+import java.util.Stack;
 import java.util.TreeSet;
 import java.util.Vector;
 
+import Utilities.BMMove;
 import Utilities.BMNodeType;
 import node.BMBomb;
 import node.BMBombing;
@@ -31,57 +33,274 @@ public class BMAIPlayer extends BMPlayer {
 	}
 	
 	public void run(){
-		int [] moveRatings = new int[5];
-		Random rand = new Random();
-//		System.out.println("Start running");
-		while(!hasLost()){
-			for(int i=0; i<5; i++) {
-				moveRatings[i] = 0;
-				if(canMove(i)) moveRatings[i] = calculateMoveRatings(i);
-				else moveRatings[i] = Integer.MIN_VALUE;
-			}
-			int maxindex = 0;
-			int maxvalue = Integer.MIN_VALUE;
-			for(int i=0; i<5; i++){
-				if(maxvalue < moveRatings[i]){
-					maxvalue = moveRatings[i];
-					maxindex = i;
+		while (!hasLost()){
+			Queue<Point> path = null;
+			Vector<Point> reachable = getReachablePoints();
+//			if (reachable.empty()) {
+//				System.out.println("Empty stack");
+//				continue;
+//			}
+			int [][] board = searchSave();
+			Point p = null;
+//			if (ID == 3) System.out.println("Start");
+			Random r = new Random();
+			while (path == null){
+				if (reachable.isEmpty()) break;
+				int index = Math.abs(r.nextInt())%reachable.size();
+				p = reachable.get(index);
+				reachable.remove(index);
+				if (board[p.x][p.y] == safe){ 
+//					System.out.println("Target " + p);
+					path = findBFSPath(p);
+					break;
 				}
 			}
-//			System.out.println("Player " + ID + " moves " + maxindex);
-			//Stay
-			if (maxindex == 0){
-				/*try{
-					//Thread.sleep(10);
-					
-				} catch(InterruptedException ie){
-					ie.printStackTrace();
-				}*/
-				int randomMove = rand.nextInt(5);
-				
-				if (canMove(randomMove)) maxindex = randomMove;
+//			if (ID == 3) System.out.println("Mid");
+			if (path == null) continue;
+			while (!path.isEmpty()){
+//				if (ID == 3) System.out.println("Next Point " + path.peek());
+				board = this.searchSave();
+//				if (board[p.x][p.y] == unsafe) System.out.println("UNSAFE");
+				if (board[p.x][p.y] == unsafe || !AIMove(path.peek())) break;
+				path.remove();
 			}
-			//Move
-			
-				for(int i=0; i<coordinatesRatio/speed; i++){
-					startMove(maxindex);
-					try{
-						Thread.sleep(10);
-					} catch(InterruptedException ie){
-						ie.printStackTrace();
-					}
-				}
-			
-			//Drop bomb
-			if(!cooling){
-				startMove(5);
-			}
-			
-			for(int i=0; i<5; i++)
-				moveRatings[i] = Integer.MIN_VALUE;
-			
+//			if (ID == 3) System.out.println("End");
 		}
 	}
+	
+	public Vector<Point> getReachablePoints(){
+		Vector<Point> results = new Vector<Point>();
+		Set<Point> visitedPoints = new HashSet<Point>();
+		Queue<Point> pointQueue = new LinkedList<Point>();
+		pointQueue.add(currPoint());
+		visitedPoints.add(currPoint());
+		while(!pointQueue.isEmpty()){
+			Point p = pointQueue.poll();
+			if(gridInBounds(new Point(p.x, p.y-1))){
+				BMNode upNode = simulation.getNode(p.x, p.y-1);
+				if(upNode instanceof BMWall || upNode instanceof BMTile || upNode instanceof BMBomb || upNode instanceof BMBombing);
+				else {
+					Point newpoint = new Point(p.x, p.y-1);
+					if (!visitedPoints.contains(newpoint)){
+						pointQueue.add(new Point(p.x, p.y-1));
+						visitedPoints.add(newpoint);
+						results.add(newpoint);
+					}
+					
+				}
+			}
+			//Down
+			if(gridInBounds(new Point(p.x, p.y+1))){
+				BMNode downNode = simulation.getNode(p.x, p.y+1);
+				if(downNode instanceof BMWall || downNode instanceof BMTile || downNode instanceof BMBomb || downNode instanceof BMBombing);
+				else {
+					Point newpoint = new Point(p.x, p.y+1);
+					if (!visitedPoints.contains(newpoint)){
+						pointQueue.add(new Point(p.x, p.y+1));
+						visitedPoints.add(newpoint);
+						results.add(newpoint);
+					}
+				}
+			}
+			//Left
+			if(gridInBounds(new Point(p.x-1, p.y))){
+				BMNode leftNode = simulation.getNode(p.x-1, p.y);
+				if(leftNode instanceof BMWall || leftNode instanceof BMTile || leftNode instanceof BMBomb || leftNode instanceof BMBombing);
+				else {
+					Point newpoint = new Point(p.x-1, p.y);
+					if (!visitedPoints.contains(newpoint)){
+						pointQueue.add(new Point(p.x-1, p.y));
+						visitedPoints.add(newpoint);
+						results.add(newpoint);
+					}
+				}
+			}
+			//Right
+			if(gridInBounds(new Point(p.x+1, p.y))){
+				BMNode rightNode = simulation.getNode(p.x+1, p.y);
+				if(rightNode instanceof BMWall || rightNode instanceof BMTile || rightNode instanceof BMBomb || rightNode instanceof BMBombing);
+				else {
+					
+					Point newpoint = new Point(p.x+1, p.y);
+					if (!visitedPoints.contains(newpoint)){
+						pointQueue.add(new Point(p.x+1, p.y));
+						visitedPoints.add(newpoint);
+						results.add(newpoint);
+					}
+				}
+			}
+		}
+		return results;
+	}
+	
+	private Queue<Point> findBFSPath(Point point){
+		
+//		System.out.println("Target " + point + " curr point " + currPoint());
+		if (!pointInBigBounds(point.x, point.y)) return null;
+		if (point.equals(currPoint())) return null;
+		Queue<Point> queue = new LinkedList<Point>();
+		Set<Point> visitedPoints = new HashSet<Point>();
+		Vector<Point> pointQueue = new Vector<Point>();
+		Vector<Integer> parentArray = new Vector<Integer>();
+		boolean pointFound = false;
+		visitedPoints.add(currPoint());
+		pointQueue.add(currPoint());
+		parentArray.add(-1);
+		int endptr = 0;
+		int parentptr = -1;
+		while(!pointFound && endptr > parentptr){
+			parentptr++;
+			Point p = pointQueue.get(parentptr);
+			
+			
+//			System.out.println("Searching " + p);
+			//Up
+			if(gridInBounds(new Point(p.x, p.y-1))){
+				BMNode upNode = simulation.getNode(p.x, p.y-1);
+				if(upNode instanceof BMWall || upNode instanceof BMTile || upNode instanceof BMBomb || upNode instanceof BMBombing);
+				else {
+					Point newpoint = new Point(p.x, p.y-1);
+					if (!visitedPoints.contains(newpoint)){
+						pointQueue.add(new Point(p.x, p.y-1));
+						parentArray.add(parentptr);
+						visitedPoints.add(newpoint);
+						endptr++;
+						if(newpoint.equals(point)){
+							pointFound = true;
+							break;
+						}
+					}
+					
+				}
+			}
+			//Down
+			if(gridInBounds(new Point(p.x, p.y+1))){
+				BMNode downNode = simulation.getNode(p.x, p.y+1);
+				if(downNode instanceof BMWall || downNode instanceof BMTile || downNode instanceof BMBomb || downNode instanceof BMBombing);
+				else {
+					Point newpoint = new Point(p.x, p.y+1);
+					if (!visitedPoints.contains(newpoint)){
+						pointQueue.add(new Point(p.x, p.y+1));
+						parentArray.add(parentptr);
+						visitedPoints.add(newpoint);
+						endptr++;
+						if(newpoint.equals(point)){
+							pointFound = true;
+							break;
+						}
+
+					}
+				}
+			}
+			//Left
+			if(gridInBounds(new Point(p.x-1, p.y))){
+				BMNode leftNode = simulation.getNode(p.x-1, p.y);
+				if(leftNode instanceof BMWall || leftNode instanceof BMTile || leftNode instanceof BMBomb || leftNode instanceof BMBombing);
+				else {
+					Point newpoint = new Point(p.x-1, p.y);
+					if (!visitedPoints.contains(newpoint)){
+						pointQueue.add(new Point(p.x-1, p.y));
+						parentArray.add(parentptr);
+						visitedPoints.add(newpoint);
+						endptr++;
+						if(newpoint.equals(point)){
+							pointFound = true;
+							break;
+						}
+
+					}
+				}
+			}
+			//Right
+			if(gridInBounds(new Point(p.x+1, p.y))){
+				BMNode rightNode = simulation.getNode(p.x+1, p.y);
+				if(rightNode instanceof BMWall || rightNode instanceof BMTile || rightNode instanceof BMBomb || rightNode instanceof BMBombing);
+				else {
+					
+					Point newpoint = new Point(p.x+1, p.y);
+					if (!visitedPoints.contains(newpoint)){
+						pointQueue.add(new Point(p.x+1, p.y));
+						parentArray.add(parentptr);
+						visitedPoints.add(newpoint);
+						endptr++;
+						if(newpoint.equals(point)){
+							pointFound = true;
+							break;
+						}
+
+					}
+				}
+			}
+		}
+		if (!pointFound) return null;
+//		System.out.println("Found path to point");
+		Vector<Point> path = new Vector<Point>();
+		path.add(point);
+		while(parentptr != 0){
+			path.add(pointQueue.get(parentptr));
+			parentptr = parentArray.get(parentptr);
+		}
+		for(int i=path.size()-1; i>=0; i--){
+			queue.add(path.get(i));
+		}
+		return queue;
+	}
+	
+	
+	
+	
+//	public void run(){
+//		int [] moveRatings = new int[5];
+//		Random rand = new Random();
+////		System.out.println("Start running");
+//		while(!hasLost()){
+//			for(int i=0; i<5; i++) {
+//				moveRatings[i] = 0;
+//				if(canMove(i)) moveRatings[i] = calculateMoveRatings(i);
+//				else moveRatings[i] = Integer.MIN_VALUE;
+//			}
+//			int maxindex = 0;
+//			int maxvalue = Integer.MIN_VALUE;
+//			for(int i=0; i<5; i++){
+//				if(maxvalue < moveRatings[i]){
+//					maxvalue = moveRatings[i];
+//					maxindex = i;
+//				}
+//			}
+////			System.out.println("Player " + ID + " moves " + maxindex);
+//			//Stay
+//			if (maxindex == 0){
+//				/*try{
+//					//Thread.sleep(10);
+//					
+//				} catch(InterruptedException ie){
+//					ie.printStackTrace();
+//				}*/
+//				int randomMove = rand.nextInt(5);
+//				
+//				if (canMove(randomMove)) maxindex = randomMove;
+//			}
+//			//Move
+//			
+//				for(int i=0; i<coordinatesRatio/speed; i++){
+//					startMove(maxindex);
+//					try{
+//						Thread.sleep(10);
+//					} catch(InterruptedException ie){
+//						ie.printStackTrace();
+//					}
+//				}
+//			
+//			//Drop bomb
+//			if(!cooling){
+//				startMove(5);
+//			}
+//			
+//			for(int i=0; i<5; i++)
+//				moveRatings[i] = Integer.MIN_VALUE;
+//			
+//		}
+//	}
 
 	private int calculateMoveRatings(int i) {
 		int rating = 0;
@@ -254,12 +473,12 @@ public class BMAIPlayer extends BMPlayer {
 				}
 				//Right
 				if(gridInBounds(new Point(p.x+1, p.y))){
-					BMNode rightNode = simulation.getNode(p.x++, p.y);
+					BMNode rightNode = simulation.getNode(p.x+1, p.y);
 					if(rightNode instanceof BMWall || rightNode instanceof BMTile);
 					else {
 						Point newpoint = new Point(p.x+1, p.y);
 						if (!visitedPoints.contains(newpoint)){
-							pointQueue.add(new Point(p.x++, p.y));
+							pointQueue.add(new Point(p.x+1, p.y));
 							stepsArray.add(stepsArray.get(count)+1);
 							visitedPoints.add(newpoint);
 						}
@@ -475,5 +694,34 @@ public class BMAIPlayer extends BMPlayer {
 			}
 		}
 		return board;
+	}
+	
+	public Point currPoint(){
+		return new Point(location.x/coordinatesRatio,location.y/coordinatesRatio);
+	}
+	
+	public boolean AIMove(Point p){
+		int moveType = 0;
+		Point curr = currPoint();
+		if (p.x > curr.x) moveType = BMMove.right;
+		else if (p.x < curr.x) moveType = BMMove.left;
+		else if (p.y > curr.y) moveType = BMMove.down;
+		else if (p.y < curr.y) moveType = BMMove.up;
+		while (!p.equals(currPoint())){
+			if (canMove(5)){
+				startMove(BMMove.bomb);
+			}
+			else{
+				if (!canMove(moveType)) return false;
+				startMove(moveType);
+			}
+//			System.out.println("Move Type " + moveType);
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		return true;
 	}
 }

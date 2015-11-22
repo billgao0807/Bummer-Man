@@ -220,10 +220,8 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		return ID >= 0;
 	}
 	private void addItem(BMItem item){
-		if(items.size() == 2){
-			items.remove(0);
-		}
-		items.add(item.getValue());
+		items.set(0, items.get(1));
+		items.set(1, item.getValue());
 		
 		speed = normalSpeed;
 		power = normalPower;

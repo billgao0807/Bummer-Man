@@ -18,7 +18,7 @@ public abstract class BMNode extends Thread{
 		}
 		
 		public boolean vanish(int id) {
-			System.out.println("x " + x + " y " + y + " bombing");
+//			System.out.println("x " + x + " y " + y + " bombing");
 			board[x][y] = new BMBombing(x, y, board, BMNodeType.road, id);
 			return false;
 		}
