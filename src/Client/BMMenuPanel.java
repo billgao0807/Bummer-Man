@@ -36,7 +36,7 @@ public class BMMenuPanel extends PaintedPanel{
 		ipField = new JTextField();
 		ipField.setText("localhost");
 		ipField.setColumns(10);
-		ipField.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 10));
+		ipField.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		ipField.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
