@@ -30,7 +30,7 @@ public class HostClientListener  extends Thread{
 	public HostClientListener(BMClientPanel clientpanel, String ip, int host) {		
 		try
 		{
-			mSocket = new Socket(ip,host);
+			mSocket = new Socket("172.20.10.4",host);
 			System.out.println("Hello");
 
 			this.clientpanel = clientpanel;		

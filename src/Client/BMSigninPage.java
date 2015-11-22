@@ -101,6 +101,8 @@ class signIn extends PaintedPanel
 		quickGame.setOpaque(false);
 		quickGame.add(quickGameB);
 		loginB = new PaintedButton("Log In", BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 20);
+		//loginB.addActionListener(
+			//	);
 		loginB.addActionListener(login);
 		JPanel loginP = new JPanel();
 		loginP.setOpaque(false);
