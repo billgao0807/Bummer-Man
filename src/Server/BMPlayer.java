@@ -18,6 +18,7 @@ import node.BMTile;
 import node.BMWall;
 
 import Utilities.BMItem;
+import Utilities.BMMove;
 import Utilities.BMResult;
 
 public abstract class BMPlayer extends Thread implements Serializable{
@@ -74,6 +75,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	protected boolean lost;
 	protected int playerNumber;
 	protected BMSimulation simulation;
+	protected int direction;
 	
 	private Lock mLock;
 	protected volatile boolean respawning;
@@ -116,6 +118,24 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		respawning = false;
 		items.add(-1);
 		items.add(-1);
+		direction = BMMove.face_down; //down
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				while (true){
+					try {
+						Thread.sleep(50);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					BMNode currentNode = simulation.getNode(location.x/coordinatesRatio,  location.y/coordinatesRatio);
+					if(currentNode instanceof BMBombing){
+						BMPlayer.this.killed(((BMBombing)currentNode).getPlayerID());
+					}
+				}
+			}			
+		}).start();
 	}
 	
 	public void setSimulation(BMSimulation simulation){
@@ -232,18 +252,23 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		switch(moveType){
 			//Stop
 			case BMMove.stop: location.setLocation(initX, initY);
+					
 					break;
 			//Up
 			case BMMove.up: location.setLocation(initX, initY-1);
+					direction = BMMove.face_up;
 					break;
 			//Down
 			case BMMove.down: location.setLocation(initX, initY+1);
+					direction = BMMove.face_down;
 					break;
 			//Left
 			case BMMove.left: location.setLocation(initX-1, initY);
+					direction = BMMove.face_left;
 					break;
 			//Right
 			case BMMove.right: location.setLocation(initX+1, initY);
+					direction = BMMove.face_right;
 					break;
 			//Drop a bomb
 			case BMMove.bomb: simulation.dropBomb(initX/coordinatesRatio, initY/coordinatesRatio, this);
@@ -264,14 +289,11 @@ public abstract class BMPlayer extends Thread implements Serializable{
 					}).start();
 		}
 		BMNode nextNode = simulation.getNode(location.x/64, location.y/64);
-		if (nextNode instanceof BMBombing){
-			killed(((BMBombing)nextNode).getID());
-		}
-		else if (nextNode instanceof BMNodeItem){
+		if (nextNode instanceof BMNodeItem){
 			BMNodeItem itemNode = (BMNodeItem)nextNode;
 			int value = itemNode.getValue();
 			addItem(new BMItem(value));
-			
+			itemNode.vanish(ID);
 		}
 	}
 	
@@ -297,11 +319,12 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			//int initBigY = location.y/16;
 			int initSmallX = location.x;
 			int initSmallY = location.y;
+			int threshold = coordinatesRatio/4;
 			switch(moveType){
-				case BMMove.up: initSmallY--; break;
-				case BMMove.down: initSmallY++; break;
-				case BMMove.left: initSmallX--; break;
-				case BMMove.right: initSmallX++; break;
+				case BMMove.up: initSmallY-= threshold; break;
+				case BMMove.down: initSmallY+= threshold; break;
+				case BMMove.left: initSmallX-= threshold; break;
+				case BMMove.right: initSmallX+= threshold; break;
 			}
 			//int finalBigX = initBigX;
 			//int finalBigY = initBigY;
@@ -309,8 +332,9 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			int finalSmallY = initSmallY;
 			System.out.println("X " + finalSmallX + " Y " + finalSmallY);
 			if (pointInSmallBounds(new Point(finalSmallX, finalSmallY))){
-				BMNode nextNode = simulation.getNode(finalSmallX/64, finalSmallY/64);
-				if (nextNode instanceof BMWall || nextNode instanceof BMTile) return false;
+				BMNode nextNode = simulation.getNode(finalSmallX/coordinatesRatio, finalSmallY/coordinatesRatio);
+				if (nextNode instanceof BMWall || nextNode instanceof BMTile)return false;
+				
 				else return true;
 			}
 			else return false;
@@ -379,6 +403,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		info.put("hp", HP);
 		info.put("speed", speed);
 		info.put("power", power);
+		info.put("direction", direction);
 		info.put("item1", items.get(0));
 		info.put("item2", items.get(1));
 //		System.out.println("Info " +info);

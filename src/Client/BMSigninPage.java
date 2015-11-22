@@ -2,6 +2,7 @@ package Client;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -16,6 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import Utilities.BMLibrary;
+import customUI.ClearPanel;
 import customUI.PaintedButton;
 import customUI.PaintedPanel;
 
@@ -46,9 +48,9 @@ class signIn extends PaintedPanel
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private JButton signupB;
-	private JButton quickGameB;
-	private JButton loginB;
+	private PaintedButton signupB;
+	private PaintedButton quickGameB;
+	private PaintedButton loginB;
 	signIn(ActionListener signup, ActionListener quickG, ActionListener login, Image image)
 	{
 		super(image);
@@ -73,6 +75,9 @@ class signIn extends PaintedPanel
 		passwordInput = new JTextField();
 		passwordInput.setText("Password:");
 		passwordInput.setForeground(Color.GRAY);
+	//	passwordInput.setFont();
+		passwordInput.setFont(new Font("font.tff", Font.BOLD, 20));
+
 		passwordInput.setPreferredSize(new Dimension(100, 20));
 		passwordInput.addMouseListener(new MouseAdapter(){
             @Override
@@ -84,17 +89,18 @@ class signIn extends PaintedPanel
 		password.setOpaque(false);
 		password.add(passwordInput);
 		
-		signupB = new PaintedButton("Sign up", null, null, 20);
+		signupB = new PaintedButton("Sign up",BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 20);
 		signupB.addActionListener(signup);
 		JPanel signupP = new JPanel();
+		signupP.add(new ClearPanel());
 		signupP.add(signupB);
 		signupP.setOpaque(false);
-		quickGameB = new PaintedButton("Quick Game", null, null, 20);
+		quickGameB = new PaintedButton("Quick Game", BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 20);
 		quickGameB.addActionListener(quickG);
 		JPanel quickGame = new JPanel();
 		quickGame.setOpaque(false);
 		quickGame.add(quickGameB);
-		loginB = new PaintedButton("Log In", null, null, 20);
+		loginB = new PaintedButton("Log In", BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 20);
 		loginB.addActionListener(login);
 		JPanel loginP = new JPanel();
 		loginP.setOpaque(false);
