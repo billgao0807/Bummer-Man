@@ -51,9 +51,9 @@ public class BMRoomPanel extends PaintedPanel{
 		time = new JLabel("Time:");
 		HP = new JLabel("HP:");
 		this.identity = identity;
-		String[] t = new String[]{"1 min", "2 min", "30 secs"};
+		String[] t = new String[]{"one min", "two mins", " half min"};
 		//timing = new JComboBox<>(t);
-		Integer[] hp = new Integer[]{1,2,3};
+		String[] hp = new String[]{"one","two","three"};
 		//HPCounting = new JComboBox<>(hp);
 		//		
 		//		timeP.add(time);
@@ -68,7 +68,7 @@ public class BMRoomPanel extends PaintedPanel{
 		start.addActionListener(startP);
 		startPanel.setOpaque(false);
 
-		startAI = new PaintedButton("Start(AI)", null, null, 20);
+		startAI = new PaintedButton("Start With AI", null, null, 20);
 		startAIP.add(startAI);
 		startAI.addActionListener(startB);
 		startAIP.setOpaque(false);
@@ -89,7 +89,7 @@ public class BMRoomPanel extends PaintedPanel{
 		lt = new JPanel();
 		lt.setLayout(new BorderLayout());
 		lt.setOpaque(false);
-		JLabel username0 = new JLabel("player0");
+		JLabel username0 = new JLabel("Player Zero");
 		username0.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		username0.setHorizontalAlignment(SwingConstants.CENTER);
 		username0.setOpaque(false);
@@ -103,7 +103,7 @@ public class BMRoomPanel extends PaintedPanel{
 		ll = new JPanel();
 		ll.setLayout(new BorderLayout());
 		ll.setOpaque(false);
-		JLabel username1 = new JLabel("player1");
+		JLabel username1 = new JLabel("Player One");
 		username1.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		username1.setHorizontalAlignment(SwingConstants.CENTER);
 		username1.setOpaque(false);
@@ -125,7 +125,7 @@ public class BMRoomPanel extends PaintedPanel{
 			comboBox.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		}
 		JComboBox comboBox_1 = new JComboBox();
-		for (Integer Int : hp){
+		for (String Int : hp){
 			comboBox_1.addItem(Int);
 			comboBox_1.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		}
@@ -134,7 +134,7 @@ public class BMRoomPanel extends PaintedPanel{
 		btnPlay.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		btnPlay.setAlignmentX(CENTER_ALIGNMENT);
 		btnPlay.addActionListener(startP);
-		JButton btnPlayai = new JButton("Play(AI)");
+		JButton btnPlayai = new JButton("Play With AI");
 		btnPlayai.addActionListener(startB);
 		btnPlayai.setAlignmentX(CENTER_ALIGNMENT);
 		btnPlayai.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
@@ -168,7 +168,7 @@ public class BMRoomPanel extends PaintedPanel{
 		rt = new JPanel();
 		rt.setLayout(new BorderLayout());
 		rt.setOpaque(false);
-		JLabel username2 = new JLabel("player2");
+		JLabel username2 = new JLabel("player Two");
 		username2.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		username2.setHorizontalAlignment(SwingConstants.CENTER);
 		username2.setOpaque(false);
@@ -182,7 +182,7 @@ public class BMRoomPanel extends PaintedPanel{
 		rl = new JPanel();
 		rl.setLayout(new BorderLayout());
 		rl.setOpaque(false);
-		JLabel username3 = new JLabel("player3");
+		JLabel username3 = new JLabel("player Three");
 		username3.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		username3.setHorizontalAlignment(SwingConstants.CENTER);
 		username3.setOpaque(false);
