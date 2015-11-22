@@ -203,6 +203,7 @@ public class BMRatingCalculator {
 		
 		return Math.pow(v, -1);
 	}
+<<<<<<< HEAD
 	
 	
 	/**
@@ -308,7 +309,115 @@ public class BMRatingCalculator {
 	}
 
 	
+=======
+	
+	
+	/**
+	 * This is a formula as per step 4 of Glickman's paper.
+	 * 
+	 * @param player
+	 * @param results
+	 * @return delta
+	 */
+	private double delta(BMRating player, List<BMResult> results) {
+		return v(player, results) * outcomeBasedRating(player, results);
+	}
+	
+	
+	/**
+	 * This is a formula as per step 4 of Glickman's paper.
+	 * 
+	 * @param player
+	 * @param results
+	 * @return expected rating based on game outcomes
+	 */
+	private double outcomeBasedRating(BMRating player, List<BMResult> results) {
+		double outcomeBasedRating = 0;
+		
+		for ( BMResult result: results ) {
+			outcomeBasedRating = outcomeBasedRating
+					+ ( g(result.getOpponent(player).getGlicko2RatingDeviation())
+						* ( result.getScore(player) - E(
+								player.getGlicko2Rating(),
+								result.getOpponent(player).getGlicko2Rating(),
+								result.getOpponent(player).getGlicko2RatingDeviation() ))
+				);
+		}
+		
+		return outcomeBasedRating;
+	}
+	
+	
+	/**
+	 * This is the formula defined in step 6. It is also used for players
+	 * who have not competed during the rating period.
+	 * 
+	 * @param phi
+	 * @param sigma
+	 * @return new rating deviation
+	 */
+	private double calculateNewRD(double phi, double sigma) {
+		return Math.sqrt( Math.pow(phi, 2) + Math.pow(sigma, 2) );
+	}
+
+	
+	/**
+	 * Converts from the value used within the algorithm to a rating in the same range as traditional Elo et al
+	 * 
+	 * @param rating in Glicko2 scale
+	 * @return rating in Glicko scale
+	 */
+	public static double convertRatingToOriginalGlickoScale(double rating) {
+		return ( ( rating  * MULTIPLIER ) + DEFAULT_RATING );
+	}
+	
+	
+	/**
+	 * Converts from a rating in the same range as traditional Elo et al to the value used within the algorithm
+	 * 
+	 * @param rating in Glicko scale
+	 * @return rating in Glicko2 scale
+	 */
+	public static double convertRatingToGlicko2Scale(double rating) {
+		return ( ( rating  - DEFAULT_RATING ) / MULTIPLIER ) ;
+	}
+	
+	
+	/**
+	 * Converts from the value used within the algorithm to a rating deviation in the same range as traditional Elo et al
+	 * 
+	 * @param ratingDeviation in Glicko2 scale
+	 * @return ratingDeviation in Glicko scale
+	 */
+	public static double convertRatingDeviationToOriginalGlickoScale(double ratingDeviation) {
+		return ( ratingDeviation * MULTIPLIER ) ;
+	}
+	
+	
+	/**
+	 * Converts from a rating deviation in the same range as traditional Elo et al to the value used within the algorithm
+	 * 
+	 * @param ratingDeviation in Glicko scale
+	 * @return ratingDeviation in Glicko2 scale
+	 */
+	public static double convertRatingDeviationToGlicko2Scale(double ratingDeviation) { 
+		return ( ratingDeviation / MULTIPLIER );
+	}
+
+	
+	public double getDefaultRating() {
+		return DEFAULT_RATING;
+	}
+
+	
+	public double getDefaultVolatility() {
+		return defaultVolatility;
+	}
+
+	
+>>>>>>> 4076c9f1e083b6b6ad4abe0e594430cac5114e65
 	public double getDefaultRatingDeviation() {
 		return DEFAULT_DEVIATION;
 	}
 }
+

@@ -1,7 +1,10 @@
 package Utilities;
 
+<<<<<<< HEAD
+=======
 import java.io.Serializable;
 
+>>>>>>> 4076c9f1e083b6b6ad4abe0e594430cac5114e65
 /*
  * Copyright (C) 2013 Jeremy Gooch <http://www.linkedin.com/in/jeremygooch/>
  *
@@ -33,6 +36,31 @@ public class BMResult {
 		if ( ! validPlayers(winner, loser) ) {
 			throw new IllegalArgumentException();
 		}
+<<<<<<< HEAD
+
+		this.winner = winner;
+		this.loser = loser;
+	}
+	
+	
+	/**
+	 * Record a draw between two players.
+	 * 
+	 * @param player1
+	 * @param player2
+	 * @param isDraw (must be set to "true")
+	 */
+	public BMResult(BMRating player1, BMRating player2, boolean isDraw) {
+		if (! isDraw || ! validPlayers(player1, player2) ) {
+			throw new IllegalArgumentException();
+		}
+		
+		this.winner = player1;
+		this.loser = player2;
+		this.isDraw = true;
+	}
+=======
+>>>>>>> 4076c9f1e083b6b6ad4abe0e594430cac5114e65
 
 		this.winner = winner;
 		this.loser = loser;
@@ -73,6 +101,25 @@ public class BMResult {
 	
 	
 	/**
+<<<<<<< HEAD
+	 * Check that we're not doing anything silly like recording a match with only one player.
+	 * 
+	 * @param player1
+	 * @param player2
+	 * @return
+	 */
+	private boolean validPlayers(BMRating player1, BMRating player2) {
+		if (player1.equals(player2)) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
+	
+	/**
+=======
+>>>>>>> 4076c9f1e083b6b6ad4abe0e594430cac5114e65
 	 * Test whether a particular player participated in the match represented by this result.
 	 * 
 	 * @param player
@@ -142,4 +189,8 @@ public class BMResult {
 	public BMRating getLoser() {
 		return this.loser;
 	}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 4076c9f1e083b6b6ad4abe0e594430cac5114e65
