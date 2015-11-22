@@ -3,6 +3,7 @@ package Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -24,6 +25,7 @@ public class BMHostServer extends Thread {
 	}
 	public void sendMapToClients(TreeMap<String,Object> output) {
 		for (BMClient ct : ctVector) {
+//			System.out.println("Direction " + ((Vector)output.get("players")).get(0));
 			ct.sendMap(output);
 		}
 	}

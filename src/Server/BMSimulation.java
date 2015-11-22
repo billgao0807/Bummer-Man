@@ -1,6 +1,7 @@
 package Server;
 
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -18,7 +19,7 @@ import node.BMWall;
 
 public class BMSimulation extends Thread {
 	volatile private BMNode[][] board = new BMNode[16][16];
-	private Vector<BMPlayer> players;
+	private ArrayList<BMPlayer> players;
 	private BMPlayer host;
 	private int timeLeft = 1000;
 	private BMHostServer hs;
@@ -32,7 +33,7 @@ public class BMSimulation extends Thread {
 		System.out.println("num of player "+ numPlayer);
 		this.numPlayer = numPlayer; 
 		if (this.numPlayer > 4) numPlayer = 4;
-		players = new Vector<BMPlayer>();
+		players = new ArrayList<BMPlayer>();
 		hs = new BMHostServer(port,numPlayer);
 		hs.setSimulation(this);
 		loadBoard(BMLibrary.getGameMap());
@@ -86,7 +87,8 @@ public class BMSimulation extends Thread {
 		Vector<TreeMap<String,Object>> results = new Vector<TreeMap<String,Object>>();
 		for (BMPlayer player : players){
 			TreeMap<String,Object> result = player.getResult();
-			result.put("username", hs.getClients().get(player.getid()).getName());
+			if (player instanceof BMRealPlayer) result.put("username", hs.getClients().get(player.getid()).getName());
+			else result.put("username", "AI player " + player.getid());
 			results.add(result);
 		}
 		return results;
@@ -129,15 +131,25 @@ public class BMSimulation extends Thread {
 			public void run() {
 				while (true){
 					try {
-						Thread.sleep(10);
+						Thread.sleep(20);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					BMSimulation.this.sendMove();
+					if (checkEnd()) {
+						endGame();
+						return;
+					}
+					else BMSimulation.this.sendMove();
 				}
 			}			
 		}).start();
+	}
+	protected boolean checkEnd() {
+		int livePlayer = 0;
+		for (BMPlayer player : players) if (!player.hasLost()) livePlayer++;
+		if (livePlayer > 1) return false;
+		else return true;
 	}
 	public void endGame() {	
 		TreeMap<String,Object> map = new TreeMap<String,Object>();
@@ -154,7 +166,7 @@ public class BMSimulation extends Thread {
 		}
 		return myBoard;
 	}
-	public Vector<BMPlayer> getPlayers(){
+	public ArrayList<BMPlayer> getPlayers(){
 		return players;
 	}
 	public void joinGame(){
@@ -165,7 +177,7 @@ public class BMSimulation extends Thread {
 		map.put("players", hs.getNames());
 		hs.sendMapToClients(map);
 	}
-	public Vector<BMPlayer> getAllPlayers(){
+	public ArrayList<BMPlayer> getAllPlayers(){
 		return players;
 	}
 	public Vector<TreeMap<String,Object>> playersInfo(){
@@ -182,7 +194,7 @@ public class BMSimulation extends Thread {
 		TreeMap<String, Object> info = new TreeMap<String,Object>();
 		info.put("type", "move");
 		info.put("time", timeLeft);
-		info.put("board", this.getBoard());
+		info.put("board", getBoard());
 		info.put("players", playersInfo());
 		hs.sendMapToClients(info);
 	}

@@ -82,7 +82,6 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	protected BMSimulation simulation;
 	protected int direction;
 	
-	private Lock mLock;
 	protected volatile boolean respawning;
 	protected volatile boolean cooling;
 	
@@ -119,7 +118,6 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		HP = initialLives;
 		kills = 0;
 		lost = false;
-		mLock = new ReentrantLock();
 		respawning = false;
 		items.add(-1);
 		items.add(-1);
@@ -300,7 +298,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			int value = itemNode.getValue();
 			addItem(new BMItem(value));
 			itemNode.getItem();
-		}
+		}	
 	}
 	
 	public int getid(){return ID;}
