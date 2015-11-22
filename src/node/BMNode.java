@@ -1,22 +1,32 @@
 package node;
 
-public abstract class BMNode {
+import Utilities.BMNodeType;
+
+public abstract class BMNode extends Thread{
 		protected int x;
 		protected int y;
 		protected int type;
 		protected Boolean canPass;
-		protected BMNodePanel nodePanel;
+		protected BMNode[][] board;
 		
-		public BMNode(int x, int y, int type, boolean canPass, BMNodePanel np) {
+		public BMNode(int x, int y, int type, boolean canPass, BMNode[][] board) {
 			this.x = x;
 			this.y = y;
 			this.type = type;
 			this.canPass = canPass;
-			this.nodePanel = np;
+			this.board = board;
 		}
 		
-		public boolean vanish() {
-			nodePanel.node = new BMBombing(x, y, nodePanel, BMNodeType.road);
+		public boolean vanish(int id) {
+			board[x][y] = new BMBombing(x, y, board, BMNodeType.road, id);
 			return false;
-		};
+		}
+		
+		public int getType() {
+			return type;
+		}
+		
+		public boolean canPass() {
+			return canPass;
+		}
 }

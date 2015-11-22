@@ -8,19 +8,45 @@ import java.util.Vector;
 
 public class BMHostServer extends Thread {
 	private Vector<BMClient> ctVector = new Vector<BMClient>();
-	public BMHostServer(int port) {
+	private int port;
+	private int numPlayer;
+	private BMSimulation simulation;
+	public Vector<BMClient> getClients(){
+		return ctVector;
+	}
+	public BMHostServer(int port, int numPlayer) {
+		this.port = port;
+		this.numPlayer = numPlayer;
+		this.start();
+	}
+	public void removeChatThread(BMClient ct) {
+		ctVector.remove(ct);
+	}
+	public void sendMapToClients(TreeMap<String,Object> output) {
+		for (BMClient ct : ctVector) {
+			ct.sendMap(output);
+		}
+	}
+	public void run(){
 		ServerSocket ss = null;
 		try {
 			System.out.println("Starting Chat Server");
-			ss = new ServerSocket(6789);
-			this.start();
+			ss = new ServerSocket(port);
 			while (true) {
 				System.out.println("Waiting for client to connect...");
 				Socket s = ss.accept();
 				System.out.println("Client " + s.getInetAddress() + ":" + s.getPort() + " connected");
-				BMClient ct = new BMClient(s, this);
-				ctVector.add(ct);
-				ct.start();
+				BMClient ct = new BMClient(s, this,simulation);
+				System.out.println("size " + ctVector.size());
+				if (ctVector.size() < numPlayer){
+					ctVector.add(ct);
+				}
+				else {
+					TreeMap<String,Object>map = new TreeMap<String,Object>();
+					map.put("type", "error");
+					map.put("errMsg","This room is full, please try another one");
+					ct.sendMap(map);
+				}
 			}
 		} catch (IOException ioe) {
 			System.out.println("IOE: " + ioe.getMessage());
@@ -34,13 +60,14 @@ public class BMHostServer extends Thread {
 			}
 		}
 	}
-	public void removeChatThread(BMClient ct) {
-		ctVector.remove(ct);
-	}
-	public void sendMapToClients(BMClient ct, TreeMap<String,Object> output) {
-		for (BMClient ct1 : ctVector) {
-				ct1.sendMap(output);
+	public Vector<String> getNames() {
+		Vector<String> names = new Vector<String>();
+		for (BMClient client : ctVector){
+			names.add(client.getName());
 		}
+		return names;
 	}
-
+	public void setSimulation(BMSimulation bmSimulation) {
+		this.simulation = bmSimulation;
+	}
 }

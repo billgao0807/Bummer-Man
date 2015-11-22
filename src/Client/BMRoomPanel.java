@@ -4,6 +4,7 @@ import java.awt.Container;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Image;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
@@ -28,9 +29,9 @@ public class BMRoomPanel extends PaintedPanel{
 	private JPanel startAIP = new JPanel();
 	private JPanel quitP = new JPanel();
 	
-	BMRoomPanel(ActionListener startP, ActionListener startB, ActionListener quit)
+	BMRoomPanel(ActionListener startP, ActionListener startB, ActionListener quit,Image image)
 	{
-		super(null, true);
+		super(image, true);
 		time = new JLabel("Time:");
 		HP = new JLabel("HP:");
 		
@@ -40,17 +41,26 @@ public class BMRoomPanel extends PaintedPanel{
 		HPCounting = new JComboBox<>(hp);
 		
 		timeP.add(time);
-		timeP.add(timing);		
+		timeP.add(timing);	
+		timeP.setOpaque(false);
 		HPP.add(HP);
 		HPP.add(HPCounting);
+		HPP.setOpaque(false);
 		
 		start =  new PaintedButton("Start", null ,null, 20);		
 		startPanel.add(start);
+		start.addActionListener(startP);
+		startPanel.setOpaque(false);
 		
 		startAI = new PaintedButton("Start(AI)", null, null, 20);
 		startAIP.add(startAI);
+		startAI.addActionListener(startB);
+		startAIP.setOpaque(false);
+		
 		quitG = new PaintedButton("Quit", null, null, 20);
 		quitP.add(quitG);
+		quitG.addActionListener(quit);
+		quitP.setOpaque(false);
 		
 		setLayout(new GridLayout(0,3));
 		//temp stands for the player pic
@@ -59,6 +69,7 @@ public class BMRoomPanel extends PaintedPanel{
 		
 		JPanel mid = new JPanel();
 		mid.setLayout(new GridBagLayout());
+		mid.setOpaque(false);
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridy = 1;
 		mid.add(timeP,gbc);

@@ -1,82 +1,110 @@
 package Client;
-
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
-import customUI.PaintedButton;
 import customUI.PaintedPanel;
-
-public class BMLoginPanel extends PaintedPanel{
+public class BMLoginPanel extends PaintedPanel implements KeyListener{
 	
-	private JLabel title;
-	private JLabel username;
-	private JLabel password;
-	private JTextField nameInput;
+	
+	public JTextField nameInput;
 	private JTextField passwordInput;
 	private JButton signupB;
 	private JButton quickGameB;
 	private JButton loginB;
-	private JPanel titlePanel = new JPanel();
-	private JPanel userPanel = new JPanel();
-	private JPanel passwordPanel = new JPanel();
-	private JPanel buttonPanel  = new JPanel();
+	private PaintedPanel titlePanel = new PaintedPanel(null);
+	private PaintedPanel passwordPanel = new PaintedPanel(null);
+	private JPanel panel;
+	private JLabel label;
+	private JPanel panel_1;
+	ActionListener signup;
+	ActionListener quickG;
+	ActionListener login;
+	 BMSigninPage signin;
 	
-	
-	BMLoginPanel (ActionListener signup, ActionListener quickG, ActionListener login)
+	BMLoginPanel (ActionListener signup, ActionListener quickG, ActionListener login, Image image)
 	{
-		super(null,true);
-		title = new JLabel("BomberMan");
-		titlePanel.add(title);
+		super(image);
+		this.setFocusable(true);
+		this.requestFocusInWindow();
+		this.addKeyListener(this);
+		Image buttonImage = null;//BMLibrary.readImages(BMLibrary.path+"button.png");
+		setLayout(new BorderLayout(0, 0));
+		this.signup = signup;
+		this.quickG = quickG;
+		this.login = login;
 		
-		username = new JLabel("Username:");
-		userPanel.add(username);
-		nameInput = new JTextField();
-		nameInput.setPreferredSize(new Dimension(200,20));
-		userPanel.add(nameInput);
-		
-		password = new JLabel("Password:");
-		passwordPanel.add(password);
-		passwordInput = new JTextField();
-		passwordInput.setPreferredSize(new Dimension(200,20));
-		passwordPanel.add(passwordInput);
-		
-		signupB = new PaintedButton("Sign up", null, null, 20);
-		signupB.addActionListener(signup);
-		quickGameB = new PaintedButton("Quick Game", null, null, 20);
-		quickGameB.addActionListener(quickG);
-		loginB = new PaintedButton("Log In", null, null, 20);
-		loginB.addActionListener(login);
-		buttonPanel.add(signupB);
-		buttonPanel.add(quickGameB);
-		buttonPanel.add(loginB);
-		
-		setLayout(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-		//gbc.insets = new Insets(40,40,40,40);
-		gbc.fill = GridBagConstraints.HORIZONTAL;
-		gbc.gridy = 1;
-		gbc.gridy = 1;
-		add(titlePanel,gbc);
-		gbc.ipadx = 100;
-		gbc.ipady = 25;
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.gridy = 2;
-		add(userPanel,gbc);
-		gbc.ipadx = 100;
-		gbc.ipady = 25;
-		gbc.fill = GridBagConstraints.NONE;
-		gbc.gridy = 3;
-		add(passwordPanel,gbc);
-		gbc.gridy = 4;
-		add(buttonPanel,gbc);
-	}
 
+		
+		panel_1 = new JPanel();
+		panel_1.setOpaque(false);
+		add(panel_1, BorderLayout.SOUTH);
+		
+		label = new JLabel("Press Any Key To Proceed");
+		panel_1.add(label);
+		label.setFont(new Font("Lucida Grande", Font.PLAIN, 30));
+		label.setHorizontalAlignment(SwingConstants.CENTER);
+		
+		
+	
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				int color = 0;
+				boolean add = true;
+				while (true){
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						System.out.println(e.getMessage());
+					}
+					if (add == true) color++;
+					else color--;
+					BMLoginPanel.this.label.setForeground(new Color(color,255-color,color));
+					if (color <= 0) add = true;
+					else if (color >= 255) add = false;
+				}
+			}			
+		}).start();
+	}
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("Hello1");
+		
+	}
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("Hello2");
+		
+		signin = new BMSigninPage(signup,quickG,login);
+		signin.setVisible(true);
+		
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		System.out.println("Hello3");
+		
+	}
+	public void closeSignup() {
+		signin.setVisible(false);
+		
+	}
+	public BMSigninPage getSignin() {
+		// TODO Auto-generated method stub
+		return signin;
+	}
 }

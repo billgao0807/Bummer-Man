@@ -11,14 +11,18 @@ public class BMClient extends Thread {
 	private ObjectInputStream ois;
 	private BMHostServer hs;
 	private Socket s;
+	private BMSimulation mSimulation;
+	private BMPlayer player;
+	private String userName;
 	
-	public BMClient(Socket s, BMHostServer hs) {
+	public BMClient(Socket s, BMHostServer hs, BMSimulation mSimulation) {
 		this.hs = hs;
 		this.s = s;
-		this.start();
+		this.mSimulation = mSimulation;
 		try {
 			ois = new ObjectInputStream(s.getInputStream());
 			oos = new ObjectOutputStream(s.getOutputStream());
+			this.start();
 		} catch (IOException ioe) {
 			System.out.println("IOE in ChatThread constructor: " + ioe.getMessage());
 		}
@@ -26,17 +30,43 @@ public class BMClient extends Thread {
 
 	public void sendMap(TreeMap<String,Object> output) {
 		try {
+//			System.out.println("Output " + output);
 			oos.writeObject(output);
+			oos.flush();
 		} catch (IOException e) {
 			System.out.println("BMClient sendMap IOE: " + e.getMessage());
+			e.printStackTrace();
 		}
 	}
-
+	
+	public void setPlayer(BMPlayer player){
+		this.player = player;
+	}
+	
 	public void run() {
 		try {
 			while (true) {
 				try {
-					TreeMap<String,Object>map = (TreeMap<String,Object>)ois.readObject();
+					@SuppressWarnings("unchecked")
+					Object obj = ois.readObject();
+					if (!(obj instanceof TreeMap<?,?>)) continue;
+					TreeMap<String,Object> map = (TreeMap<String,Object>)obj;
+					String type = (String)map.get("type");  
+					if (type.equals("msg")) {
+						sendMsgMap(map);
+					}
+					else if (type.equals("join")){
+						this.userName = (String)(map.get("username"));
+						mSimulation.joinGame();
+					}
+					else if (type.equals("move")){
+						player.startMove((Integer)(map.get("move")));
+//						mSimulation.getGameBoard();
+						mSimulation.sendMove();
+					}
+					else if (type.equals("msg")){
+						sendMsgMap(map);
+					}
 				} catch (ClassNotFoundException e) {
 					System.out.println("BMClient Run CNFE: " + e.getMessage());
 				}
@@ -45,5 +75,13 @@ public class BMClient extends Thread {
 			hs.removeChatThread(this);
 			System.out.println(s.getInetAddress() + ":" + s.getPort() + " disconnected.");
 		} 
+	}
+
+	private void sendMsgMap(TreeMap<String, Object> map) {
+		TreeMap<String,Object> tempMap = new TreeMap<String, Object>();
+		tempMap.put("type", "msg");
+		tempMap.put("username", userName);
+		tempMap.put("content", (String)map.get("content"));
+		hs.sendMapToClients(tempMap);
 	}
 }

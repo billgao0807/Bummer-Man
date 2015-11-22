@@ -1,13 +1,15 @@
 package node;
 
+import Utilities.BMNodeType;
+
 public class BMRoad extends BMNode {
 
-	public BMRoad(int x, int y, BMNodePanel np) {
-		super(x, y, BMNodeType.road, true, np);
+	public BMRoad(int x, int y, BMNode[][] board) {
+		super(x, y, BMNodeType.road, true, board);
 	}
 
 	@Override
-	public boolean vanish() {
+	public boolean vanish(int id) {
 		return false;
 	}
 }
