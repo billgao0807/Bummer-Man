@@ -50,7 +50,12 @@ public class BMResultFrame  extends JFrame{
 			PaintedPanel single =new PaintedPanel( BMLibrary.readImages("frame5.png"));
 			
 			single.setLayout(new BoxLayout(single, BoxLayout.Y_AXIS));
-			JLabel one = new JLabel ((String)result.get(i).get("username") + (int)result.get(i).get("points") + "points");
+			JLabel zero = new JLabel ("  "+(String)result.get(i).get("username") );
+			zero.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
+			zero.setHorizontalAlignment(SwingConstants.CENTER);
+
+
+			JLabel one = new JLabel ("      "+(int)result.get(i).get("points") +"   "+ "points  ");
 			one.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 
 			if ((int)result.get(i).get("points")> highest) {
@@ -58,19 +63,21 @@ public class BMResultFrame  extends JFrame{
 				topLabel.setText("Champion is " + (String)result.get(i).get("username"));
 			}
 			one.setHorizontalAlignment(SwingConstants.CENTER);
-			JLabel two = new JLabel ("      "+(int)result.get(i).get("kill") +"       "+"kill ");
+			JLabel two = new JLabel ("      "+(int)result.get(i).get("kill") +"   "+"kill ");
 			two.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 
 			two.setHorizontalAlignment(SwingConstants.CENTER);
-			JLabel three = new JLabel ("      "+(int)result.get(i).get("death") +"       "+"death");
+			JLabel three = new JLabel ("      "+(int)result.get(i).get("death") +"   "+"death ");
 			three.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 
 			three.setHorizontalAlignment(SwingConstants.CENTER);
-			JLabel four = new JLabel ("      "+ (int)result.get(i).get("item") +"       "+"items");
+			JLabel four = new JLabel ("      "+ (int)result.get(i).get("item") +"   "+"items ");
 			four.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 
 			four.setHorizontalAlignment(SwingConstants.CENTER);
 			
+			single.add(Box.createVerticalGlue());
+			single.add(zero);
 			single.add(Box.createVerticalGlue());
 			single.add(one);
 			single.add(Box.createVerticalGlue());

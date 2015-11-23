@@ -214,13 +214,16 @@ public class BMBoard_Player  extends PaintedPanel {
 						int item1 = (int)players.get(i).get("item1") + 5;
 						int item2 = (int)players.get(i).get("item2") + 5;
 						if (item1 == 4) {}
-						else{ Image image1 = BMLibrary.readImages("node"+item1+".png");						
+						else{ Image image1 = BMLibrary.readImages("node"+item1+"_0.png");						
 							Item1Label.setImage(image1);
+							Item1Label.setText("");
 						}
 						
 						if (item2 == 4) {}
-						else{ Image image2 = BMLibrary.readImages("node"+item2+".png");						
+						else{ Image image2 = BMLibrary.readImages("node"+item2+"_0.png");						
 							Item2Label.setImage(image2);
+							Item2Label.setText("");
+
 						}
 				
 
