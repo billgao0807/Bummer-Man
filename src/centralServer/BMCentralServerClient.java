@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.TreeMap;
 import java.util.Vector;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -144,6 +145,53 @@ public class BMCentralServerClient extends Thread {
 	}
 	
 	/*
+	 * Access/Update Rankings and Records
+	 */
+	public Queue<RankContainer> requestWorldRankings() {
+		mLock.lock();
+		try {
+			sendObject(ServerConstants.REQUESTWORLDRANKING);
+			mRanksArrived.await();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println(ServerConstants.WorldRankingFetchFailure);
+		} catch (InterruptedException ie) {
+			ie.printStackTrace(); 
+			System.out.println(ServerConstants.WorldRankingFetchFailure);
+		}
+		mLock.unlock();
+		
+		return ranks;
+	}
+	
+	public Vector<GameRecord> requestPersonalRecords() {
+		mLock.lock();
+		try {
+			sendObject(ServerConstants.REQUESTPERSONALRECORDS);
+			mRanksArrived.await();
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out.println(ServerConstants.PersonalRankingFetchFailure);
+		} catch (InterruptedException ie) {
+			ie.printStackTrace(); 
+			System.out.println(ServerConstants.PersonalRankingFetchFailure);
+		}
+		
+		mLock.unlock();
+		
+		return gameRecords;
+	}
+	
+	public void updateWorldRankings(Vector<TreeMap<String, Object>> newRanks) {
+		try {
+			sendObject(newRanks);
+		} catch (NullPointerException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/*
 	 * Logs out of the server
 	 */
 	public void logout() {
@@ -166,43 +214,6 @@ public class BMCentralServerClient extends Thread {
 			//e.printStackTrace();
 			System.out.println(ServerConstants.CannotCompleteRequest + "Disconnect Failed");
 		}
-	}
-	
-	/*
-	 * Access Rankings and Records
-	 */
-	public Queue<RankContainer> requestWorldRankings() {
-		mLock.lock();
-		try {
-			sendObject(ServerConstants.REQUESTWORLDRANKING);
-			mRanksArrived.await();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException ie) {
-			ie.printStackTrace(); 
-		}
-		
-		System.out.println(ServerConstants.WorldRankingFetchFailure);
-		mLock.unlock();
-		
-		return ranks;
-	}
-	
-	public Vector<GameRecord> requestPersonalRecords() {
-		mLock.lock();
-		try {
-			sendObject(ServerConstants.REQUESTPERSONALRECORDS);
-			mRanksArrived.await();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException ie) {
-			ie.printStackTrace(); 
-		}
-		
-		System.out.println(ServerConstants.WorldRankingFetchFailure);
-		mLock.unlock();
-		
-		return gameRecords;
 	}
 	
 	/*
@@ -233,7 +244,6 @@ public class BMCentralServerClient extends Thread {
 						mRanksArrived.signal();
 					}
 					
-//					mLock.lock();
 					if (obj instanceof String) {
 						String str = (String) obj;
 						if (str.equals(ServerConstants.SUCCESSFULLOGIN)){
@@ -283,12 +293,64 @@ public class BMCentralServerClient extends Thread {
 	}
 	
 	public static void main(String args[]) throws UnknownHostException {
-		BMCentralServerClient csc = new BMCentralServerClient("172.20.10.3",6789);
-		
-		csc.signup("ellen", "cocacola");
-		csc.signup("Zoe", "brasil");
+		BMCentralServerClient csc = new BMCentralServerClient(6789);
 		
 		csc.login("Brandon", "cocacola");
-		csc.logout();
+		
+		Vector<TreeMap<String, Object>> rankings = new Vector<TreeMap<String, Object>>();
+		
+		TreeMap<String, Object> bTree = new TreeMap<String, Object>();
+		bTree.put(ServerConstants.usernameString, "Brandon");
+		bTree.put(ServerConstants.pointsString, (double) 200);
+		bTree.put(ServerConstants.killString, 6);
+		bTree.put(ServerConstants.deathString, 2);
+		
+		Thread t = new Thread(new Runnable(){
+			public void run(){
+				try{
+					Thread.sleep(10000);
+				} catch(InterruptedException ie) {
+					ie.printStackTrace();
+				}
+			}
+		});
+		t.start();
+		/*
+		TreeMap<String, Object> bTree2 = new TreeMap<String, Object>();
+		bTree2.put(ServerConstants.usernameString, "Brandon");
+		bTree2.put(ServerConstants.pointsString, (double) 500);
+		bTree2.put(ServerConstants.killString, 7);
+		bTree2.put(ServerConstants.deathString, 5);
+		
+		TreeMap<String, Object> zTree = new TreeMap<String, Object>();
+		zTree.put(ServerConstants.usernameString, "Zoe");
+		zTree.put(ServerConstants.pointsString, (double)1000);
+		zTree.put(ServerConstants.killString, 300);
+		zTree.put(ServerConstants.deathString, 1);
+		
+		rankings.add(bTree);
+		rankings.add(bTree2);
+		rankings.add(zTree);
+		*/
+		for (TreeMap<String, Object> map : rankings) {
+			String name = (String) map.get("username");
+			System.out.println("THERE IS A " + name + " IN THIS VECTOR<TREEMAP>");
+		}
+		
+		csc.updateWorldRankings(rankings);
+		
+		Queue<RankContainer> worldRanks = csc.requestWorldRankings();
+		for (int i=0; i<worldRanks.size(); i++) {
+			RankContainer rc = worldRanks.poll();
+			System.out.println(rc.getUsername() + "   " + rc.getRating());
+		}
+		
+		Vector<GameRecord> gamerec = csc.requestPersonalRecords();
+		System.out.println("Getting Record for whoever is logged in. Vector Size: " + gamerec.size());
+		
+		int i = 1;
+		for (GameRecord gr : gamerec) {
+			System.out.println(i++ + ": " + gr.getPoints() + " " + gr.getKillCount() + " " + gr.getDeathCount() + " " + gr.getTime());
+		}
 	}
 }

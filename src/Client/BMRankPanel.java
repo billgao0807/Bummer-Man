@@ -42,7 +42,9 @@ public class BMRankPanel extends JFrame{
 		JPanel myRecord = new JPanel();
 		JPanel wrdRecord = new JPanel();
 		
-		JButton btnReturn = new JButton("Return");
+		myRecord.setOpaque(false);
+		wrdRecord.setOpaque(false);
+		
 		
 //		String[] columnNames = {"Rank",
 //                "Name",
@@ -76,7 +78,12 @@ public class BMRankPanel extends JFrame{
 		 DefaultTableModel dtm = new DefaultTableModel(0, 0);
 		 dtm.setColumnIdentifiers(myColumnNames);
 		       myRcdTable.setModel(dtm);
-		
+		if (vector == null ) {
+			System.out.println("Nothing received");
+			
+		} else {
+			System.out.println(vector.size());
+		}
 		for (GameRecord gr : vector) {
 			dtm.addRow(new Object[] { gr.getPoints(), gr.getKillCount(), gr.getDeathCount(),
 	                gr.getTime() });
@@ -88,7 +95,7 @@ public class BMRankPanel extends JFrame{
 		wrdRcdTable = new JTable();
 		 DefaultTableModel dtm1 = new DefaultTableModel(0, 0);
 		 dtm1.setColumnIdentifiers(wrdColumnNames);
-		       myRcdTable.setModel(dtm1);
+		       wrdRcdTable.setModel(dtm1);
 		
 		while(!queue.isEmpty()) {
 			RankContainer temp = queue.poll();
@@ -109,8 +116,8 @@ public class BMRankPanel extends JFrame{
 		wrdRecord.add(wrdRcdScrollPane);
 		myRecord.add(myRcdScrollPane);
 		
-		tabbedPane.add("My Record", wrdRecord);
-		tabbedPane.add("Word Record", myRecord);
+		tabbedPane.add("My Record", myRecord);
+		tabbedPane.add("Word Record", wrdRecord);
 		tabbedPane.setOpaque(false);
 		
 //		btnReturn.addActionListener(returnMain);

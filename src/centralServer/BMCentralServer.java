@@ -82,10 +82,11 @@ public class BMCentralServer extends Thread {
 	/*
 	 * Methods for accessing/modifying rankings and records
 	 */
-	public void updateRatings(Vector<TreeMap<String, Object> > tmVect) {
+	public void updateRankings(Vector<TreeMap<String, Object> > tmVect) {
 		try {
 			for(TreeMap<String, Object> map : tmVect){
 				Object uname = map.get("username");
+				BMCentralServerGUI.addMessage("Updating ranks for: " + (String) uname);
 				if(uname instanceof String){
 					String username = (String) uname;
 					if (username.equals("BOT")) continue;
@@ -98,7 +99,9 @@ public class BMCentralServer extends Thread {
 					}
 				}
 			}
+			BMCentralServerGUI.addMessage(ServerConstants.CENTRALSERVERUPDATED);
 		} catch (SQLException e) {
+			e.printStackTrace();
 			BMCentralServerGUI.addMessage(ServerConstants.GenericSQLException + "Occured while updating rankings");
 		}
 	}
@@ -120,7 +123,7 @@ public class BMCentralServer extends Thread {
 		try {
 			return msqlDriver.getWorldRankings();
 		} catch (SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			BMCentralServerGUI.addMessage(ServerConstants.GenericSQLException 
 					+ "Occured while retrieving World Rankings");
 			

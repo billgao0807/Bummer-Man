@@ -149,7 +149,7 @@ public class BMCentralServerClientCommunicator extends Thread {
 					else if (obj instanceof Vector<?>){
 						@SuppressWarnings("unchecked")
 						Vector<TreeMap<String, Object>> rankings = (Vector<TreeMap<String, Object>>) obj;
-						bmcs.updateRatings(rankings);
+						bmcs.updateRankings(rankings);
 					}
 				} catch (ClassNotFoundException cnfe) {
 					cnfe.printStackTrace();
