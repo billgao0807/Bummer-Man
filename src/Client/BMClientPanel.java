@@ -1,6 +1,8 @@
 package Client;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -10,15 +12,14 @@ import java.net.UnknownHostException;
 import java.util.Dictionary;
 import java.util.TreeMap;
 import java.util.Vector;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import Server.BMHostServer;
 import Server.BMPlayer;
 import Server.BMSimulation;
+import Utilities.BMFontLibrary;
 import Utilities.BMLibrary;
 import centralServer.BMCentralServerClient;
 import customUI.PaintedButton;
@@ -42,7 +43,7 @@ public class BMClientPanel extends JPanel{
 	protected BMSimulation simulation;
 	//true = host the game
 	private boolean identity = true;
-	private BMCentralServerClient centralServerClient;
+	BMCentralServerClient centralServerClient;
 	
 	{
 		players = new Vector<TreeMap<String,Object>>();
@@ -55,7 +56,6 @@ public class BMClientPanel extends JPanel{
 				simulation.setVariables(60, 2);
 				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
 				hostClient.sendJoin("Guest");
-
 				BMClientPanel.this.removeAll();				
 				BMClientPanel.this.add(boardPanel);
 				BMClientPanel.this.revalidate();
@@ -70,14 +70,20 @@ public class BMClientPanel extends JPanel{
 				BMClientPanel.this.removeAll();
 				username = loginPanel.getSignin().txtUsername.getText().trim();
 				password = loginPanel.getSignin().txtPassword.getText().trim();
+				try {
+					centralServerClient = new BMCentralServerClient(6789);
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
-				/*QuickGame
-				BMClientPanel.this.add(roomPanel);
-				*/
-				BMClientPanel.this.revalidate();
-				BMClientPanel.this.repaint();
-				System.out.println("login 2");
-//				detailSignin.closeMe();
+				if (centralServerClient.signup(username, password))
+				{
+					loginPanel.getSignin().label.setText("Signed up successfully! ");
+					loginPanel.getSignin().txtPassword.setText("");
+					loginPanel.getSignin().txtUsername.setText("");
+					System.out.println("");
+				}
 			}
 		},
 				new ActionListener(){
@@ -105,10 +111,11 @@ public class BMClientPanel extends JPanel{
 					else
 					{
 						loginPanel.getSignin().label.setText("Sign in failed");
+						loginPanel.getSignin().label.setForeground(Color.RED);
+						loginPanel.getSignin().label.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 						loginPanel.getSignin().txtPassword.setText("");
 						loginPanel.getSignin().txtUsername.setText("");
 					}
-//				detailSignin.closeMe();
 			}}, BMLibrary.readImages("menu.png"));
 		
 		
@@ -123,7 +130,6 @@ public class BMClientPanel extends JPanel{
 	{
 		initMenuPanel();
 		
-
 		
 	initRoomPanel();
 	rankPanel = new BMRankPanel(new ActionListener(){
@@ -280,15 +286,12 @@ public class BMClientPanel extends JPanel{
 		}, BMLibrary.readImages("menu.png")
 	);		
 	}
-
 	void set_start(Integer [][] board, int time, Vector<TreeMap<String, Object>> players)
 	{
 		this.board = board;
 		this.time = time;
 		this.players = players;
 		boardPanel.setupMap(board, time, players , username, hostClient);
-
-		initRoomPanel();
 		BMClientPanel.this.removeAll();
 		BMClientPanel.this.add(boardPanel);		
 		BMClientPanel.this.revalidate();
@@ -314,7 +317,6 @@ public class BMClientPanel extends JPanel{
 		ipChecking popup = new ipChecking(error, this, menuPanel);
 	}
 }
-
 class ipChecking extends JFrame
 {
 	private BMClientPanel clientPanel;
