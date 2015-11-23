@@ -75,7 +75,7 @@ public class BMAIPlayer extends BMPlayer {
 				while (!path.isEmpty()){
 					board = this.searchSave();
 					if (board[p.x][p.y] == unsafe || !AIMove(path.peek())) break;
-					path.remove();
+					path.remove(); 
 				}
 			}
 			catch (InterruptedException e){
