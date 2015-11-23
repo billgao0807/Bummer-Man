@@ -7,35 +7,37 @@ import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 import javax.swing.JDialog;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import Utilities.BMFontLibrary;
+import customUI.PaintedPanel;
 
 public class Help {
 
 	private static final String filePath = "src/Utilities/help.txt";
-	private static final JTextArea helpText;
+	private static final PaintedPanel helpText;
 	private static final JDialog helpDisplay;
 
 	static {
-		helpText = new JTextArea();
+		helpText = new PaintedPanel(BMLibrary.readImages("resultBG.png"));
 		helpText.setBackground(new Color(250, 200, 100));
-		helpText.setEditable(false);
-		helpText.setLineWrap(true);
-		helpText.setWrapStyleWord(true);
-		helpText.setTabSize(4);
+//		helpText.setEditable(false);
+//		helpText.setLineWrap(true);
+//		helpText.setWrapStyleWord(true);
+//		helpText.setTabSize(4);
 		helpText.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 14));
 		
-		try {
-			Scanner sc = new Scanner(new File(filePath));
-			while (sc.hasNext()) {
-				helpText.append(sc.nextLine()+"\n");
-			}
-			sc.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		helpText.setCaretPosition(0);
+//		try {
+//			Scanner sc = new Scanner(new File(filePath));
+//			while (sc.hasNext()) {
+//				helpText.append(sc.nextLine()+"\n");
+//			}
+//			sc.close();
+//		} catch (FileNotFoundException e) {
+//			e.printStackTrace();
+//		}
+		//helpText.setCaretPosition(0);
 		
 		helpDisplay = new JDialog();
 		helpDisplay.setTitle("Help");

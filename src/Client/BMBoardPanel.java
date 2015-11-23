@@ -181,13 +181,13 @@ public class BMBoardPanel extends JPanel{
 		
 		chatPanel.setLayout(new BorderLayout());
 		chatArea = new JTextArea();
-		chatArea.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
+		chatArea.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 
 		chatTF = new JTextField(20);
-		chatTF.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
+		chatTF.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 
 		chatButton = new PaintedButton("send" , BMLibrary.readImages("button2.png"), BMLibrary.readImages("button2-0.png"), 10);	
-		chatButton.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 15));
+		chatButton.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 		chatButton.addActionListener(new ActionListener(){
 
 			@Override
@@ -395,7 +395,7 @@ public class BMBoardPanel extends JPanel{
 	
 	class NodePanel extends PaintedPanel {
 
-		private int node_type=-1;
+		public int node_type=-1;
 		
 		NodePanel(int node_type) {		
 			super(null);
