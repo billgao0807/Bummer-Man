@@ -98,8 +98,7 @@ public class BMSimulation extends Thread {
 		Vector<TreeMap<String,Object>> results = new Vector<TreeMap<String,Object>>();
 		for (BMPlayer player : players){
 			TreeMap<String,Object> result = player.getResult();
-			if (player instanceof BMRealPlayer) result.put("username", hs.getClients().get(player.getid()).getName());
-			else result.put("username", "AI player " + player.getid());
+			if (player instanceof BMAIPlayer) result.put("username", "AI player " + player.getid());
 			results.add(result);
 		}
 		return results;

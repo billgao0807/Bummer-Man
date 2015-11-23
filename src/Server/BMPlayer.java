@@ -494,6 +494,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		resultMap.put("death", new Integer(initialHP-HP));
 		resultMap.put("item", itemCount);
 		resultMap.put("username", this.getUserName());
+		System.out.println("Result username " + this.getUserName());
 		return resultMap;
 	}
 

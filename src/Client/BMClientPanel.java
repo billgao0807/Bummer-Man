@@ -21,6 +21,7 @@ import Server.BMSimulation;
 import Utilities.BMFontLibrary;
 import Utilities.BMLibrary;
 import centralServer.BMCentralServerClient;
+import centralServer.ServerConstants;
 import customUI.PaintedButton;
 import customUI.PaintedPanel;
 public class BMClientPanel extends JPanel{
@@ -61,6 +62,7 @@ public class BMClientPanel extends JPanel{
 				BMClientPanel.this.revalidate();
 				BMClientPanel.this.repaint();
 				loginPanel.closeSignup();
+				roomPanel = null;
 				simulation.startGame(1);
 			}
 		},
@@ -151,6 +153,7 @@ public class BMClientPanel extends JPanel{
 				{
 					System.out.println("Set variables " + roomPanel.sendTime + "  " + roomPanel.sendhp);
 					simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
+					roomPanel = null;
 					simulation.startGame(0);
 				}
 			}
@@ -163,26 +166,12 @@ public class BMClientPanel extends JPanel{
 				//enter Game
 				System.out.println("Set variables " + roomPanel.sendTime + "  " + roomPanel.sendhp);
 				simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
+				roomPanel = null;
 				simulation.startGame(1);
 			}
 		},
 		new ActionListener()
 		{
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				//Login
-				if (simulation != null)simulation.gameOver();
-				initMenuPanel();
-				BMClientPanel.this.removeAll();
-				BMClientPanel.this.add(menuPanel);
-				BMClientPanel.this.revalidate();
-
-			}
-		},BMLibrary.readImages("vs.png")
-				);
-=======
-				{
 				@Override
 					public void actionPerformed(ActionEvent e)
 					{
@@ -196,8 +185,7 @@ public class BMClientPanel extends JPanel{
 						
 					}
 				},BMLibrary.readImages("vs.png")
-			);
->>>>>>> ca33b44ed3a055da2078429cc9ee04f31ac2556c
+		);
 		boardPanel = new BMBoardPanel(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -335,22 +323,12 @@ public class BMClientPanel extends JPanel{
 		boardPanel.requestFocusInWindow();
 		boardPanel.requestFocus();
 	}
-<<<<<<< HEAD
-
-	void set_join(Vector<TreeMap<String,Object>> players, int hp, int time)
-=======
-	
 	void set_join(Vector<String> players, int hp, int time)
->>>>>>> ca33b44ed3a055da2078429cc9ee04f31ac2556c
 	{
 //		this.players = players;
+		if (roomPanel == null) return;
 		this.time = time;
 		this.hp = hp;
-<<<<<<< HEAD
-
-=======
-		System.out.println(players);
->>>>>>> ca33b44ed3a055da2078429cc9ee04f31ac2556c
 		this.initRoomPanel(players.size());
 		BMClientPanel.this.removeAll();
 		BMClientPanel.this.add(roomPanel);		
@@ -378,6 +356,28 @@ public class BMClientPanel extends JPanel{
 		BMClientPanel.this.hostClient.close();
 		if (simulation != null) simulation.gameOver();	
 		}
+	public void game_over(Vector<TreeMap<String, Object>> result) {
+		Vector<TreeMap<String, Object>> tmVector = new Vector<TreeMap<String, Object>>();
+		for(TreeMap<String, Object> tm : result) {
+			//TreeMap<String, Object> temp = new TreeMap<String, Object>();
+			
+			String usr = (String)tm.get("username");
+			if (!usr.startsWith("AI")) {
+				//temp.put(ServerConstants.usernameString, usr);
+//				temp.put(key, value)
+				
+				
+				
+				
+				
+				tmVector.add(tm);
+			}
+			
+			
+		}
+		centralServerClient.updateWorldRankings(tmVector);
+		
+	}
 }
 class ipChecking extends JFrame
 {
