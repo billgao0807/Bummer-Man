@@ -23,12 +23,12 @@ public class BMFontLibrary {
 		Font font = fontMap.get(directory);
 		if(font == null) {
 			try {
-				font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(directory));
+				font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(path+directory));
 			}
 			catch (IOException | FontFormatException e) { System.out.println("Error reading image: " + e); return null; }
 			fontMap.put(directory, font);
 		}
-		return font;
+		return font.deriveFont(style, size);
 	}
 	
 	//Clears out all the images from the library

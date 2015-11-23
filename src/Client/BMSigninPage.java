@@ -1,215 +1,137 @@
 package Client;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingConstants;
 
+import Utilities.BMFontLibrary;
 import Utilities.BMLibrary;
-import centralServer.BMCentralServer;
-import centralServer.BMCentralServerClient;
-import customUI.ClearPanel;
-import customUI.PaintedButton;
 import customUI.PaintedPanel;
+import javax.swing.JLabel;
 
 public class BMSigninPage extends JFrame{
-private static final long serialVersionUID = 5147395078473323173L;
-	
+	private static final long serialVersionUID = 5147395078473323173L;
+
 	private final static Dimension minSize = new Dimension(320,480);
-//	private final static Dimension maxSize = new Dimension(960,640);
-	public JTextField nameInput;
-	public JTextField passwordInput;
-	
-	public BMSigninPage(ActionListener signup, ActionListener quickG, ActionListener login, BMCentralServerClient serverClient)
+		private final static Dimension maxSize = new Dimension(960,640);
+	public JTextField txtUsername;
+	public JTextField txtPassword;
+public JLabel label;
+
+	public BMSigninPage(ActionListener quickG, ActionListener signup, ActionListener login)
 	{
+		setResizable(false);
+//		setIconImage(Toolkit.getDefaultToolkit().getImage(BMSigninPage.class.getResource("/Utilities/images/resultBG.png")));
 		setTitle("Bomberman Sign In");
 		setSize(minSize);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		signIn si = new signIn(signup, quickG, login, BMLibrary.readImages("background4.png"), serverClient);
-		add(si);
+		//setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
-
-	}
-	
-	class signUpPanel extends PaintedPanel
-	{
-		PaintedButton ok = new PaintedButton("OK", null, null, 40);
-		signUpPanel(ActionListener signup,ActionListener quickG, ActionListener login, Image image, BMCentralServerClient serverClient)
-		{
-			super(image);
-			setLayout(new GridBagLayout());
-			GridBagConstraints gbc = new GridBagConstraints();
-			setVisible(true);
-			
-			nameInput = new JTextField();
-			nameInput.setText("Username: ");
-			nameInput.setForeground(Color.GRAY);
-			nameInput.setPreferredSize(new Dimension(100, 20));
-			nameInput.addMouseListener(new MouseAdapter(){
-	            @Override
-	            public void mouseClicked(MouseEvent e){
-	                nameInput.setText("");
-	            }
-	        });
-			JPanel userName = new JPanel();
-			userName.setOpaque(false);
-			userName.add(nameInput);
-			
-			passwordInput = new JTextField();
-			passwordInput.setText("Password:");
-			passwordInput.setForeground(Color.GRAY);
-			passwordInput.setFont(new Font("font.tff", Font.BOLD, 20));
-
-			passwordInput.setPreferredSize(new Dimension(100, 20));
-			passwordInput.addMouseListener(new MouseAdapter(){
-	            @Override
-	            public void mouseClicked(MouseEvent e){
-	                passwordInput.setText("");
-	            }
-	        });
-			JPanel password = new JPanel();
-			password.setOpaque(false);
-			password.add(passwordInput);
-			
-			JPanel okPanel = new JPanel();
-			okPanel.setOpaque(false);
-			okPanel.add(ok);
-			ok.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e)
-			{
-				String username = nameInput.getText().trim();
-				String password = passwordInput.getText().trim();
-				if (serverClient.signup(username, password))
-				{
-					
-				}
-				removeAll();				
-				add(new signIn(signup,quickG, login, image, serverClient));
-				revalidate();
-				repaint();
-			}
-		});
-			gbc.gridy = 1;
-			add(userName,gbc);
-			gbc.gridy = 2;
-			add(password,gbc);
-			gbc.gridy = 3;
-			add(okPanel, gbc);
-			
-			
-			
-			
-			
-			//signupB = new PaintedButton("Sign up",BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 20);
-			
-		}
-	}
-class signIn extends PaintedPanel
-{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	
-	private PaintedButton signupB;
-	private PaintedButton quickGameB;
-	private PaintedButton loginB;
-	public BMCentralServerClient serverClient;
-	signIn(ActionListener signup, ActionListener quickG, ActionListener login, Image image, BMCentralServerClient serverClient)
-	{
-		super(image);
-		setLayout(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-		setVisible(true);
-		this.serverClient = serverClient;
-		nameInput = new JTextField();
-		nameInput.setText("Username: ");
-		nameInput.setForeground(Color.GRAY);
-		nameInput.setPreferredSize(new Dimension(100, 20));
-		nameInput.addMouseListener(new MouseAdapter(){
+//		setContentPane(new JLabel(new ImageIcon("/Utilities/images/resultBG.png")));
+		
+		txtUsername = new JTextField(SwingConstants.CENTER);
+		txtUsername.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
+		txtUsername.setHorizontalAlignment(SwingConstants.CENTER);
+		txtUsername.setText("Username");
+		txtUsername.setColumns(10);
+		txtUsername.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
-                nameInput.setText("");
+                txtUsername.setText("");
             }
         });
-		JPanel userName = new JPanel();
-		userName.setOpaque(false);
-		userName.add(nameInput);
 		
-		passwordInput = new JTextField();
-		passwordInput.setText("Password:");
-		passwordInput.setForeground(Color.GRAY);
-	//	passwordInput.setFont();
-		passwordInput.setFont(new Font("font.tff", Font.BOLD, 20));
-
-		passwordInput.setPreferredSize(new Dimension(100, 20));
-		passwordInput.addMouseListener(new MouseAdapter(){
+		txtPassword = new JTextField(SwingConstants.CENTER);
+		txtPassword.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
+		txtPassword.setHorizontalAlignment(SwingConstants.CENTER);
+		txtPassword.setText("Password");
+		txtPassword.setColumns(10);
+		txtPassword.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
-                passwordInput.setText("");
+                txtPassword.setText("");
             }
         });
-		JPanel password = new JPanel();
-		password.setOpaque(false);
-		password.add(passwordInput);
 		
-		signupB = new PaintedButton("Sign up",BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 20);
-		signupB.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e)
-			{
-				removeAll();				
-				add(new signUpPanel(signup, quickG,  login, null, serverClient));
-				revalidate();
-				repaint();
+		JButton btnQuickgame = new JButton("QuickGame");
+		btnQuickgame.addActionListener(quickG);
+		btnQuickgame.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
+		
+		JButton btnSignup = new JButton("Signup");
+		btnSignup.addActionListener(signup);
+		btnSignup.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
+		btnSignup.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		signupB.addActionListener(signup);
+		
+		
+		
+		PaintedPanel mainPanel = new PaintedPanel(BMLibrary.readImages("resultBG.png"));
+		
+		JButton btnLogin_1 = new JButton("Login");
+		btnLogin_1.addActionListener(login);
+		btnLogin_1.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 20));
+		
+		label = new JLabel("");
+		GroupLayout groupLayout = new GroupLayout(mainPanel);
+		groupLayout.setHorizontalGroup(
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(60)
+					.addComponent(btnQuickgame, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
+					.addGap(60))
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(105)
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addComponent(btnSignup, GroupLayout.PREFERRED_SIZE, 110, Short.MAX_VALUE)
+						.addComponent(btnLogin_1, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
+					.addGap(105))
+				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
+					.addGap(100)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addComponent(label)
+							.addContainerGap())
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(txtPassword, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+								.addComponent(txtUsername, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
+							.addGap(100))))
+		);
+		groupLayout.setVerticalGroup(
+			groupLayout.createParallelGroup(Alignment.LEADING)
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(35)
+					.addComponent(label)
+					.addGap(18)
+					.addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(18)
+					.addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 129, Short.MAX_VALUE)
+					.addComponent(btnQuickgame)
+					.addGap(18)
+					.addComponent(btnSignup)
+					.addGap(18)
+					.addComponent(btnLogin_1)
+					.addGap(67))
+		);
 
-		JPanel signupP = new JPanel();
-		signupP.add(new ClearPanel());
-		signupP.add(signupB);
-		signupP.setOpaque(false);
-		quickGameB = new PaintedButton("Quick Game", BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 20);
-		quickGameB.addActionListener(quickG);
-		JPanel quickGame = new JPanel();
-		quickGame.setOpaque(false);
-		quickGame.add(quickGameB);
-		loginB = new PaintedButton("Log In", BMLibrary.readImages("button0.png") , BMLibrary.readImages("button0-0.png"), 20);
-		//loginB.addActionListener(
-			//	);
-		loginB.addActionListener(login);
-		JPanel loginP = new JPanel();
-		loginP.setOpaque(false);
-		loginP.add(loginB);
-		
-		gbc.gridy = 1;
-		add(userName,gbc);
-		gbc.gridy = 2;
-		add(password,gbc);
-		gbc.gridy = 3;
-		add(quickGame,gbc);
-		gbc.gridy = 4;
-		add(signupP,gbc);
-		gbc.gridy = 5;
-		add(loginP,gbc);
-		
+		mainPanel.setLayout(groupLayout);
+		getContentPane().add(mainPanel);
+
 	}
-}
-public void closeMe() {
-	this.setVisible(false);
-	
-}
 }

@@ -3,6 +3,7 @@ package Server;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -11,6 +12,7 @@ public class BMHostServer extends Thread {
 	private int port;
 	private int numPlayer;
 	private BMSimulation simulation;
+	private ServerSocket ss;
 	public Vector<BMClient> getClients(){
 		return ctVector;
 	}
@@ -22,16 +24,25 @@ public class BMHostServer extends Thread {
 	public void removeChatThread(BMClient ct) {
 		ctVector.remove(ct);
 	}
-	public synchronized void sendMapToClients(TreeMap<String,Object> output) {
+	public void sendMapToClients(TreeMap<String,Object> output) {
 		for (BMClient ct : ctVector) {
+//			System.out.println("Direction " + ((Vector)output.get("players")).get(0));
 			ct.sendMap(output);
 		}
 	}
 	public void run(){
-		ServerSocket ss = null;
+
+		try {
+			ss = new ServerSocket(port);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			simulation.popError(e.getMessage());
+			return;
+		}
+		
 		try {
 			System.out.println("Starting Chat Server");
-			ss = new ServerSocket(port);
 			while (true) {
 				System.out.println("Waiting for client to connect...");
 				Socket s = ss.accept();
@@ -69,5 +80,18 @@ public class BMHostServer extends Thread {
 	}
 	public void setSimulation(BMSimulation bmSimulation) {
 		this.simulation = bmSimulation;
+	}
+	public void clientDisconnected(int id) {
+		simulation.playerQuit(id);
+		ctVector.remove(id);	
+	}
+	public void endGame() {
+		try {
+			for (BMClient client : ctVector) client.close();
+			ss.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

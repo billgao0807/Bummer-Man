@@ -1,9 +1,6 @@
 package centralServer;
-
 import java.io.Serializable;
-
 public class UserPasswordInfo implements Serializable {
-
 	private static final long serialVersionUID = -3947594960486424457L;
 	
 	private String username;
@@ -63,5 +60,4 @@ public class UserPasswordInfo implements Serializable {
 	public boolean isSignup() {
 		return isSignUp;
 	}
-
 }

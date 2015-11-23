@@ -19,22 +19,17 @@ public class MusicLibrary {
 //	public static void main(String[] args){
 //		victory();
 //	}
-	public static void draw_card(){
-		playSound("draw_card.wav");
+	public static final String path = "src/Utilities/bgm/";
+	public static void startGame(){
+		playSound("roomBGM.mp3");
 	}
-	public static void lose(){
-		playSound("lose.wav");
-	}
-	public static void victory(){
-		playSound("victory.wav");
-	}
-	public static void your_turn(){
-		playSound("your_turn.wav");
-	}
+	
 	public static void playSound(final String address) {
+		
+		
 		try {
 			System.out.println(MusicLibrary.class);
-			URL url = MusicLibrary.class.getResource("A5_Assets/"+address);
+			URL url = MusicLibrary.class.getResource(path+address);
 			AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
 			System.out.println(audioIn);
 			Clip clip = AudioSystem.getClip();

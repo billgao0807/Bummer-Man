@@ -1,5 +1,4 @@
 package centralServer;
-
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -11,13 +10,11 @@ import java.net.ServerSocket;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-
 public class PortGUI extends JFrame {
 	public static final long serialVersionUID = 1;
 	private JTextField portTextField;
@@ -26,7 +23,6 @@ public class PortGUI extends JFrame {
 	private Lock portLock;
 	private Condition portCondition;
 	private ServerSocket ss;
-
 	public PortGUI() {
 		super("BMServer Port Selection");
 		initializeVariables();

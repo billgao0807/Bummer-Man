@@ -49,14 +49,14 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	private static final int increasedPower = 5;
 	//Wait 10 or 5 seconds before player dropping another bomb 
 	private static final int increasedCoolingTime = 8;
-	private static final int normalCoolingTime = 6;
+	private static final int normalCoolingTime = 4;
 	private static final int decreasedCoolingTime = 3;
 	//Wait 5 or 3 seconds between a bomb is dropped and it detonates
 	private static final int increasedDetonatedTime = 7;
-	private static final int normalDetonatedTime = 5;
+	private static final int normalDetonatedTime = 4;
 	private static final int decreasedDetonatedTime = 3;
 	//Inclusive small coordinates limit:7, 247
-	private static final int smallCoordinateUpperLimit = 988;
+	private static final int smallCoordinateUpperLimit = 1005;
 	private static final int smallCoordinateLowerLimit = 16;
 	//Inclusive big coordinates limit:0, 15
 	private static final int bigCoordinateUpperLimit = 15;
@@ -82,7 +82,6 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	protected BMSimulation simulation;
 	protected int direction;
 	
-	private Lock mLock;
 	protected volatile boolean respawning;
 	protected volatile boolean cooling;
 	
@@ -119,7 +118,6 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		HP = initialLives;
 		kills = 0;
 		lost = false;
-		mLock = new ReentrantLock();
 		respawning = false;
 		items.add(-1);
 		items.add(-1);
@@ -127,7 +125,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		new Thread(new Runnable(){
 			@Override
 			public void run() {
-				while (true){
+				while (!hasLost()){
 					try {
 						Thread.sleep(50);
 					} catch (InterruptedException e) {
@@ -148,31 +146,21 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	}
 	
 	public void killed(int id){
-//		if (respawning) return;
-//	respawning = true;
-		if(mLock.tryLock()){
-			try{
+		if (respawning) return;
+		respawning = true;
 				HP--;
 				if (HP <= 0) lost = true;
 				location.x = initialLocation.x;
 				location.y = initialLocation.y;
 				simulation.addKill(id);
-				simulation.sendMove();
-				//System.out.println("hp is " + HP);
 				try{
 				Thread.sleep(3000);
 				} catch (InterruptedException ie){
 					ie.printStackTrace();
 				} finally{
-					System.out.println("Recovered " + HP);
+//					System.out.println("Recovered " + HP);
 					respawning = false;
-				}				
-			}
-			finally{
-				mLock.unlock();
-			}
-			
-		}
+				}
 		//		new Thread(new Runnable(){
 //			@Override
 //			public void run() {
@@ -190,8 +178,8 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		Vector<Integer> returnVector = new Vector<Integer>();
 		//Object [] array = itemQueue.toArray();
 		
-		if (items.size() > 2 || items.size() < 0)
-			System.out.println("Player has " + items.size() + " items. Error in BMPlayer getItemsProcessed.");
+//		if (items.size() > 2 || items.size() < 0)
+//			System.out.println("Player has " + items.size() + " items. Error in BMPlayer getItemsProcessed.");
 		for(int i=0; i< items.size(); i++){
 			returnVector.add(items.get(i));
 		}
@@ -230,10 +218,8 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		return ID >= 0;
 	}
 	private void addItem(BMItem item){
-		if(items.size() == 2){
-			items.remove(0);
-		}
-		items.add(item.getValue());
+		items.set(0, items.get(1));
+		items.set(1, item.getValue());
 		
 		speed = normalSpeed;
 		power = normalPower;
@@ -245,15 +231,26 @@ public abstract class BMPlayer extends Thread implements Serializable{
 				case BMItem.speeddown: speed--; break;
 				case BMItem.powerup: power++; break;
 				case BMItem.powerdown: power--; break;
-				case BMItem.coolingfast: coolingTime--; break;
-				case BMItem.coolingslow: coolingTime++; break;
+				case BMItem.coolingfast: coolingTime/=2; break;
+				case BMItem.coolingslow: coolingTime*=2; break;
 				case BMItem.detonatingfast: detonatedTime--; break;
 				case BMItem.detonatingslow: detonatedTime++; break;
+			}
+			if (vip) {
+				speed+=2;
+				power+=1;
+				coolingTime-=1;
+				detonatedTime-=1;
 			}
 		}
 								
 	
 	}
+	
+	public String getUserName(){
+		return username;
+	}
+	
 	public void startMove(int moveType){
 		for(int i=0; i<speed; i++){
 			if (canMove(moveType)){
@@ -300,7 +297,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 								e.printStackTrace();
 							}
 							finally {
-								System.out.println("Cooled");
+//								System.out.println("Cooled");
 								cooling = false;
 							}
 						}
@@ -312,7 +309,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			int value = itemNode.getValue();
 			addItem(new BMItem(value));
 			itemNode.getItem();
-		}
+		}	
 	}
 	
 	public int getid(){return ID;}
@@ -320,7 +317,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	protected boolean canMove(int moveType) {
 		if (hasLost()) return false;
 		if (moveType < 0 || moveType > 5){
-			System.out.println("Error input of moveType. BMPlayer canMove.");
+//			System.out.println("Error input of moveType. BMPlayer canMove.");
 			return false;
 		}
 		else if (moveType == 0) return true;
@@ -328,14 +325,14 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			if (cooling) return false;
 			BMNode node = simulation.getNode(location.x/coordinatesRatio, location.y/coordinatesRatio);
 			if (node instanceof BMBombing || node instanceof BMBomb){
-				System.out.println("cant drop bomb because tile is bomb or bombing");
+//				System.out.println("cant drop bomb because tile is bomb or bombing");
 				return false;
 			}
 			else return true;
 		}
 		else{
-			//int initBigX = location.x/16;
-			//int initBigY = location.y/16;
+			int initBigX = location.x/coordinatesRatio;
+			int initBigY = location.y/coordinatesRatio;
 			int initSmallX = location.x;
 			int initSmallY = location.y;
 			
@@ -354,13 +351,97 @@ public abstract class BMPlayer extends Thread implements Serializable{
 //			System.out.println("X " + finalSmallX + " Y " + finalSmallY);
 			if (pointInSmallBounds(new Point(finalSmallX, finalSmallY))){
 				BMNode nextNode = simulation.getNode(finalSmallX/coordinatesRatio, finalSmallY/coordinatesRatio);
-				if (nextNode instanceof BMWall || nextNode instanceof BMTile)return false;
 				
-				else return true;
+				BMNode currNode = simulation.getNode(initBigX, initBigY);
+				if (currNode instanceof BMBomb) return true;
+				else if (nextNode instanceof BMWall || nextNode instanceof BMTile || nextNode instanceof BMBomb) return false;
+				else {
+					
+					int nextBigX = initBigX;
+					int nextBigY = initBigY;
+					switch(moveType){
+						case BMMove.up: nextBigY--; break;
+						case BMMove.down: nextBigY++; break;
+						case BMMove.left: nextBigX--; break;
+						case BMMove.right: nextBigX++; break;
+					}
+					if (pointInBigBounds(nextBigX, nextBigY)){
+//						System.out.println("helper case");
+						if (moveType/3 == 0){
+							int leftBigX = nextBigX-1;
+							int leftBigY = nextBigY;
+							if(!canMoveHelper(leftBigX, leftBigY,BMMove.left,xthreshold)){
+//								System.out.println("helper");
+								return false;
+							}
+							int rightBigX = nextBigX+1;
+							int rightBigY = nextBigY;
+							if(!canMoveHelper(rightBigX, rightBigY,BMMove.right, xthreshold)){
+//								System.out.println("helper");
+								return false;
+							}
+						}
+						else{
+							int upBigX = nextBigX;
+							int upBigY = nextBigY-1;
+							if(!canMoveHelper(upBigX, upBigY,BMMove.up, ythreshold)){
+//								System.out.println("helper");
+								return false;
+							}
+							int downBigX = nextBigX;
+							int downBigY = nextBigY+1;
+							if(!canMoveHelper(downBigX, downBigY, BMMove.down, ythreshold)){
+//								System.out.println("helper");
+								return false;
+							}
+								
+						}
+					}
+					
+					return true;
+				}
 			}
 			else return false;
 			//System.out.println("Error in BMPlayer canMove");			
 		}
+	}
+	
+	private boolean canMoveHelper(int BigX, int BigY, int direction, int threshold){
+		if(pointInBigBounds(BigX, BigY)){
+			//BMNode nextNode = simulation.getNode(BigX, BigY);
+			//int nodetype = (int)nextNode.getId();
+			//if(nodetype == BMNodeType.tile || nodetype == BMNodeType.wall || nodetype == BMNodeType.bomb || nodetype == BMNodeType.bombing){
+				int SmallX = location.x/coordinatesRatio;
+				int SmallY = location.y/coordinatesRatio;
+				//threshold /= 2;
+				switch(direction){
+					case BMMove.up: SmallY -= threshold; 
+									SmallX = BigX/coordinatesRatio + coordinatesRatio/2;
+									break;
+					case BMMove.down: SmallY += threshold; 
+									SmallX = BigX/coordinatesRatio + coordinatesRatio/2;
+									break;
+					case BMMove.left: SmallX -= threshold; 
+									SmallY = BigY/coordinatesRatio + coordinatesRatio/2;
+									break;
+					case BMMove.right: SmallX += threshold; 
+									SmallY = BigY/coordinatesRatio + coordinatesRatio/2;	
+									break;
+				}
+				if(pointInSmallBounds(new Point(SmallX, SmallY))){
+					BMNode node = simulation.getNode(SmallX/coordinatesRatio, SmallY/coordinatesRatio);
+					int nodetype2 = (int)node.getId();
+					if(nodetype2 == BMNodeType.tile || nodetype2 == BMNodeType.wall || nodetype2 == BMNodeType.bomb || nodetype2 == BMNodeType.bombing){
+						return false;
+					}
+				}
+				else{
+					//System.out.println("Should not happen, logic error");
+				}
+		//	} 
+			
+		}
+		return true;
 	}
 	//Note that Point stores small coordinates. Use ints for big coordinates
 	protected boolean pointInSmallBounds(Point p){
@@ -378,7 +459,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	
 	
 	public void setInitialLocation(int playerNumber){
-		if (playerNumber > 3 || playerNumber < 0) System.out.println("Input out of bounds, needs 0 to 3. In BMPlayer setInitialLocation.");
+//		if (playerNumber > 3 || playerNumber < 0) System.out.println("Input out of bounds, needs 0 to 3. In BMPlayer setInitialLocation.");
 		switch(playerNumber){
 		
 			case 0:
@@ -409,16 +490,18 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		TreeMap<String,Object> resultMap = new TreeMap<String,Object>();
 		resultMap.put("ID", ID);
 		resultMap.put("points", new Integer(calculatePoints()));
-		resultMap.put("Kill", kills);
+		resultMap.put("kill", kills);
 		resultMap.put("death", new Integer(initialHP-HP));
 		resultMap.put("item", itemCount);
+		resultMap.put("username", this.getUserName());
 		return resultMap;
 	}
 
-	protected String username = "";
+	boolean vip = false;
+	protected String username = "AI Player";
 	public TreeMap<String,Object> getInfo(){
 		TreeMap<String,Object> info = new TreeMap<String,Object>();
-		info.put("username",username);
+		info.put("username",getUserName());
 		info.put("posX", location.x);
 		info.put("posY", location.y);
 		info.put("hp", HP);
@@ -430,12 +513,19 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		info.put("coolingTime", coolingTime);
 		info.put("denotated", this.detonatedTime);
 		int time = simulation.getTime();
-		String timeLeft = (Integer.toString(time/60)) + ":" + (Integer.toString(time%60));
+		String timeLeft = "";
+		if (time%60 > 9 ) timeLeft = (Integer.toString(time/60)) + ":" + (Integer.toString(time%60));
+		else timeLeft = (Integer.toString(time/60)) + ":0" + (Integer.toString(time%60));
+//		System.out.println("time " + time + " left " + timeLeft);
 		info.put("time", timeLeft);
 //		System.out.println("Info " +info);
 		return info;
 	}
 	public void addKill() {
 		kills++;
+	}
+
+	public void setLose() {
+		lost = true;
 	}
 }

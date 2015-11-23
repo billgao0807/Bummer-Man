@@ -14,6 +14,7 @@ public class BMClient extends Thread {
 	private BMSimulation mSimulation;
 	private BMPlayer player;
 	private String userName;
+	public boolean vip = false;
 	
 	public BMClient(Socket s, BMHostServer hs, BMSimulation mSimulation) {
 		this.hs = hs;
@@ -57,9 +58,11 @@ public class BMClient extends Thread {
 					}
 					else if (type.equals("join")){
 						this.userName = (String)(map.get("username"));
+						this.vip = (boolean)(map.get("vip"));
 						mSimulation.joinGame();
 					}
 					else if (type.equals("move")){
+//						System.out.println("Start move " + map.get("move"));
 						player.startMove((Integer)(map.get("move")));
 					}
 					else if (type.equals("msg")){
@@ -74,7 +77,7 @@ public class BMClient extends Thread {
 				}
 			}
 		} catch (IOException ioe) {
-			hs.removeChatThread(this);
+			hs.clientDisconnected(this.player.getid());
 			System.out.println(s.getInetAddress() + ":" + s.getPort() + " disconnected.");
 		} 
 	}
@@ -89,5 +92,9 @@ public class BMClient extends Thread {
 
 	public String getUserName() {
 		return userName;
+	}
+
+	public void close() throws IOException {
+		s.close();
 	}
 }

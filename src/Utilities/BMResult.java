@@ -1,5 +1,7 @@
 package Utilities;
 
+import java.io.Serializable;
+
 /*
  * Copyright (C) 2013 Jeremy Gooch <http://www.linkedin.com/in/jeremygooch/>
  *
@@ -54,7 +56,6 @@ public class BMResult {
 		this.isDraw = true;
 	}
 
-	
 	/**
 	 * Check that we're not doing anything silly like recording a match with only one player.
 	 * 
