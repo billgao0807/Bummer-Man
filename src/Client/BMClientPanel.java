@@ -177,6 +177,11 @@ public class BMClientPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
+				if (simulation != null) simulation.gameOver();
+				hostClient.interrupt();
+				simulation = null;
+				hostClient = null;
+				System.gc();
 				BMClientPanel.this.removeAll();
 				BMClientPanel.this.add(menuPanel);
 				BMClientPanel.this.revalidate();
