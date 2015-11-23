@@ -240,6 +240,11 @@ public abstract class BMPlayer extends Thread implements Serializable{
 								
 	
 	}
+	
+	public String getUserName(){
+		return username;
+	}
+	
 	public void startMove(int moveType){
 		for(int i=0; i<speed; i++){
 			if (canMove(moveType)){
@@ -471,7 +476,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		TreeMap<String,Object> resultMap = new TreeMap<String,Object>();
 		resultMap.put("ID", ID);
 		resultMap.put("points", new Integer(calculatePoints()));
-		resultMap.put("Kill", kills);
+		resultMap.put("kill", kills);
 		resultMap.put("death", new Integer(initialHP-HP));
 		resultMap.put("item", itemCount);
 		resultMap.put("username", username);
@@ -481,7 +486,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	protected String username = "AI Player";
 	public TreeMap<String,Object> getInfo(){
 		TreeMap<String,Object> info = new TreeMap<String,Object>();
-		info.put("username",username);
+		info.put("username",getUserName());
 		info.put("posX", location.x);
 		info.put("posY", location.y);
 		info.put("hp", HP);
@@ -493,7 +498,10 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		info.put("coolingTime", coolingTime);
 		info.put("denotated", this.detonatedTime);
 		int time = simulation.getTime();
-		String timeLeft = (Integer.toString(time/60)) + ":" + (Integer.toString(time%60));
+		String timeLeft = "";
+		if (time%60 > 9 ) timeLeft = (Integer.toString(time/60)) + ":" + (Integer.toString(time%60));
+		else timeLeft = (Integer.toString(time/60)) + ":0" + (Integer.toString(time%60));
+		System.out.println("time " + time + " left " + timeLeft);
 		info.put("time", timeLeft);
 //		System.out.println("Info " +info);
 		return info;

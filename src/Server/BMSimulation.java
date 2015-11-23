@@ -157,6 +157,8 @@ public class BMSimulation extends Thread {
 		map.put("result", getResult());
 		hs.sendMapToClients(map);
 		System.out.println("End game");
+		hs.endGame();
+		this.interrupt();
 	}
 	public Integer[][] getBoard(){
 		Integer[][] myBoard = new Integer[16][16];
@@ -200,7 +202,6 @@ public class BMSimulation extends Thread {
 		hs.sendMapToClients(info);
 	}
 	public int getTime() {
-		
 		return timeLeft;
 	}
 	public void playerQuit(int id) {

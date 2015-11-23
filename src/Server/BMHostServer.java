@@ -12,6 +12,7 @@ public class BMHostServer extends Thread {
 	private int port;
 	private int numPlayer;
 	private BMSimulation simulation;
+	private ServerSocket ss;
 	public Vector<BMClient> getClients(){
 		return ctVector;
 	}
@@ -30,7 +31,6 @@ public class BMHostServer extends Thread {
 		}
 	}
 	public void run(){
-		ServerSocket ss = null;
 		try {
 			System.out.println("Starting Chat Server");
 			ss = new ServerSocket(port);
@@ -75,5 +75,14 @@ public class BMHostServer extends Thread {
 	public void clientDisconnected(int id) {
 		simulation.playerQuit(id);
 		ctVector.remove(id);	
+	}
+	public void endGame() {
+		try {
+			for (BMClient client : ctVector) client.close();
+			ss.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

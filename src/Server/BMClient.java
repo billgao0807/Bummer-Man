@@ -91,4 +91,8 @@ public class BMClient extends Thread {
 	public String getUserName() {
 		return userName;
 	}
+
+	public void close() throws IOException {
+		s.close();
+	}
 }
