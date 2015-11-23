@@ -75,6 +75,10 @@ public class BMSimulation extends Thread {
 		timeLeft = time;
 		totalHP = HP;
 	}
+	public int getNumClients(){
+		return hs.getClients().size();
+	}
+	
 	public Vector<String> getHPs(){
 		Vector<String> HPs = new Vector<String>();
 		for (BMPlayer player : players){
@@ -107,7 +111,7 @@ public class BMSimulation extends Thread {
 		Vector<BMClient> clients = hs.getClients();
 		for (int i = 0; i < clients.size(); i++){
 			System.out.println("Client name");
-			BMPlayer player = new BMRealPlayer(i,totalHP, clients.get(i).getUserName());
+			BMPlayer player = new BMRealPlayer(i,totalHP, clients.get(i).getUserName(), clients.get(i).vip);
 			clients.get(i).setPlayer(player);
 			player.setSimulation(this);
 			players.add(player);

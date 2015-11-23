@@ -236,6 +236,12 @@ public abstract class BMPlayer extends Thread implements Serializable{
 				case BMItem.detonatingfast: detonatedTime--; break;
 				case BMItem.detonatingslow: detonatedTime++; break;
 			}
+			if (vip) {
+				speed+=2;
+				power+=1;
+				coolingTime-=1;
+				detonatedTime-=1;
+			}
 		}
 								
 	
@@ -491,6 +497,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		return resultMap;
 	}
 
+	boolean vip = false;
 	protected String username = "AI Player";
 	public TreeMap<String,Object> getInfo(){
 		TreeMap<String,Object> info = new TreeMap<String,Object>();

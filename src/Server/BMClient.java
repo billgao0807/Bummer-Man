@@ -14,6 +14,7 @@ public class BMClient extends Thread {
 	private BMSimulation mSimulation;
 	private BMPlayer player;
 	private String userName;
+	public boolean vip = false;
 	
 	public BMClient(Socket s, BMHostServer hs, BMSimulation mSimulation) {
 		this.hs = hs;
@@ -57,6 +58,7 @@ public class BMClient extends Thread {
 					}
 					else if (type.equals("join")){
 						this.userName = (String)(map.get("username"));
+						this.vip = (boolean)(map.get("vip"));
 						mSimulation.joinGame();
 					}
 					else if (type.equals("move")){

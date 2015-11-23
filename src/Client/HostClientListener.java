@@ -90,6 +90,7 @@ public class HostClientListener  extends Thread{
 		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
 		 tempMap.put("type", "join");
 		 tempMap.put("username", username);	
+		 tempMap.put("vip", vipClass.vip);
 		 System.out.println("This user's name " + username);
 	        try {
 	        	oos.writeObject(tempMap);
