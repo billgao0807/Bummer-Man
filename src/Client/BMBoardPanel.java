@@ -81,6 +81,7 @@ public class BMBoardPanel extends JPanel{
 	public static long a;
 	private JScrollPane jsp;
 	private ActionListener playingGame;
+	private ActionListener quit2;
 	private boolean endGame =false;
 
 
@@ -166,10 +167,11 @@ public class BMBoardPanel extends JPanel{
 
 	//	setSize(1000,600);
 		this.playingGame=playingGame;
+		
 		this.setLayout(new BorderLayout());
 		chatPanel= new PaintedPanel(null);
 		boardPanel = new PaintedPanel( null);
-		playerPanel = new BMBoard_Player( BMLibrary.readImages("frame.png"), playingGame);
+		playerPanel = new BMBoard_Player( BMLibrary.readImages("frame.png"), playingGame );
 		playerPanel.setPreferredSize(new Dimension(150, BMBoardPanel.this.getHeight()));
 
 		chatPanel.setPreferredSize(new Dimension(150, BMBoardPanel.this.getHeight()));

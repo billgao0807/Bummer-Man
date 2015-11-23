@@ -1,6 +1,6 @@
 package Client;
 
-import java.awt.BorderLayout;
+import java.awt.BorderLayout;import java.awt.Color;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
@@ -47,10 +47,12 @@ public class BMRoomPanel extends PaintedPanel{
 	public JPanel rl;
 	public int sendTime = 60;
 	public int sendhp = 1;
+	private int num;
 
-	BMRoomPanel(boolean identity,ActionListener startP, ActionListener startB, ActionListener quit,Image image)
+	BMRoomPanel(int num,boolean identity,ActionListener startP, ActionListener startB, ActionListener quit,Image image)
 	{
 		super(image, true);
+		this.num=num;
 		time = new JLabel("Time:");
 		HP = new JLabel("HP:");
 		this.identity = identity;
@@ -94,6 +96,7 @@ public class BMRoomPanel extends PaintedPanel{
 		lt.setOpaque(false);
 		JLabel username0 = new JLabel("Player Zero");
 		username0.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
+		//username0.setForeground(Color.y);
 		username0.setHorizontalAlignment(SwingConstants.CENTER);
 		username0.setOpaque(false);
 		username0.setAlignmentY(CENTER_ALIGNMENT);
@@ -115,6 +118,8 @@ public class BMRoomPanel extends PaintedPanel{
 		ll.add(username1, BorderLayout.NORTH);
 		ll.add(player1, BorderLayout.CENTER);
 		left.add(ll);
+		if (num <=1) ll.setVisible(false);
+
 
 		
 
@@ -238,12 +243,18 @@ public class BMRoomPanel extends PaintedPanel{
 		player2 = new PaintedPanel(BMLibrary.readImages("player2.png"));
 		rt.add(username2, BorderLayout.NORTH);
 		rt.add(player2,BorderLayout.CENTER);
+		//rt.setVisible(false);
+		if (num <=2) rt.setVisible(false);
+
+
 		right.add(rt);
 		player2.setLayout(new GridLayout(1, 0, 0, 0));
 
 		rl = new JPanel();
 		rl.setLayout(new BorderLayout());
 		rl.setOpaque(false);
+		rl.setVisible(false);
+
 		JLabel username3 = new JLabel("player Three");
 		username3.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		username3.setHorizontalAlignment(SwingConstants.CENTER);
@@ -252,7 +263,9 @@ public class BMRoomPanel extends PaintedPanel{
 		player3 = new PaintedPanel(BMLibrary.readImages("player3.png"));
 		rl.add(username3, BorderLayout.NORTH);
 		rl.add(player3, BorderLayout.CENTER);
-		right.add(rl);
+		if (num <=3) rl.setVisible(false);
+
+//		right.add(rl);
 
 	}
 	public void repaintPlayer(TreeMap<Integer, String> treeMap)

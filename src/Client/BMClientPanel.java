@@ -103,8 +103,8 @@ public class BMClientPanel extends JPanel{
 		
 
 		
-	initRoomPanel();
-	rankPanel = new BMRankPanel(new ActionListener(){
+		initRoomPanel(1);
+		rankPanel = new BMRankPanel(new ActionListener(){
 		@Override
 		public void actionPerformed(ActionEvent e)
 		{
@@ -114,8 +114,8 @@ public class BMClientPanel extends JPanel{
 		}
 	});
 	}
-	private void initRoomPanel(){
-		roomPanel = new BMRoomPanel(identity,
+	private void initRoomPanel(int i){
+		roomPanel = new BMRoomPanel(i, identity,
 				new ActionListener(){
 					@Override
 					public void actionPerformed(ActionEvent e){
@@ -151,6 +151,7 @@ public class BMClientPanel extends JPanel{
 					public void actionPerformed(ActionEvent e)
 					{
 					//Login
+						if (simulation != null)simulation.gameOver();
 						initMenuPanel();
 						BMClientPanel.this.removeAll();
 						BMClientPanel.this.add(menuPanel);
@@ -169,11 +170,26 @@ public class BMClientPanel extends JPanel{
 				hostClient = null;
 				roomPanel = null;
 				System.gc();
-				BMClientPanel.this.removeAll();
-				BMClientPanel.this.add(menuPanel);
-				BMClientPanel.this.revalidate();
-				BMClientPanel.this.repaint();
+				if (!username.equals("Guest")){
+					BMClientPanel.this.removeAll();
+					BMClientPanel.this.add(menuPanel);
+					BMClientPanel.this.revalidate();
+					BMClientPanel.this.repaint();
+//					BMClientPanel.requestFocusInWindow();
+					
+					loginPanel.requestFocus();
+					loginPanel.requestFocusInWindow();
+				}
+				else {
+					BMClientPanel.this.removeAll();
+					BMClientPanel.this.add(loginPanel);
+					BMClientPanel.this.revalidate();
+					BMClientPanel.this.repaint();
+				}
+				BMClientPanel.this.hostClient.close();
+				if (simulation != null) simulation.gameOver();
 			}
+		
 		});
 	}
 	private void initMenuPanel() {
@@ -181,7 +197,7 @@ public class BMClientPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e){
 				//host the game
-				initRoomPanel();
+				initRoomPanel(1);
 				BMClientPanel.this.removeAll();
 				BMClientPanel.this.add(roomPanel);
 				BMClientPanel.this.revalidate();
@@ -231,7 +247,8 @@ public class BMClientPanel extends JPanel{
 				System.out.println("connect server");
 				hostClient.sendJoin(username);
 				System.out.println("Join game");
-				
+
+				identity = true;
 			}
 		},
 		new ActionListener()
@@ -279,7 +296,8 @@ public class BMClientPanel extends JPanel{
 		this.players = players;
 		this.time = time;
 		this.hp = hp;
-		this.initRoomPanel();
+		
+		this.initRoomPanel(players.size());
 		BMClientPanel.this.removeAll();
 		BMClientPanel.this.add(roomPanel);		
 		BMClientPanel.this.revalidate();
