@@ -51,7 +51,7 @@ public class BMCentralServerClient extends Thread {
 		gameRecords = new Vector<GameRecord>();
 	}
 	
-	public BMCentralServerClient(int port) throws UnknownHostException {
+	public BMCentralServerClient(int port) {
 		try{
 			s = new Socket("localhost", port);
 			oos = new ObjectOutputStream(s.getOutputStream());
@@ -65,7 +65,7 @@ public class BMCentralServerClient extends Thread {
 		}
 	}
 	
-	public BMCentralServerClient(String ip, int port) {
+	public BMCentralServerClient(String ip, int port) throws UnknownHostException {
 		try{
 			s = new Socket(ip,port);
 			oos = new ObjectOutputStream(s.getOutputStream());
