@@ -47,7 +47,8 @@ public class BMAIPlayer extends BMPlayer {
 		items.clear();
 		items.add(bmPlayer.items.get(0));
 		items.add(bmPlayer.items.get(1));
-		direction = bmPlayer.direction;		
+		direction = bmPlayer.direction;	
+		this.setSimulation(bmPlayer.simulation);
 		this.start();
 	}
 
