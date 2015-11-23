@@ -72,4 +72,8 @@ public class BMHostServer extends Thread {
 	public void setSimulation(BMSimulation bmSimulation) {
 		this.simulation = bmSimulation;
 	}
+	public void clientDisconnected(int id) {
+		simulation.playerQuit(id);
+		ctVector.remove(id);	
+	}
 }

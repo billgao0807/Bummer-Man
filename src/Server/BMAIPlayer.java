@@ -33,17 +33,29 @@ public class BMAIPlayer extends BMPlayer {
 		this.start();
 	}
 	
+	public BMAIPlayer(BMPlayer bmPlayer) {
+		super(bmPlayer.ID, bmPlayer.initialHP);
+		this.location = new Point(bmPlayer.location);
+		speed = bmPlayer.speed;
+		power = bmPlayer.power;
+		coolingTime = bmPlayer.coolingTime;
+		detonatedTime = bmPlayer.detonatedTime;
+		HP = bmPlayer.HP;
+		kills = bmPlayer.kills;
+		lost = bmPlayer.lost;
+		respawning = bmPlayer.respawning;
+		items.clear();
+		items.add(bmPlayer.items.get(0));
+		items.add(bmPlayer.items.get(1));
+		direction = bmPlayer.direction;		
+	}
+
 	public void run(){
 		while (!hasLost()){
 			Queue<Point> path = null;
 			Vector<Point> reachable = getReachablePoints();
-//			if (reachable.empty()) {
-//				System.out.println("Empty stack");
-//				continue;
-//			}
 			int [][] board = searchSave();
 			Point p = null;
-//			if (ID == 3) System.out.println("Start");
 			Random r = new Random();
 			while (path == null){
 				if (reachable.isEmpty()) break;
@@ -51,21 +63,17 @@ public class BMAIPlayer extends BMPlayer {
 				p = reachable.get(index);
 				reachable.remove(index);
 				if (board[p.x][p.y] == safe){ 
-//					System.out.println("Target " + p);
 					path = findBFSPath(p);
 					break;
 				}
 			}
-//			if (ID == 3) System.out.println("Mid");
+			if (p != null) System.out.println("Safe point " + p);
 			if (path == null) continue;
 			while (!path.isEmpty()){
-//				if (ID == 3) System.out.println("Next Point " + path.peek());
 				board = this.searchSave();
-//				if (board[p.x][p.y] == unsafe) System.out.println("UNSAFE");
 				if (board[p.x][p.y] == unsafe || !AIMove(path.peek())) break;
 				path.remove();
 			}
-//			if (ID == 3) System.out.println("End");
 		}
 	}
 	
@@ -77,59 +85,61 @@ public class BMAIPlayer extends BMPlayer {
 		visitedPoints.add(currPoint());
 		while(!pointQueue.isEmpty()){
 			Point p = pointQueue.poll();
+			//Up
+			Point upPoint = new Point(p.x, p.y-1);
 			if(gridInBounds(new Point(p.x, p.y-1))){
 				BMNode upNode = simulation.getNode(p.x, p.y-1);
 				if(upNode instanceof BMWall || upNode instanceof BMTile || upNode instanceof BMBomb || upNode instanceof BMBombing);
 				else {
-					Point newpoint = new Point(p.x, p.y-1);
-					if (!visitedPoints.contains(newpoint)){
+					if (!visitedPoints.contains(upPoint)){
 						pointQueue.add(new Point(p.x, p.y-1));
-						visitedPoints.add(newpoint);
-						results.add(newpoint);
+						results.add(upPoint);
 					}
 					
 				}
 			}
+			visitedPoints.add(upPoint);
+			
 			//Down
+			Point downPoint = new Point(p.x, p.y+1);
 			if(gridInBounds(new Point(p.x, p.y+1))){
 				BMNode downNode = simulation.getNode(p.x, p.y+1);
 				if(downNode instanceof BMWall || downNode instanceof BMTile || downNode instanceof BMBomb || downNode instanceof BMBombing);
 				else {
-					Point newpoint = new Point(p.x, p.y+1);
-					if (!visitedPoints.contains(newpoint)){
+					if (!visitedPoints.contains(downPoint)){
 						pointQueue.add(new Point(p.x, p.y+1));
-						visitedPoints.add(newpoint);
-						results.add(newpoint);
+						results.add(downPoint);
 					}
 				}
 			}
+			visitedPoints.add(downPoint);
+			
 			//Left
+			Point leftPoint = new Point(p.x-1, p.y);
 			if(gridInBounds(new Point(p.x-1, p.y))){
 				BMNode leftNode = simulation.getNode(p.x-1, p.y);
 				if(leftNode instanceof BMWall || leftNode instanceof BMTile || leftNode instanceof BMBomb || leftNode instanceof BMBombing);
 				else {
-					Point newpoint = new Point(p.x-1, p.y);
-					if (!visitedPoints.contains(newpoint)){
+					if (!visitedPoints.contains(leftPoint)){
 						pointQueue.add(new Point(p.x-1, p.y));
-						visitedPoints.add(newpoint);
-						results.add(newpoint);
+						results.add(leftPoint);
 					}
 				}
 			}
+			visitedPoints.add(leftPoint);
 			//Right
+			Point rightPoint = new Point(p.x+1, p.y);
 			if(gridInBounds(new Point(p.x+1, p.y))){
 				BMNode rightNode = simulation.getNode(p.x+1, p.y);
 				if(rightNode instanceof BMWall || rightNode instanceof BMTile || rightNode instanceof BMBomb || rightNode instanceof BMBombing);
 				else {
-					
-					Point newpoint = new Point(p.x+1, p.y);
-					if (!visitedPoints.contains(newpoint)){
+					if (!visitedPoints.contains(rightPoint)){
 						pointQueue.add(new Point(p.x+1, p.y));
-						visitedPoints.add(newpoint);
-						results.add(newpoint);
+						results.add(rightPoint);
 					}
 				}
 			}
+			visitedPoints.add(rightPoint);
 		}
 		return results;
 	}

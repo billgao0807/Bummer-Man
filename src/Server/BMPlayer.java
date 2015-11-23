@@ -320,8 +320,8 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			else return true;
 		}
 		else{
-			int initBigX = location.x/64;
-			int initBigY = location.y/64;
+			int initBigX = location.x/coordinatesRatio;
+			int initBigY = location.y/coordinatesRatio;
 			int initSmallX = location.x;
 			int initSmallY = location.y;
 			
@@ -344,11 +344,85 @@ public abstract class BMPlayer extends Thread implements Serializable{
 				BMNode currNode = simulation.getNode(initBigX, initBigY);
 				if (currNode instanceof BMBomb) return true;
 				else if (nextNode instanceof BMWall || nextNode instanceof BMTile || nextNode instanceof BMBomb) return false;
-				else return true;
+				else {
+					
+					int nextBigX = initBigX;
+					int nextBigY = initBigY;
+					switch(moveType){
+						case BMMove.up: nextBigY--; break;
+						case BMMove.down: nextBigY++; break;
+						case BMMove.left: nextBigX--; break;
+						case BMMove.right: nextBigX++; break;
+					}
+					if (pointInBigBounds(nextBigX, nextBigY)){
+//						System.out.println("helper case");
+						if (moveType/3 == 0){
+							int leftBigX = nextBigX-1;
+							int leftBigY = nextBigY;
+							if(!canMoveHelper(leftBigX, leftBigY,BMMove.left,xthreshold)){
+//								System.out.println("helper");
+								return false;
+							}
+							int rightBigX = nextBigX+1;
+							int rightBigY = nextBigY;
+							if(!canMoveHelper(rightBigX, rightBigY,BMMove.right, xthreshold)){
+//								System.out.println("helper");
+								return false;
+							}
+						}
+						else{
+							int upBigX = nextBigX;
+							int upBigY = nextBigY-1;
+							if(!canMoveHelper(upBigX, upBigY,BMMove.up, ythreshold)){
+//								System.out.println("helper");
+								return false;
+							}
+							int downBigX = nextBigX;
+							int downBigY = nextBigY+1;
+							if(!canMoveHelper(downBigX, downBigY, BMMove.down, ythreshold)){
+//								System.out.println("helper");
+								return false;
+							}
+								
+						}
+					}
+					
+					return true;
+				}
 			}
 			else return false;
 			//System.out.println("Error in BMPlayer canMove");			
 		}
+	}
+	
+	private boolean canMoveHelper(int BigX, int BigY, int direction, int threshold){
+		if(pointInBigBounds(BigX, BigY)){
+			//BMNode nextNode = simulation.getNode(BigX, BigY);
+			//int nodetype = (int)nextNode.getId();
+			//if(nodetype == BMNodeType.tile || nodetype == BMNodeType.wall || nodetype == BMNodeType.bomb || nodetype == BMNodeType.bombing){
+				int SmallX = location.x/coordinatesRatio;
+				int SmallY = location.y/coordinatesRatio;
+				//threshold /= 2;
+				switch(direction){
+					case BMMove.up: SmallY -= threshold; break;
+					case BMMove.down: SmallY += threshold; break;
+					case BMMove.left: SmallX -= threshold; break;
+					case BMMove.right: SmallX += threshold; break;
+				}
+				if(pointInSmallBounds(new Point(SmallX, SmallY))){
+					BMNode node = simulation.getNode(SmallX/coordinatesRatio, SmallY/coordinatesRatio);
+					int nodetype2 = (int)node.getId();
+					if(nodetype2 == BMNodeType.tile || nodetype2 == BMNodeType.wall || nodetype2 == BMNodeType.bomb || nodetype2 == BMNodeType.bombing){
+						return false;
+					}
+				}
+				else{
+					//System.out.println("Should not happen, logic error");
+				}
+		//	} 
+			
+		}
+		return true;
 	}
 	//Note that Point stores small coordinates. Use ints for big coordinates
 	protected boolean pointInSmallBounds(Point p){
@@ -400,10 +474,11 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		resultMap.put("Kill", kills);
 		resultMap.put("death", new Integer(initialHP-HP));
 		resultMap.put("item", itemCount);
+		resultMap.put("username", username);
 		return resultMap;
 	}
 
-	protected String username = "";
+	protected String username = "AI Player";
 	public TreeMap<String,Object> getInfo(){
 		TreeMap<String,Object> info = new TreeMap<String,Object>();
 		info.put("username",username);
