@@ -37,7 +37,7 @@ public class BMSigninPage extends JFrame{
 		setTitle("Bomberman Sign In");
 		setSize(minSize);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		//setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 //		setContentPane(new JLabel(new ImageIcon("/Utilities/images/resultBG.png")));
 		

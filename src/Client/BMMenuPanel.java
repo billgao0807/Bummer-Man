@@ -24,6 +24,7 @@ public class BMMenuPanel extends PaintedPanel{
 	public JTextField IP;
 	public JTextField ipField;
 	public JTextField portField;
+	public JButton btnBecomeVip;
 
 	BMMenuPanel(ActionListener host, ActionListener join, ActionListener rank, Image image)
 	{
@@ -55,13 +56,13 @@ public class BMMenuPanel extends PaintedPanel{
 		JButton btnJoin = new JButton("join");
 		btnJoin.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		
-		JButton btnBecomeVip = new JButton("Become VIP");
+		btnBecomeVip = new JButton("Become VIP");
 		btnBecomeVip.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		btnBecomeVip.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				vipClass vip = new vipClass();
+				vipClass vip = new vipClass(BMMenuPanel.this);
 				vip.setVisible(true);
 				
 			}
