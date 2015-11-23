@@ -34,6 +34,7 @@ public class BMClientPanel extends JPanel{
 	HostClientListener hostClient;
 	private Vector<TreeMap<String, Object>> players;
 	String username;
+	String password;
 	private int hp;
 	protected BMHostServer hs;
 	protected BMSimulation simulation;
@@ -63,6 +64,8 @@ public class BMClientPanel extends JPanel{
 				@Override
 			public void actionPerformed(ActionEvent ae) {
 				BMClientPanel.this.removeAll();
+				username = loginPanel.getSignin().txtUsername.getText().trim();
+				password = loginPanel.getSignin().txtPassword.getText().trim();
 				/*QuickGame
 				BMClientPanel.this.add(roomPanel);
 				*/
@@ -117,9 +120,18 @@ public class BMClientPanel extends JPanel{
 					@Override
 					public void actionPerformed(ActionEvent e){
 						//enter the game
-						System.out.println("Set variables " + roomPanel.sendTime + "  " + roomPanel.sendhp);
-						simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
-						simulation.startGame(0);	
+						if (simulation.getNumClients() == 1)
+						{
+							JFrame jf = new JFrame();
+							jf.setSize(new Dimension(300,300));
+							jf.setLocationRelativeTo(null);
+						}
+						else
+						{
+							System.out.println("Set variables " + roomPanel.sendTime + "  " + roomPanel.sendhp);
+							simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
+							simulation.startGame(0);
+						}
 					}
 				},
 				new ActionListener()

@@ -16,9 +16,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import Utilities.BMFontLibrary;
 
 class vipClass extends JFrame{
-	public static final String secret = "Jeffery Miller is handsome";
+	public static final String secret = "handsomeMiller";
 	// is vip 
-	public boolean vip = true;
+	public static boolean vip = true;
 	private JLabel reminder;
 	private JTextField input;
 	private JTextField textField;
