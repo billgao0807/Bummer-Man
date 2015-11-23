@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.TreeMap;
+import java.util.Vector;
 
 
 public class BMCentralServerClientCommunicator extends Thread {
@@ -21,8 +23,9 @@ public class BMCentralServerClientCommunicator extends Thread {
 		super();
 		this.s = s;
 		this.bmcs = bmcs;
-		ois = new ObjectInputStream(s.getInputStream());
 		oos = new ObjectOutputStream(s.getOutputStream());
+		ois = new ObjectInputStream(s.getInputStream());
+		
 		running = true;
 		
 	}
@@ -30,7 +33,7 @@ public class BMCentralServerClientCommunicator extends Thread {
 	/*
 	 * Login and Sign up
 	 */
-	private void login(UserPasswordInfo upi) {
+	private synchronized void login(UserPasswordInfo upi) {
 		try {
 			if (bmcs.login(upi.getUsername(), upi.getPassword())) {
 				//If login is successful, then set the currentUPI and assign their VIP status
@@ -50,7 +53,7 @@ public class BMCentralServerClientCommunicator extends Thread {
 			System.out.println("Problem connecting with Server/Client:" + s.getInetAddress() + ":" + s.getPort());
 		}
 	}
-	private void signup(UserPasswordInfo upi) {
+	private synchronized void signup(UserPasswordInfo upi) {
 		try {
 			if (bmcs.signup(upi.getUsername(), upi.getPassword())) {
 				sendObject(ServerConstants.SUCCESSFULSIGNUP);
@@ -111,6 +114,12 @@ public class BMCentralServerClientCommunicator extends Thread {
 						UserPasswordInfo upi = (UserPasswordInfo) obj;
 						if (upi.isLogin()) login(upi);
 						else if (upi.isSignup()) signup(upi);
+					}
+					
+					else if (obj instanceof Vector<?>){
+						@SuppressWarnings("unchecked")
+						Vector<TreeMap<String, Object>> rankings = (Vector<TreeMap<String, Object>>) obj;
+						bmcs.updateRatings(rankings);
 					}
 				} catch (ClassNotFoundException cnfe) {
 					cnfe.printStackTrace();

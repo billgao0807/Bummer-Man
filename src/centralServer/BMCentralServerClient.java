@@ -7,9 +7,12 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Vector;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import Utilities.BMRating;
 
 //For connecting to MySQL Server, which contains all the scores, user accounts, etc. 
 public class BMCentralServerClient extends Thread {
@@ -30,7 +33,8 @@ public class BMCentralServerClient extends Thread {
 	private Boolean vipStatus;
 	private Boolean signupSuccess;
 	
-	private Queue<Ranking> ranks;
+	private Queue<BMRating> ranks;
+	private Vector<GameRecord> gameRecords;
 	
 	{
 		mLock = new ReentrantLock();
@@ -144,6 +148,8 @@ public class BMCentralServerClient extends Thread {
 			System.out.println("**LOGGING OUT**");
 			try {
 				sendObject(ServerConstants.LOGOUT);
+				ranks = null;
+				gameRecords = null;
 			} catch (IOException e) {
 				//e.printStackTrace();
 				System.out.println(ServerConstants.LOGOUTFAILED);
@@ -162,7 +168,7 @@ public class BMCentralServerClient extends Thread {
 	/*
 	 * Access Rankings
 	 */
-	public Queue<Ranking> requestWorldRankings() {
+	public Queue<BMRating> requestWorldRankings() {
 		try {
 			mLock.lock();
 			sendObject(ServerConstants.REQUESTWORLDRANKING);
@@ -176,7 +182,7 @@ public class BMCentralServerClient extends Thread {
 		}
 		
 		System.out.println(ServerConstants.WorldRankingFetchFailure);
-		Queue<Ranking> emptyRanks = new LinkedList<Ranking>();
+		Queue<BMRating> emptyRanks = new LinkedList<BMRating>();
 		return emptyRanks;
 	}
 	
@@ -200,7 +206,7 @@ public class BMCentralServerClient extends Thread {
 					Object obj = ois.readObject();
 					if (obj instanceof Queue<?>){
 						mLock.lock();
-						ranks = (Queue<Ranking>) obj;
+						ranks = (Queue<BMRating>) obj;
 						mRanksArrived.signal();
 						mLock.unlock();
 					}
@@ -259,7 +265,12 @@ public class BMCentralServerClient extends Thread {
 	/*
 	 * For debugging
 	 */
+<<<<<<< HEAD
 	/*public static void main(String args[]) {
+=======
+	/*
+	public static void main(String args[]) {
+>>>>>>> master
 		try {
 			BMCentralServerClient csc = new BMCentralServerClient(6789);
 			csc.login("TurdFerguson", "hello");

@@ -1,46 +1,54 @@
 package centralServer;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 
 public class GameRecord implements Serializable {
 
 	private static final long serialVersionUID = 4064181985723480070L;
 	
+	double points;
 	int kills;
 	int deaths;
-	double time;
+	Timestamp time;
 	
-	public GameRecord(int k, int d, double t) {
-		kills = k;
-		deaths = d;
-		time = t;
+	public GameRecord(double points, int kills, int deaths, Timestamp time) {
+		this.points = points;
+		this.kills = kills;
+		this.deaths = deaths;
+		this.time = time;
 	}
 	
 	/*
 	 * Setters
 	 */
-	public void setKillCount(int k) {
-		kills = k;
+	public void setPoints(double points) {
+		this.points = points;
 	}
-	public void setDeathCount(int d) {
-		deaths = d;
+	public void setKillCount(int kills) {
+		this.kills = kills;
 	}
-	public void setTime(double t) {
-		time = t;
+	public void setDeathCount(int deaths) {
+		this.deaths = deaths;
+	}
+	public void setTime(Timestamp time) {
+		this.time = time;
 	}
 	
 	/*
 	 * Getters
 	 */
-	public double getKillCount() {
+	public double getPoints() {
+		return points;
+	}
+	public int getKillCount() {
 		return kills;
 	}
-	public double getDeathCount() {
+	public int getDeathCount() {
 		return deaths;
 	}
-	public String getTime() {
-		String t = Double.toString(time) + " sec";
-		return t;
+	public Timestamp getTime() {
+		return time;
 	}
 
 }

@@ -24,10 +24,11 @@ public class ServerConstants {
 	public static final String NotLoggedIn = "Not Logged In to Server";
 	public static final String NotConnected = "Not Connected to Server";
 	
-	
 	public static final String VIPSTATUSREQUEST = "VIP Status Request Received | ";
 	public static final String VIPSTATUSTRUE = "User is a VIP";
 	public static final String VIPSTATUSFALSE = "User is not a VIP";
+	
+	public static final String GenericSQLException = "Error: Could not complete access to MySQL Database | ";
 	
 	
 	/*
@@ -53,4 +54,16 @@ public class ServerConstants {
 	
 	public static final String connectionToMySQL = "Successful Connection to MySQL | ";
 	public static final String failedConnectionToMySQL = "Failed to Connect to MySQL | ";
+	public static final String disconnectedFromMySQL = "Disconnecting from MySQL | ";
+	public static final String failedDisconnectFromMySQL = "Failed to Disconnect from MySQL | ";
+	
+	
+	/*
+	 * Map and Updating constants
+	 */
+	public static final String usernameString = "username";
+	public static final String pointsString = "points";
+	public static final String killString = "kill";
+	public static final String deathString = "death";
+	
 }

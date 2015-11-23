@@ -1,6 +1,8 @@
 package centralServer;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.JButton;
@@ -20,21 +22,24 @@ public class BMCentralServerGUI extends JFrame {
 	private JButton connectButton;
 	private JButton disconnectButton;
 
-	public BMCentralServerGUI() {
-		super("Central Server");
+	public BMCentralServerGUI(MySQLDriver driver) {
+		super("Central Server Monitor");
 		initializeVariables();
 		createGUI();
-		addActionAdapters();
-		setVisible(true);
+		addActionAdapters(driver);
+		setVisible(false);
 	}
 	
 	private void initializeVariables() {
 		textArea = new JTextArea();
 		textArea.setEditable(false);
+		textArea.setLineWrap(true);
 		textAreaScrollPane = new JScrollPane(textArea);
 		
 		connectButton = new JButton("Connect");
+		connectButton.setEnabled(true);
 		disconnectButton = new JButton("Disconnect");
+		disconnectButton.setEnabled(false);
 	}
 	
 	private void createGUI() {
@@ -46,16 +51,30 @@ public class BMCentralServerGUI extends JFrame {
 		add(textAreaScrollPane, BorderLayout.CENTER);
 	}
 	
-	private void addActionAdapters() {
+	private void addActionAdapters(MySQLDriver driver) {
 		addWindowListener(new WindowAdapter() {
 			  public void windowClosing(WindowEvent we) {
 				  System.exit(0);
 			  }
 		});
 		
-		//connectButton.addActionListener(new ConfigureFactoryListener(selectFactoryComboBox));
-		
-		//disconnectButton.addActionListener(new FactoryInfoListener(selectFactoryComboBox));
+		connectButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				driver.connect();
+				connectButton.setEnabled(false);
+				disconnectButton.setEnabled(true);
+			}
+		});
+		disconnectButton.addActionListener(
+		new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent ae) {
+				driver.stop();
+				connectButton.setEnabled(true);
+				disconnectButton.setEnabled(false);
+			}
+		});
 	}
 	
 	public static void addMessage(String msg) {
@@ -65,10 +84,6 @@ public class BMCentralServerGUI extends JFrame {
 		else {
 			textArea.setText(msg);
 		}
-	}
-	
-	public static void main(String args[]) {
-		new BMCentralServerGUI();
 	}
 }
 

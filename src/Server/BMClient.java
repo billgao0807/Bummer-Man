@@ -61,14 +61,16 @@ public class BMClient extends Thread {
 					}
 					else if (type.equals("move")){
 						player.startMove((Integer)(map.get("move")));
-//						mSimulation.getGameBoard();
-						mSimulation.sendMove();
 					}
 					else if (type.equals("msg")){
 						sendMsgMap(map);
 					}
 				} catch (ClassNotFoundException e) {
 					System.out.println("BMClient Run CNFE: " + e.getMessage());
+				} catch (ClassCastException e){
+//					e.printStackTrace();
+				} catch (ArrayStoreException e){
+//					e.printStackTrace();
 				}
 			}
 		} catch (IOException ioe) {
@@ -83,5 +85,9 @@ public class BMClient extends Thread {
 		tempMap.put("username", userName);
 		tempMap.put("content", (String)map.get("content"));
 		hs.sendMapToClients(tempMap);
+	}
+
+	public String getUserName() {
+		return userName;
 	}
 }

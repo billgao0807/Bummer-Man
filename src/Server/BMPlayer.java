@@ -19,6 +19,7 @@ import node.BMWall;
 
 import Utilities.BMItem;
 import Utilities.BMMove;
+import Utilities.BMNodeType;
 import Utilities.BMResult;
 
 public abstract class BMPlayer extends Thread implements Serializable{
@@ -39,25 +40,29 @@ public abstract class BMPlayer extends Thread implements Serializable{
 //		- BMSimulation : simulation
 	private static final long serialVersionUID = 4139291657328559403L;
 	//Move 2 or 4 spaces per second 
-	private static final int normalSpeed = 2;
-	private static final int increasedSpeed = 4;
+	private static final int decreasedSpeed = 2;
+	private static final int normalSpeed = 3;
+	private static final int increasedSpeed = 6;
 	//Bomb blasts 3 or 5 spaces at each direction
+	private static final int decreasedPower = 2;
 	private static final int normalPower = 3;
 	private static final int increasedPower = 5;
 	//Wait 10 or 5 seconds before player dropping another bomb 
-	private static final int normalCoolingTime = 10;
-	private static final int reducedCoolingTime = 5;
+	private static final int increasedCoolingTime = 8;
+	private static final int normalCoolingTime = 6;
+	private static final int decreasedCoolingTime = 3;
 	//Wait 5 or 3 seconds between a bomb is dropped and it detonates
+	private static final int increasedDetonatedTime = 7;
 	private static final int normalDetonatedTime = 5;
-	private static final int reducedDetonatedTime = 3;
+	private static final int decreasedDetonatedTime = 3;
 	//Inclusive small coordinates limit:7, 247
-	private static final int smallCoordinateUpperLimit = 960;
-	private static final int smallCoordinateLowerLimit = 31;
+	private static final int smallCoordinateUpperLimit = 988;
+	private static final int smallCoordinateLowerLimit = 16;
 	//Inclusive big coordinates limit:0, 15
 	private static final int bigCoordinateUpperLimit = 15;
 	private static final int bigCoordinateLowerLimit = 0;
 	
-	private static final int coordinatesRatio = 64;
+	protected static final int coordinatesRatio = 64;
 	
 	protected Point initialLocation;
 	protected Point location;
@@ -65,7 +70,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	protected int power;
 	protected int coolingTime;
 	protected int detonatedTime;
-	//protected Queue<BMItem> itemQueue;
+	//protected Queue<BMItem> items;
 	protected Vector<Integer> items;
 	protected int deaths;
 	protected int initialHP;
@@ -130,7 +135,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 						e.printStackTrace();
 					}
 					BMNode currentNode = simulation.getNode(location.x/coordinatesRatio,  location.y/coordinatesRatio);
-					if(currentNode instanceof BMBombing){
+					if(currentNode.getType() == BMNodeType.bombing){
 						BMPlayer.this.killed(((BMBombing)currentNode).getPlayerID());
 					}
 				}
@@ -143,18 +148,37 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	}
 	
 	public void killed(int id){
-		if (respawning) return;
-		respawning = true;
-		HP--;
-		if (HP < 0) lost = true;
-		location = initialLocation;
-		try{
-			Thread.sleep(3000);
-		} catch (InterruptedException ie){
-			ie.printStackTrace();
+//		if (respawning) return;
+//	respawning = true;
+		if(mLock.tryLock()){
+			try{
+				HP--;
+				if (HP <= 0) lost = true;
+				location.x = initialLocation.x;
+				location.y = initialLocation.y;
+				simulation.addKill(id);
+				simulation.sendMove();
+				//System.out.println("hp is " + HP);
+				try{
+				Thread.sleep(3000);
+				} catch (InterruptedException ie){
+					ie.printStackTrace();
+				} finally{
+					System.out.println("Recovered " + HP);
+					respawning = false;
+				}				
+			}
+			finally{
+				mLock.unlock();
+			}
+			
 		}
-		respawning = false;
-		simulation.addKill(id);
+		//		new Thread(new Runnable(){
+//			@Override
+//			public void run() {
+//				
+//			}
+//		}).start();
 	}
 	
 	public Point getLocation(){
@@ -206,45 +230,38 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		return ID >= 0;
 	}
 	private void addItem(BMItem item){
-		if(item.getValue()%2 == 0){
-			if(items.size() == 2){
-				Integer toBeRemovedItem = items.remove(0);
-				switch(toBeRemovedItem){
-					case 0: speed = normalSpeed;
-					case 2: power = normalPower;
-					case 4: coolingTime = normalCoolingTime;
-					case 6: detonatedTime = normalDetonatedTime;
-				}
-			}
-				items.add(item.getValue());
-			switch(item.getValue()){
-				case 0: speed = increasedSpeed;
-				case 2: power = increasedPower;
-				case 4: coolingTime = reducedCoolingTime;
-				case 6: detonatedTime = reducedDetonatedTime;
-			
+		if(items.size() == 2){
+			items.remove(0);
+		}
+		items.add(item.getValue());
+		
+		speed = normalSpeed;
+		power = normalPower;
+		coolingTime = normalCoolingTime;
+		detonatedTime = normalDetonatedTime;
+		for(int i=0; i<items.size(); i++){
+			switch(items.get(i)){
+				case BMItem.speedup: speed++; break;
+				case BMItem.speeddown: speed--; break;
+				case BMItem.powerup: power++; break;
+				case BMItem.powerdown: power--; break;
+				case BMItem.coolingfast: coolingTime--; break;
+				case BMItem.coolingslow: coolingTime++; break;
+				case BMItem.detonatingfast: detonatedTime--; break;
+				case BMItem.detonatingslow: detonatedTime++; break;
 			}
 		}
-		else{
-			switch(item.getValue()){
-				case 1: speed = normalSpeed;
-				case 3: power = normalPower;
-				case 5: coolingTime = normalCoolingTime;
-				case 7: detonatedTime = normalDetonatedTime;
-			}
-			for (int i=0; i< items.size(); i++){
-				if(item.getValue() - items.get(i) == 0){
-					items.remove(i);
-				}
-			}
-		}
+								
 	
 	}
 	public void startMove(int moveType){
+		for(int i=0; i<speed; i++){
 			if (canMove(moveType)){
-				System.out.println("Move enabled");
+//				System.out.println("Move enabled");
 				moveHelper(moveType);
 			}
+
+		}
 	}
 	protected void moveHelper(int moveType){
 		int initX = location.x;
@@ -283,6 +300,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 								e.printStackTrace();
 							}
 							finally {
+								System.out.println("Cooled");
 								cooling = false;
 							}
 						}
@@ -293,7 +311,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			BMNodeItem itemNode = (BMNodeItem)nextNode;
 			int value = itemNode.getValue();
 			addItem(new BMItem(value));
-			itemNode.vanish(ID);
+			itemNode.getItem();
 		}
 	}
 	
@@ -310,6 +328,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			if (cooling) return false;
 			BMNode node = simulation.getNode(location.x/coordinatesRatio, location.y/coordinatesRatio);
 			if (node instanceof BMBombing || node instanceof BMBomb){
+				System.out.println("cant drop bomb because tile is bomb or bombing");
 				return false;
 			}
 			else return true;
@@ -319,18 +338,20 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			//int initBigY = location.y/16;
 			int initSmallX = location.x;
 			int initSmallY = location.y;
-			int threshold = coordinatesRatio/4;
+			
+			int xthreshold = coordinatesRatio/4;
+			int ythreshold = 2*coordinatesRatio/5;
 			switch(moveType){
-				case BMMove.up: initSmallY-= threshold; break;
-				case BMMove.down: initSmallY+= threshold; break;
-				case BMMove.left: initSmallX-= threshold; break;
-				case BMMove.right: initSmallX+= threshold; break;
+				case BMMove.up: initSmallY-= ythreshold; break;
+				case BMMove.down: initSmallY+= ythreshold; break;
+				case BMMove.left: initSmallX-= xthreshold; break;
+				case BMMove.right: initSmallX+= xthreshold; break;
 			}
 			//int finalBigX = initBigX;
 			//int finalBigY = initBigY;
 			int finalSmallX = initSmallX;
 			int finalSmallY = initSmallY;
-			System.out.println("X " + finalSmallX + " Y " + finalSmallY);
+//			System.out.println("X " + finalSmallX + " Y " + finalSmallY);
 			if (pointInSmallBounds(new Point(finalSmallX, finalSmallY))){
 				BMNode nextNode = simulation.getNode(finalSmallX/coordinatesRatio, finalSmallY/coordinatesRatio);
 				if (nextNode instanceof BMWall || nextNode instanceof BMTile)return false;
@@ -406,6 +427,11 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		info.put("direction", direction);
 		info.put("item1", items.get(0));
 		info.put("item2", items.get(1));
+		info.put("coolingTime", coolingTime);
+		info.put("denotated", this.detonatedTime);
+		int time = simulation.getTime();
+		String timeLeft = (Integer.toString(time/60)) + ":" + (Integer.toString(time%60));
+		info.put("time", timeLeft);
 //		System.out.println("Info " +info);
 		return info;
 	}

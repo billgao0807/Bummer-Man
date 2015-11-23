@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 
 import com.mysql.jdbc.Driver;
 
@@ -13,10 +14,14 @@ public class MySQLDriver {
 	private Connection con;
 	private final static String selectUser = "SELECT * FROM USERS WHERE USERNAME=?";
 	private final static String deleteUser = "DELETE FROM USERS WHERE USERNAME=? AND PASS=?";
-	//private final static String selectRank = "SELECT * FROM WORLDRANKS WHERE RANK=?";
-	private final static String addUser = "INSERT INTO USERS(USERNAME,PASS,VIP,RATING,RATINGDEVIATION,VOLATIVITY) VALUES(?,?,?,?,?,?)";
+	private final static String addUser = "INSERT INTO USERS(USERNAME,PASS,VIP,MAXPOINTS) VALUES(?,?,?,?)";
+	private final static String setMaxPoints = "UPDATE USERS WHERE USERNAME=? SET MAXPOINTS=?";
 	private final static String sortByRank = "ALTER TABLE USERS ORDER BY RATING DESC";
 	
+	private final static String selectGameRecord = "SELECT * FROM GAMERECORDS WHERE USERNAME=?";
+	private final static String addGameRecord = "INSERT INTO GAMERECORDS(USERNAME,POINTS,KILLS,DEATHS,TIME) VALUES(?,?,?,?,?)";
+	//private final static String sortByTime = "ALTER TABLE USERS ORDER BY TIME DESC";
+
 	private final static String connectionString = "jdbc:mysql://localhost:3306/bomberman?user=root&password=root";
 	
 	public MySQLDriver() {
@@ -43,23 +48,23 @@ public class MySQLDriver {
 	public void stop() {
 		try {
 			con.close();
+			BMCentralServerGUI.addMessage(ServerConstants.disconnectedFromMySQL + connectionString);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			BMCentralServerGUI.addMessage(ServerConstants.failedDisconnectFromMySQL + connectionString);
 		}
 	}
 	
 	/*
 	 * Adds to database
 	 */
-	public void addUser(String userName, String password) {
+	public void addUser(String userName, String password) throws SQLException {
 		try {
 			PreparedStatement ps = con.prepareStatement(addUser);
 			ps.setString(1, userName);
 			ps.setString(2, password);
 			ps.setString(3, "false");
 			ps.setDouble(4, 0);
-			ps.setDouble(5, 0);
-			ps.setDouble(6, 0);
 			ps.executeUpdate();
 			System.out.println("Adding User:" + userName);
 			
@@ -69,7 +74,7 @@ public class MySQLDriver {
 			e.printStackTrace();
 		}
 	}
-	public void deleteUser(String userName, String password) {
+	public void deleteUser(String userName, String password) throws SQLException {
 		try {
 			PreparedStatement ps = con.prepareStatement(deleteUser);
 			ps.setString(1, userName);
@@ -84,7 +89,7 @@ public class MySQLDriver {
 	/*
 	 * Checks if username and password match/exist
 	 */
-	public boolean doesMatch(String userName, String password) {
+	public boolean doesMatch(String userName, String password) throws SQLException {
 		try {
 			ResultSet result = getUsernameResults(userName);
 			while (result.next()) {
@@ -98,7 +103,7 @@ public class MySQLDriver {
 		System.out.println("Invalid username and password combination for: " + userName);
 		return false;
 	}
-	public boolean doesExist(String userName) {
+	public boolean doesExist(String userName) throws SQLException {
 		try {
 			ResultSet result = getUsernameResults(userName);
 			while (result.next()) {
@@ -111,17 +116,53 @@ public class MySQLDriver {
 		
 		return false;
 	}
-	public boolean isVIP(String userName) {
-		try {
-			ResultSet result = getUsernameResults(userName);
-			while (result.next()) {
-				if (result.getString(3).equals("true")) return true;
+	public boolean isVIP(String userName) throws SQLException {
+		ResultSet result = getUsernameResults(userName);
+		while (result.next()) {
+			if (result.getString(3).equals("true")) return true;
+		}
+	
+		return false;
+	}
+	
+	/*
+	 * Game Record related methods
+	 */
+	public void updateGameRecords(String userName, Double points, Integer kills, Integer deaths) throws SQLException {
+		ResultSet result1 = getUsernameResults(userName);
+		while (result1.next()) {
+			if (result1.getDouble(4) < points) {
+				PreparedStatement ps = con.prepareStatement(setMaxPoints);
+				ps.setString(1, userName);
+				ps.setDouble(2, points);
+				ps.executeUpdate();
 			}
-		} catch (SQLException sqle) {
-			sqle.printStackTrace();
 		}
 		
-		return false;
+		//Update Game Records
+		PreparedStatement ps = con.prepareStatement(addGameRecord);
+		ps.setString(1, userName);
+		ps.setDouble(2, points);
+		ps.setInt(3, kills);
+		ps.setInt(4, deaths);
+		ps.executeUpdate();
+	}
+	
+	public Vector<GameRecord> getPersonalRecords(String userName) throws SQLException {
+		Vector<GameRecord> vect = new Vector<GameRecord>();
+		PreparedStatement ps = con.prepareStatement(selectGameRecord);
+		ps.setString(1, userName);
+		ResultSet results = ps.executeQuery();
+		while (results.next()) {
+			GameRecord temp = new GameRecord(
+					results.getDouble(3),
+					results.getInt(4),
+					results.getInt(5),
+					results.getTimestamp(6));
+			vect.add(temp);
+		}
+		
+		return vect;
 	}
 	
 	//Helper Function
