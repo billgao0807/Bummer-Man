@@ -27,7 +27,7 @@ public class BMSigninPage extends JFrame{
 	public JTextField txtPassword;
 
 
-	public BMSigninPage(ActionListener signup, ActionListener quickG, ActionListener login)
+	public BMSigninPage(ActionListener quickG, ActionListener signup, ActionListener login)
 	{
 		setTitle("Bomberman Sign In");
 		setSize(minSize);

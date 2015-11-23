@@ -201,7 +201,7 @@ public class BMBoard_Player  extends PaintedPanel {
 
 					if (((String)players.get(i).get("username")).equals(local_username))
 					{
-						
+//						System.out.println("Speedlabel " +SpeedLabel + " text " +SpeedLabel.getText() );
 						curr_hp = (int)(players.get(i).get("hp"));
 //						System.out.println("inside Current_hp" +curr_hp + "total_hp" +total_hp );
 						SpeedLabel.setText("Speed : " + (players.get(i).get("speed")) );
