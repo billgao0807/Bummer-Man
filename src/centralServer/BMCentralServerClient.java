@@ -223,6 +223,7 @@ public class BMCentralServerClient extends Thread {
 			while(running) {
 				try {
 					Object obj = ois.readObject();
+					mLock.lock();
 					if (obj instanceof Queue<?>){
 						ranks = (Queue<RankContainer>) obj;
 						mRanksArrived.signal();
@@ -232,7 +233,7 @@ public class BMCentralServerClient extends Thread {
 						mRanksArrived.signal();
 					}
 					
-					mLock.lock();
+//					mLock.lock();
 					if (obj instanceof String) {
 						String str = (String) obj;
 						if (str.equals(ServerConstants.SUCCESSFULLOGIN)){

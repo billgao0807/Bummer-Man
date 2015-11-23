@@ -1,6 +1,6 @@
 package Client;
 
-import java.awt.event.ActionListener;
+import java.awt.Dimension;
 import java.util.Queue;
 import java.util.Vector;
 
@@ -13,8 +13,10 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
+import Utilities.BMLibrary;
 import centralServer.GameRecord;
 import centralServer.RankContainer;
+import customUI.PaintedPanel;
 
 public class BMRankPanel extends JFrame{
 	/**
@@ -25,14 +27,14 @@ public class BMRankPanel extends JFrame{
 	 */
 	private static final long serialVersionUID = 1L;
 
-	private JPanel main;
+	private PaintedPanel main;
 	private JTable myRcdTable;
 	private JTable wrdRcdTable; 
 	
-	BMRankPanel(ActionListener returnMain)
+	BMRankPanel(Queue<RankContainer> queue, Vector<GameRecord> vector)
 	{
-		
-		main = new JPanel();
+		setSize(new Dimension(640,480));
+		main = new PaintedPanel(BMLibrary.readImages("resultBG.png"));
 		main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
 		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
@@ -42,45 +44,79 @@ public class BMRankPanel extends JFrame{
 		
 		JButton btnReturn = new JButton("Return");
 		
-		String[] columnNames = {"Rank",
-                "Name",
-                "Games",
-                "Total Points",
-                "Total Time"};
+//		String[] columnNames = {"Rank",
+//                "Name",
+//                "Games",
+//                "Total Points",
+//                "Total Time"};
+//		
+//		Object[][] data = {
+//			    {"Kathy", "Smith",
+//			     "Snowboarding", new Integer(5), new Boolean(false)},
+//			    {"John", "Doe",
+//			     "Rowing", new Integer(3), new Boolean(true)},
+//			    {"Sue", "Black",
+//			     "Knitting", new Integer(2), new Boolean(false)},
+//			    {"Jane", "White",
+//			     "Speed reading", new Integer(20), new Boolean(true)},
+//			    {"Joe", "Brown",
+//			     "Pool", new Integer(10), new Boolean(false)}
+//			};
+//		data[0][0] = "adsf";
+//		myRcdTable = new JTable(data, columnNames);
+//		wrdRcdTable = new JTable(data, columnNames);
 		
-		Object[][] data = {
-			    {"Kathy", "Smith",
-			     "Snowboarding", new Integer(5), new Boolean(false)},
-			    {"John", "Doe",
-			     "Rowing", new Integer(3), new Boolean(true)},
-			    {"Sue", "Black",
-			     "Knitting", new Integer(2), new Boolean(false)},
-			    {"Jane", "White",
-			     "Speed reading", new Integer(20), new Boolean(true)},
-			    {"Joe", "Brown",
-			     "Pool", new Integer(10), new Boolean(false)}
-			};
-		data[0][0] = "adsf";
-		myRcdTable = new JTable(data, columnNames);
+		
+		String[] myColumnNames = {
+                "Points",
+                "Kills",
+                "Death", 
+                "Time"};
+		 myRcdTable = new JTable();
+		 DefaultTableModel dtm = new DefaultTableModel(0, 0);
+		 dtm.setColumnIdentifiers(myColumnNames);
+		       myRcdTable.setModel(dtm);
+		
+		for (GameRecord gr : vector) {
+			dtm.addRow(new Object[] { gr.getPoints(), gr.getKillCount(), gr.getDeathCount(),
+	                gr.getTime() });
+		}
+		
+		String[] wrdColumnNames = {
+                "Name", 
+                "Total Points"};
+		wrdRcdTable = new JTable();
+		 DefaultTableModel dtm1 = new DefaultTableModel(0, 0);
+		 dtm1.setColumnIdentifiers(wrdColumnNames);
+		       myRcdTable.setModel(dtm1);
+		
+		while(!queue.isEmpty()) {
+			RankContainer temp = queue.poll();
+			dtm1.addRow(new Object[] { temp.getUsername(), temp.getRating() });
+		}
+		
+		
+		
+		
 		JScrollPane myRcdScrollPane = new JScrollPane(myRcdTable);
+		myRcdScrollPane.setOpaque(false);
 		myRcdTable.setFillsViewportHeight(true);
 		
-		myRecord.add(myRcdScrollPane);
-		
-		
-		wrdRcdTable = new JTable(data, columnNames);
 		JScrollPane wrdRcdScrollPane = new JScrollPane(wrdRcdTable);
+		wrdRcdScrollPane.setOpaque(false);
 		wrdRcdTable.setFillsViewportHeight(true);
 		
 		wrdRecord.add(wrdRcdScrollPane);
+		myRecord.add(myRcdScrollPane);
 		
-		tabbedPane.add("My Record", myRecord);
-		tabbedPane.add("Word Record", wrdRecord);
+		tabbedPane.add("My Record", wrdRecord);
+		tabbedPane.add("Word Record", myRecord);
+		tabbedPane.setOpaque(false);
 		
-		btnReturn.addActionListener(returnMain);
+//		btnReturn.addActionListener(returnMain);
 		
 		main.add(tabbedPane);
-		main.add(btnReturn);
+//		main.add(btnReturn);
 		add(main);
 		
 	}

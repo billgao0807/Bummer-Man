@@ -68,24 +68,28 @@ public class BMMenuPanel extends PaintedPanel{
 			}
 		});
 		
+		JButton btnRanking = new JButton("Ranking");
+		
+		btnRanking.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
+		btnRanking.addActionListener(rank);
+		
 		
 		GroupLayout groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+					.addGap(123)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+						.addComponent(portField, 0, 0, Short.MAX_VALUE)
+						.addComponent(ipField, 0, 0, Short.MAX_VALUE)
+						.addComponent(btnBecomeVip, Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(99)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
-								.addComponent(portField, 0, 0, Short.MAX_VALUE)
-								.addComponent(ipField, 0, 0, Short.MAX_VALUE)
-								.addComponent(btnBecomeVip, Alignment.TRAILING)))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(123)
+							.addGap(10)
 							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+								.addComponent(btnStart)
 								.addComponent(btnJoin)
-								.addComponent(btnStart))))
-					.addContainerGap(236, Short.MAX_VALUE))
+								.addComponent(btnRanking, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 85, GroupLayout.PREFERRED_SIZE))))
+					.addContainerGap(212, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -100,7 +104,9 @@ public class BMMenuPanel extends PaintedPanel{
 					.addComponent(btnStart)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnJoin)
-					.addContainerGap(121, Short.MAX_VALUE))
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(btnRanking)
+					.addContainerGap(86, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 		btnStart.addActionListener(host);
