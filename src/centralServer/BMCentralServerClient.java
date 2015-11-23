@@ -295,32 +295,43 @@ public class BMCentralServerClient extends Thread {
 	public static void main(String args[]) throws UnknownHostException {
 		BMCentralServerClient csc = new BMCentralServerClient(6789);
 		
-		csc.signup("Brandon", "cocacola");
-		csc.signup("Zoe", "brasil");
-		
 		csc.login("Brandon", "cocacola");
-		csc.logout();
-		csc.login("Zoe", "brasil");
 		
 		Vector<TreeMap<String, Object>> rankings = new Vector<TreeMap<String, Object>>();
 		
 		TreeMap<String, Object> bTree = new TreeMap<String, Object>();
 		bTree.put(ServerConstants.usernameString, "Brandon");
-		bTree.put(ServerConstants.pointsString, (double) 400);
+		bTree.put(ServerConstants.pointsString, (double) 200);
 		bTree.put(ServerConstants.killString, 6);
 		bTree.put(ServerConstants.deathString, 2);
-		System.out.println("JUST MADE TREE FOR : " + (String) bTree.get("username"));
+		
+		Thread t = new Thread(new Runnable(){
+			public void run(){
+				try{
+					Thread.sleep(10000);
+				} catch(InterruptedException ie) {
+					ie.printStackTrace();
+				}
+			}
+		});
+		t.start();
+		/*
+		TreeMap<String, Object> bTree2 = new TreeMap<String, Object>();
+		bTree2.put(ServerConstants.usernameString, "Brandon");
+		bTree2.put(ServerConstants.pointsString, (double) 500);
+		bTree2.put(ServerConstants.killString, 7);
+		bTree2.put(ServerConstants.deathString, 5);
 		
 		TreeMap<String, Object> zTree = new TreeMap<String, Object>();
 		zTree.put(ServerConstants.usernameString, "Zoe");
 		zTree.put(ServerConstants.pointsString, (double)1000);
 		zTree.put(ServerConstants.killString, 300);
 		zTree.put(ServerConstants.deathString, 1);
-		System.out.println("JUST MADE TREE FOR : " + (String) zTree.get("username"));
 		
 		rankings.add(bTree);
+		rankings.add(bTree2);
 		rankings.add(zTree);
-		
+		*/
 		for (TreeMap<String, Object> map : rankings) {
 			String name = (String) map.get("username");
 			System.out.println("THERE IS A " + name + " IN THIS VECTOR<TREEMAP>");
@@ -331,7 +342,15 @@ public class BMCentralServerClient extends Thread {
 		Queue<RankContainer> worldRanks = csc.requestWorldRankings();
 		for (int i=0; i<worldRanks.size(); i++) {
 			RankContainer rc = worldRanks.poll();
-			System.out.println(rc.getUsername() + "   " + rc.getRating() + "\n");
+			System.out.println(rc.getUsername() + "   " + rc.getRating());
+		}
+		
+		Vector<GameRecord> gamerec = csc.requestPersonalRecords();
+		System.out.println("Getting Record for whoever is logged in. Vector Size: " + gamerec.size());
+		
+		int i = 1;
+		for (GameRecord gr : gamerec) {
+			System.out.println(i++ + ": " + gr.getPoints() + " " + gr.getKillCount() + " " + gr.getDeathCount() + " " + gr.getTime());
 		}
 	}
 }
