@@ -62,12 +62,9 @@ public class HostClientListener  extends Thread{
 		 tempMap.put("type", "move");
 		 tempMap.put("move", key);
 	        try {
-//	       	 	System.out.println("Send move");
-//	        		System.out.println(oos + "    " + tempMap);
 	        		oos.writeObject(tempMap);
 				oos.flush();
 	        } catch (ArrayIndexOutOfBoundsException e) {
-//	            System.out.println(e.toString())
 	        		e.printStackTrace();
 	        } catch (IOException e) {
 				e.printStackTrace();
