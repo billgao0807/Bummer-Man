@@ -32,7 +32,7 @@ public class BMMenuPanel extends PaintedPanel{
 		ipField = new JTextField();
 		ipField.setText("localhost");
 		ipField.setColumns(10);
-		ipField.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
+		ipField.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 		ipField.addMouseListener(new MouseAdapter(){
             @Override
             public void mouseClicked(MouseEvent e){
@@ -42,7 +42,7 @@ public class BMMenuPanel extends PaintedPanel{
 		
 		portField = new JTextField();
 		portField.setText("6666");
-		portField.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
+		portField.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 		portField.setColumns(10);
 		portField.addMouseListener(new MouseAdapter(){
             @Override
@@ -52,12 +52,12 @@ public class BMMenuPanel extends PaintedPanel{
         });
 		
 		JButton btnStart = new JButton("start");
-		btnStart.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
-		JButton btnJoin = new JButton("join");
-		btnJoin.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
+		btnStart.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
+		JButton btnJoin = new JButton("join ");
+		btnJoin.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 		
 		btnBecomeVip = new JButton("Become VIP");
-		btnBecomeVip.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
+		btnBecomeVip.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 		btnBecomeVip.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -76,16 +76,16 @@ public class BMMenuPanel extends PaintedPanel{
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(groupLayout.createSequentialGroup()
 							.addGap(99)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(portField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(ipField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnBecomeVip)))
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
+								.addComponent(portField, 0, 0, Short.MAX_VALUE)
+								.addComponent(ipField, 0, 0, Short.MAX_VALUE)
+								.addComponent(btnBecomeVip, Alignment.TRAILING)))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(133)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+							.addGap(123)
+							.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 								.addComponent(btnJoin)
 								.addComponent(btnStart))))
-					.addContainerGap(221, Short.MAX_VALUE))
+					.addContainerGap(236, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -100,7 +100,7 @@ public class BMMenuPanel extends PaintedPanel{
 					.addComponent(btnStart)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnJoin)
-					.addContainerGap(125, Short.MAX_VALUE))
+					.addContainerGap(121, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 		btnStart.addActionListener(host);
