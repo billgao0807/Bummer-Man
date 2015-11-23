@@ -164,6 +164,12 @@ public class BMSimulation extends Thread {
 		gameOver();
 	}
 	public void gameOver(){
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		hs.endGame();
 		for (BMPlayer player : players) player.setLose();
 		this.interrupt();
