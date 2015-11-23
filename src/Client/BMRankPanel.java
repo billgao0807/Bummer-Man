@@ -9,6 +9,9 @@ import javax.swing.JTable;
 
 public class BMRankPanel extends JPanel{
 	/**
+	 * Vector for myrank
+	 * Queue for wrdrank 
+	 * 
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
