@@ -42,7 +42,7 @@ public class BMSigninPage extends JFrame{
 //		setContentPane(new JLabel(new ImageIcon("/Utilities/images/resultBG.png")));
 		
 		txtUsername = new JTextField(SwingConstants.CENTER);
-		txtUsername.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 20));
+		txtUsername.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 		txtUsername.setHorizontalAlignment(SwingConstants.CENTER);
 		txtUsername.setText("Username");
 		txtUsername.setColumns(10);
@@ -54,7 +54,7 @@ public class BMSigninPage extends JFrame{
         });
 		
 		txtPassword = new JTextField(SwingConstants.CENTER);
-		txtPassword.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 20));
+		txtPassword.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 		txtPassword.setHorizontalAlignment(SwingConstants.CENTER);
 		txtPassword.setText("Password");
 		txtPassword.setColumns(10);
@@ -67,11 +67,11 @@ public class BMSigninPage extends JFrame{
 		
 		JButton btnQuickgame = new JButton("QuickGame");
 		btnQuickgame.addActionListener(quickG);
-		btnQuickgame.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 20));
+		btnQuickgame.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 		
 		JButton btnSignup = new JButton("Signup");
 		btnSignup.addActionListener(signup);
-		btnSignup.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 20));
+		btnSignup.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 		btnSignup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
@@ -83,32 +83,26 @@ public class BMSigninPage extends JFrame{
 		
 		JButton btnLogin_1 = new JButton("Login");
 		btnLogin_1.addActionListener(login);
-		btnLogin_1.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 20));
+		btnLogin_1.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 		GroupLayout groupLayout = new GroupLayout(mainPanel);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+			groupLayout.createParallelGroup(Alignment.TRAILING)
+				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(60)
 					.addComponent(btnQuickgame, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
 					.addGap(60))
-				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
+				.addGroup(groupLayout.createSequentialGroup()
+					.addGap(105)
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(105)
-							.addComponent(btnSignup, GroupLayout.PREFERRED_SIZE, 24, Short.MAX_VALUE))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(105)
-							.addComponent(btnLogin_1, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)))
+						.addComponent(btnSignup, GroupLayout.PREFERRED_SIZE, 110, Short.MAX_VALUE)
+						.addComponent(btnLogin_1, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
 					.addGap(105))
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(100)
+					.addGap(95)
 					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(txtPassword, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
-							.addGap(100))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(txtUsername, GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
-							.addGap(100))))
+						.addComponent(txtPassword, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+						.addComponent(txtUsername, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+					.addGap(95))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -127,7 +121,7 @@ public class BMSigninPage extends JFrame{
 		);
 
 		mainPanel.setLayout(groupLayout);
-		add(mainPanel);
+		getContentPane().add(mainPanel);
 
 	}
 }
