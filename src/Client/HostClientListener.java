@@ -162,6 +162,8 @@ public class HostClientListener  extends Thread{
 				//mFClientGUI.addMessage(Constants.serverCommunicationFailed);
 				System.out.println("serverCommunicationFailed");
 				ioe.printStackTrace();
+				clientpanel.server_quit();
+				
 			} 
 	 }
 

@@ -225,7 +225,7 @@ public class BMSimulation extends Thread {
 	public int getTime() {
 		return timeLeft;
 	}
-	public void playerQuit(int id) {
-		players.set(id, new BMAIPlayer(players.get(id)));
+	public void playerQuit(BMPlayer player) {
+		players.set(player.getid(), new BMAIPlayer(player));
 	}
 }

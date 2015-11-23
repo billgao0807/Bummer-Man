@@ -152,6 +152,7 @@ public class BMClientPanel extends JPanel{
 					{
 					//Login
 						if (simulation != null)simulation.gameOver();
+						roomPanel = null;
 						initMenuPanel();
 						BMClientPanel.this.removeAll();
 						BMClientPanel.this.add(menuPanel);
@@ -308,6 +309,22 @@ public class BMClientPanel extends JPanel{
 		System.out.println("popError");
 		ipChecking popup = new ipChecking(error, this, menuPanel);
 	}
+	public void server_quit() {
+		if (roomPanel == null) return;
+		if (simulation != null) simulation.gameOver();
+		simulation = null;
+		hostClient = null;
+		roomPanel = null;
+		System.gc();
+		
+		removeAll();
+		add(menuPanel);
+		revalidate();
+		this.repaint();
+		
+		BMClientPanel.this.hostClient.close();
+		if (simulation != null) simulation.gameOver();	
+		}
 }
 
 class ipChecking extends JFrame
