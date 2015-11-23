@@ -28,11 +28,14 @@ public class BMMenuPanel extends PaintedPanel{
 	public JTextField IP;
 	public JTextField ipField;
 	public JTextField portField;
+	private JButton vip;
 	
 	
 	BMMenuPanel(ActionListener host, ActionListener join, ActionListener rank, Image image)
 	{
 		super(image,true);
+		vip = new JButton("Become VIP");
+		vip.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		ipField = new JTextField();
 		ipField.setText("localhost");
 		ipField.setColumns(10);
