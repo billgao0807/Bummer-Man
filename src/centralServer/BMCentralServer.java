@@ -3,6 +3,7 @@ package centralServer;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.TreeMap;
 import java.util.Vector;
 import java.awt.event.ActionEvent;
@@ -48,32 +49,55 @@ public class BMCentralServer extends Thread {
 	 * Methods for access the mySQLDB
 	 */
 	public synchronized boolean login(String username, String password) {
-		return msqlDriver.doesMatch(username, password);
+		try {
+			return msqlDriver.doesMatch(username, password);
+		} catch (SQLException e) {
+			//e.printStackTrace();
+			BMCentralServerGUI.addMessage(ServerConstants.GenericSQLException);
+		}
+		return false;
 	}
 	public synchronized boolean signup(String username, String password) {
-		if (!msqlDriver.doesExist(username)) {
-			msqlDriver.addUser(username, password);
-			return true;
-		} else 
-			return false;
+		try {
+			if (!msqlDriver.doesExist(username)) {
+				msqlDriver.addUser(username, password);
+				return true;
+			} else 
+				return false;
+		} catch (SQLException e) {
+			BMCentralServerGUI.addMessage(ServerConstants.GenericSQLException);
+		}
+		
+		return false;
 	}
 	public synchronized boolean isVIP(String username) {
-		return msqlDriver.isVIP(username);
+		try {
+			return msqlDriver.isVIP(username);
+		} catch (SQLException e) {
+			//e.printStackTrace();
+			BMCentralServerGUI.addMessage(ServerConstants.GenericSQLException + "Occured while accessing VIP Status");
+			
+		}
+		return false;
 	}
 	public void updateRatings(Vector<TreeMap<String, Object> > tmVect) {
-		for(TreeMap<String, Object> map : tmVect){
-			Object uname = map.get("username");
-			if(uname instanceof String){
-				String username = (String) uname;
-				if (username.equals("BOT")) continue;
-				else{
-					msqlDriver.update(
-							(String) map.get(ServerConstants.usernameString), 
-							(Double) map.get(ServerConstants.pointsString),
-							(Integer) map.get(ServerConstants.killsString),
-							(Integer) map.get(ServerConstants.deathsString));
+		try {
+			for(TreeMap<String, Object> map : tmVect){
+				Object uname = map.get("username");
+				if(uname instanceof String){
+					String username = (String) uname;
+					if (username.equals("BOT")) continue;
+					else{
+						msqlDriver.updateGameRecords(
+								(String) map.get(ServerConstants.usernameString), 
+								(Double) map.get(ServerConstants.pointsString),
+								(Integer) map.get(ServerConstants.killsString),
+								(Integer) map.get(ServerConstants.deathsString));
+					}
 				}
 			}
+		} catch (SQLException e) {
+			BMCentralServerGUI.addMessage(ServerConstants.GenericSQLException + "Occured while updating rankings");
 		}
 	}
 	

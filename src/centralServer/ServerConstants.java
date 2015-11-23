@@ -24,10 +24,11 @@ public class ServerConstants {
 	public static final String NotLoggedIn = "Not Logged In to Server";
 	public static final String NotConnected = "Not Connected to Server";
 	
-	
 	public static final String VIPSTATUSREQUEST = "VIP Status Request Received | ";
 	public static final String VIPSTATUSTRUE = "User is a VIP";
 	public static final String VIPSTATUSFALSE = "User is not a VIP";
+	
+	public static final String GenericSQLException = "Error: Could not complete access to MySQL Database | ";
 	
 	
 	/*
