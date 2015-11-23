@@ -125,7 +125,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		new Thread(new Runnable(){
 			@Override
 			public void run() {
-				while (true){
+				while (!hasLost()){
 					try {
 						Thread.sleep(50);
 					} catch (InterruptedException e) {
@@ -509,12 +509,16 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		String timeLeft = "";
 		if (time%60 > 9 ) timeLeft = (Integer.toString(time/60)) + ":" + (Integer.toString(time%60));
 		else timeLeft = (Integer.toString(time/60)) + ":0" + (Integer.toString(time%60));
-		System.out.println("time " + time + " left " + timeLeft);
+//		System.out.println("time " + time + " left " + timeLeft);
 		info.put("time", timeLeft);
 //		System.out.println("Info " +info);
 		return info;
 	}
 	public void addKill() {
 		kills++;
+	}
+
+	public void setLose() {
+		lost = true;
 	}
 }

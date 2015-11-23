@@ -157,7 +157,11 @@ public class BMSimulation extends Thread {
 		map.put("result", getResult());
 		hs.sendMapToClients(map);
 		System.out.println("End game");
+		gameOver();
+	}
+	public void gameOver(){
 		hs.endGame();
+		for (BMPlayer player : players) player.setLose();
 		this.interrupt();
 	}
 	public Integer[][] getBoard(){

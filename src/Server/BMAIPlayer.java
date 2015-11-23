@@ -50,6 +50,7 @@ public class BMAIPlayer extends BMPlayer {
 		direction = bmPlayer.direction;		
 	}
 
+	@Override
 	public void run(){
 		while (!hasLost()){
 			Queue<Point> path = null;
