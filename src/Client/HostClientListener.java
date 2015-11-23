@@ -114,7 +114,7 @@ public class HostClientListener  extends Thread{
 	    }
 	 
 	 public void run() {
-
+		 	System.gc();
 			while(true) {
 				try {
 				
@@ -143,9 +143,7 @@ public class HostClientListener  extends Thread{
 						clientpanel.set_start(board, time, players);
 					}
 					else if (((String)map.get("type")).equals("move")){
-//						int [][] board = (int[][]) map.get("board");
-//				    		System.out.println("Receive " + (System.currentTimeMillis()-BMBoardPanel.a) + " ms");
-//				    		BMBoardPanel.a=System.currentTimeMillis();
+//						System.out.println("Direction " + ((Vector)map.get("players")).get(0));
 						int time = (int) map.get("time");
 						Vector<TreeMap<String, Object>> players =  (Vector<TreeMap<String, Object>>) map.get("players");
 						Integer[][] board = (Integer[][])map.get("board");

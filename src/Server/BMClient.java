@@ -60,6 +60,7 @@ public class BMClient extends Thread {
 						mSimulation.joinGame();
 					}
 					else if (type.equals("move")){
+//						System.out.println("Start move " + map.get("move"));
 						player.startMove((Integer)(map.get("move")));
 					}
 					else if (type.equals("msg")){
