@@ -395,7 +395,7 @@ public class BMBoardPanel extends JPanel{
 	
 	class NodePanel extends PaintedPanel {
 
-		private int node_type=-1;
+		public int node_type=-1;
 		
 		NodePanel(int node_type) {		
 			super(null);

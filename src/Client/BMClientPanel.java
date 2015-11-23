@@ -55,6 +55,7 @@ public class BMClientPanel extends JPanel{
 				simulation.setVariables(60, 2);
 				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
 				hostClient.sendJoin("Guest");
+
 				BMClientPanel.this.removeAll();				
 				BMClientPanel.this.add(boardPanel);
 				BMClientPanel.this.revalidate();
