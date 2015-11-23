@@ -80,6 +80,8 @@ public class BMBoardPanel extends JPanel{
 	private Thread sending;
 	public static long a;
 	private JScrollPane jsp;
+	private ActionListener playingGame;
+	private boolean endGame =false;
 
 
 	public void setupMap(Integer[][] map, int time, Vector<TreeMap<String, Object>> players2 , String username, HostClientListener clientListener){
@@ -115,6 +117,8 @@ public class BMBoardPanel extends JPanel{
 				}
 		this.players = players2;
 		playerPanel.set_up(players2, username);
+		endGame= false;
+
 		repaint();
 		boardPanel.addMouseListener(new MouseListener(){
 
@@ -161,6 +165,7 @@ public class BMBoardPanel extends JPanel{
 	public BMBoardPanel(ActionListener playingGame){
 
 	//	setSize(1000,600);
+		this.playingGame=playingGame;
 		this.setLayout(new BorderLayout());
 		chatPanel= new PaintedPanel(null);
 		boardPanel = new PaintedPanel( null);
@@ -362,9 +367,19 @@ public class BMBoardPanel extends JPanel{
 	}
 
 	
-	public void Gameover(Vector<Dictionary> result){
-		BMResultFrame bmrf = new BMResultFrame(result);
-		bmrf.setVisible(true);
+	public void Gameover(Vector<TreeMap<String, Object>> result){
+		
+		if (endGame) return;
+		else {
+		
+			BMResultFrame bmrf = new BMResultFrame(result, playingGame);
+			bmrf.setVisible(true);
+			System.out.println("BMBP.GAMEOVER");
+			bmrf.setVisible(true);
+			endGame= true;
+		}
+		
+
 	}
 
 	public void repaintBoard(Integer[][] board){

@@ -1,5 +1,4 @@
 package Client;
-
 import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,37 +12,27 @@ import java.util.Dictionary;
 import java.util.Scanner;
 import java.util.TreeMap;
 import java.util.Vector;
-
 import javax.swing.table.TableModel;
-
 import Server.BMPlayer;
-
-
 public class HostClientListener  extends Thread{
 	private Socket mSocket;
 	private ObjectOutputStream oos;
-
 	private ObjectInputStream ois;
 	public String username;
 	private BMClientPanel clientpanel;
-
 	
 	public HostClientListener(BMClientPanel clientpanel, String ip, int host) {		
 		try
 		{
 			mSocket = new Socket(ip,host);
 			System.out.println("Hello");
-
 			this.clientpanel = clientpanel;		
 			System.out.println("world");
-
 			boolean socketReady = initializeVariables();
 			System.out.println("Fuck");
-
 			if (socketReady) {
 				start();
 				System.out.println(".....");
-
 			}
 		}
 		catch(IOException ioe)
@@ -53,7 +42,6 @@ public class HostClientListener  extends Thread{
 	
 	}
 	
-
 	
 	private boolean initializeVariables() {
 		try {
@@ -98,7 +86,6 @@ public class HostClientListener  extends Thread{
 	            System.out.println(e.toString());
 	        }
 	    }
-
 	 public void sendJoin(String username) {
 		 TreeMap<String, Object> tempMap = new TreeMap<String , Object>();
 		 tempMap.put("type", "join");
@@ -178,4 +165,3 @@ public class HostClientListener  extends Thread{
 			} 
 	 }
 }
-	
