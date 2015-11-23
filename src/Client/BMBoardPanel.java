@@ -160,7 +160,7 @@ public class BMBoardPanel extends JPanel{
 	
 	public BMBoardPanel(ActionListener playingGame){
 
-		setSize(1000,600);
+	//	setSize(1000,600);
 		this.setLayout(new BorderLayout());
 		chatPanel= new PaintedPanel(null);
 		boardPanel = new PaintedPanel( null);
@@ -178,7 +178,7 @@ public class BMBoardPanel extends JPanel{
 		chatArea = new JTextArea();
 		chatArea.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
 
-		chatTF = new JTextField();
+		chatTF = new JTextField(20);
 		chatTF.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
 
 		chatButton = new PaintedButton("send" , BMLibrary.readImages("button2.png"), BMLibrary.readImages("button2-0.png"), 10);	
@@ -194,8 +194,8 @@ public class BMBoardPanel extends JPanel{
 			}
 			
 		});
-		chatArea.setPreferredSize(new Dimension(chatPanel.getWidth(), 400));
         jsp = new JScrollPane(chatArea);
+		jsp.setPreferredSize(new Dimension(chatPanel.getWidth(), 380));
 
         chatArea.setEditable(false);
 		
