@@ -27,7 +27,7 @@ public class MySQLDriver {
 	private final static String getWorldRankings = "SELECT username, maxpoints FROM USERS ORDER BY MAXPOINTS DESC";
 	//private final static String sortByTime = "ALTER TABLE USERS ORDER BY TIME DESC";
 
-	private final static String connectionString = "jdbc:mysql://localhost:3306/bomberman?user=root&password=root";
+	private final static String connectionString = "jdbc:mysql://localhost:3306/bomberman?user=root&password=";
 	
 	public MySQLDriver() {
 		try {

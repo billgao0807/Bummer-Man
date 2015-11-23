@@ -8,6 +8,7 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.UnknownHostException;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -69,8 +70,13 @@ public class BMClientPanel extends JPanel{
 				BMClientPanel.this.removeAll();
 				username = loginPanel.getSignin().txtUsername.getText().trim();
 				password = loginPanel.getSignin().txtPassword.getText().trim();
-				centralServerClient = new BMCentralServerClient("172.20.10.3", 6789);
-
+//				centralServerClient = new BMCentralServerClient("172.20.10.3", 6789);
+				try {
+					centralServerClient = new BMCentralServerClient( 6789);
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				if (centralServerClient.signup(username, password))
 				{
 					loginPanel.getSignin().label.setText("Signed up successfully! ");
@@ -86,7 +92,13 @@ public class BMClientPanel extends JPanel{
 				/*add check the correctness of the username and password*/
 				username = loginPanel.getSignin().txtUsername.getText().trim();
 				password = loginPanel.getSignin().txtPassword.getText().trim();
-				centralServerClient = new BMCentralServerClient("172.20.10.3", 6789);
+//				centralServerClient = new BMCentralServerClient("172.20.10.3", 6789);
+				try {
+					centralServerClient = new BMCentralServerClient( 6789);
+				} catch (UnknownHostException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 				if (centralServerClient.login(username, password))
 				{
