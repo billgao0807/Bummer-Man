@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.TreeMap;
 import java.util.Map.Entry;
@@ -126,27 +127,33 @@ public class BMRoomPanel extends PaintedPanel{
 			comboBox.addItem(str);
 			comboBox.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		}
-		int timing = comboBox.getSelectedIndex();
-		if (timing == 0)
-		{
-			sendTime = 60;
+		comboBox.addActionListener(new ActionListener(){
+				public void actionPerformed(ActionEvent ae){
+					int timing = comboBox.getSelectedIndex();
+					if (timing == 0)
+					{
+						sendTime = 60;
+					}
+					else if (timing == 1)
+					{
+						sendTime = 120;
+					}
+					else if (timing == 2)
+					{
+						sendTime = 180;
+					}
+					else if (timing == 3)
+					{
+						sendTime = 300;
+					}
+					else if (timing == 4)
+					{
+						sendTime = 600;
+					}
 		}
-		else if (timing == 1)
-		{
-			sendTime = 120;
-		}
-		else if (timing == 2)
-		{
-			sendTime = 180;
-		}
-		else if (timing == 3)
-		{
-			sendTime = 300;
-		}
-		else if (timing == 4)
-		{
-			sendTime = 600;
-		}
+		});
+		
+		
 		
 		
 		JComboBox comboBox_1 = new JComboBox();
@@ -155,27 +162,32 @@ public class BMRoomPanel extends PaintedPanel{
 			comboBox_1.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		}
 		comboBox_1.setBorder(BorderFactory.createEmptyBorder(0, 0, 60, 0));
-		int hpC = comboBox_1.getSelectedIndex();
-		if (hpC == 0)
-		{
-			sendhp = 1;
-		}
-		else if (hpC == 1)
-		{
-			sendhp = 2;
-		}
-		else if (hpC == 2)
-		{
-			sendhp = 3;
-		}
-		else if (hpC == 3)
-		{
-			sendhp = 5;
-		}
-		else if (hpC == 4)
-		{
-			sendhp = 10;
-		}
+		comboBox.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent ae){
+				int hpC = comboBox_1.getSelectedIndex();
+				if (hpC == 0)
+				{
+					sendhp = 1;
+				}
+				else if (hpC == 1)
+				{
+					sendhp = 2;
+				}
+				else if (hpC == 2)
+				{
+					sendhp = 3;
+				}
+				else if (hpC == 3)
+				{
+					sendhp = 5;
+				}
+				else if (hpC == 4)
+				{
+					sendhp = 10;
+				}
+				
+	}
+	});
 		
 		JButton btnPlay = new JButton("Play");
 		btnPlay.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
