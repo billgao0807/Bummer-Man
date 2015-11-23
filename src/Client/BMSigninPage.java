@@ -43,7 +43,7 @@ public JLabel label;
 //		setContentPane(new JLabel(new ImageIcon("/Utilities/images/resultBG.png")));
 		
 		txtUsername = new JTextField(SwingConstants.CENTER);
-		txtUsername.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 20));
+		txtUsername.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 		txtUsername.setHorizontalAlignment(SwingConstants.CENTER);
 		txtUsername.setText("Username");
 		txtUsername.setColumns(10);
@@ -55,7 +55,7 @@ public JLabel label;
         });
 		
 		txtPassword = new JTextField(SwingConstants.CENTER);
-		txtPassword.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 20));
+		txtPassword.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 		txtPassword.setHorizontalAlignment(SwingConstants.CENTER);
 		txtPassword.setText("Password");
 		txtPassword.setColumns(10);
@@ -68,11 +68,11 @@ public JLabel label;
 		
 		JButton btnQuickgame = new JButton("QuickGame");
 		btnQuickgame.addActionListener(quickG);
-		btnQuickgame.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 20));
+		btnQuickgame.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 		
 		JButton btnSignup = new JButton("Signup");
 		btnSignup.addActionListener(signup);
-		btnSignup.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 20));
+		btnSignup.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 		btnSignup.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			}
