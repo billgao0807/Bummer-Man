@@ -182,8 +182,7 @@ public class BMCentralServerClient extends Thread {
 		}
 		
 		System.out.println(ServerConstants.WorldRankingFetchFailure);
-		Queue<BMRating> emptyRanks = new LinkedList<BMRating>();
-		return emptyRanks;
+		return new LinkedList<BMRating>();
 	}
 	
 	public Vector<GameRecord> requestPersonalRecords() {
@@ -200,8 +199,7 @@ public class BMCentralServerClient extends Thread {
 		}
 		
 		System.out.println(ServerConstants.WorldRankingFetchFailure);
-		Vector<GameRecord> emptyRecord = new Vector<GameRecord>();
-		return emptyRecord;
+		return new Vector<GameRecord>();
 	}
 	
 	/*
