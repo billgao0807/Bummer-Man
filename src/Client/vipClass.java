@@ -18,7 +18,7 @@ import Utilities.BMFontLibrary;
 class vipClass extends JFrame{
 	public static final String secret = "handsomeMiller";
 	// is vip 
-	public static boolean vip = true;
+	public static boolean vip = false;
 	private JLabel reminder;
 	private JTextField input;
 	private JTextField textField;
@@ -35,16 +35,17 @@ class vipClass extends JFrame{
 		textField = new JTextField();
 		textField.setColumns(10);
 		textField.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 10));
-		if (!textField.getText().equals(secret))
-		{
-			vip = false;
-		}
+		
 		
 		JButton btnConfirm = new JButton("Confirm");
 		btnConfirm.addActionListener(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
+				if (textField.getText().equals(secret))
+				{
+					vip = true;
+				}
 				setVisible(false);
 			}
 		});
