@@ -154,11 +154,11 @@ public class BMCentralServerClient extends Thread {
 			mRanksArrived.await();
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.out.println(ServerConstants.WorldRankingFetchFailure);
 		} catch (InterruptedException ie) {
 			ie.printStackTrace(); 
+			System.out.println(ServerConstants.WorldRankingFetchFailure);
 		}
-		
-		System.out.println(ServerConstants.WorldRankingFetchFailure);
 		mLock.unlock();
 		
 		return ranks;
@@ -171,11 +171,12 @@ public class BMCentralServerClient extends Thread {
 			mRanksArrived.await();
 		} catch (IOException e) {
 			e.printStackTrace();
+			System.out.println(ServerConstants.PersonalRankingFetchFailure);
 		} catch (InterruptedException ie) {
 			ie.printStackTrace(); 
+			System.out.println(ServerConstants.PersonalRankingFetchFailure);
 		}
 		
-		System.out.println(ServerConstants.WorldRankingFetchFailure);
 		mLock.unlock();
 		
 		return gameRecords;
@@ -233,6 +234,7 @@ public class BMCentralServerClient extends Thread {
 			while(running) {
 				try {
 					Object obj = ois.readObject();
+					mLock.lock();
 					if (obj instanceof Queue<?>){
 						ranks = (Queue<RankContainer>) obj;
 						mRanksArrived.signal();
@@ -242,7 +244,6 @@ public class BMCentralServerClient extends Thread {
 						mRanksArrived.signal();
 					}
 					
-					mLock.lock();
 					if (obj instanceof String) {
 						String str = (String) obj;
 						if (str.equals(ServerConstants.SUCCESSFULLOGIN)){
@@ -326,5 +327,11 @@ public class BMCentralServerClient extends Thread {
 		}
 		
 		csc.updateWorldRankings(rankings);
+		
+		Queue<RankContainer> worldRanks = csc.requestWorldRankings();
+		for (int i=0; i<worldRanks.size(); i++) {
+			RankContainer rc = worldRanks.poll();
+			System.out.println(rc.getUsername() + "   " + rc.getRating() + "\n");
+		}
 	}
 }

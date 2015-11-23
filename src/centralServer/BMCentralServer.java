@@ -123,7 +123,7 @@ public class BMCentralServer extends Thread {
 		try {
 			return msqlDriver.getWorldRankings();
 		} catch (SQLException e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 			BMCentralServerGUI.addMessage(ServerConstants.GenericSQLException 
 					+ "Occured while retrieving World Rankings");
 			

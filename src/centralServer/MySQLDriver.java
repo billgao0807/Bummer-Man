@@ -20,14 +20,14 @@ public class MySQLDriver {
 	private final static String deleteUser = "DELETE FROM USERS WHERE USERNAME=? AND PASS=?";
 	private final static String addUser = "INSERT INTO USERS(USERNAME,PASS,VIP,MAXPOINTS) VALUES(?,?,?,?)";
 	private final static String setMaxPoints = "UPDATE USERS SET MAXPOINTS=? WHERE USERNAME=?";
-	private final static String sortByRank = "ALTER TABLE USERS ORDER BY RATING DESC";
+	private final static String sortByRank = "SELECT * FROM USERS ORDER BY MAXPOINTS DESC";
 	
 	private final static String selectGameRecord = "SELECT * FROM GAMERECORDS WHERE USERNAME=?";
 	private final static String addGameRecord = "INSERT INTO GAMERECORDS(USERNAME,POINTS,KILLS,DEATHS) VALUES(?,?,?,?)";
 	private final static String getWorldRankings = "SELECT username, maxpoints FROM USERS";
 	//private final static String sortByTime = "ALTER TABLE USERS ORDER BY TIME DESC";
 
-	private final static String connectionString = "jdbc:mysql://10.120.101.61:3306/bomberman?user=root&password=root";
+	private final static String connectionString = "jdbc:mysql://localhost:3306/bomberman?user=root&password=root";
 	
 	public MySQLDriver() {
 		try {
@@ -73,7 +73,6 @@ public class MySQLDriver {
 			ps.executeUpdate();
 			System.out.println("Adding User:" + userName);
 			
-			reSortUsers();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -142,7 +141,6 @@ public class MySQLDriver {
 				ps.executeUpdate();
 			}
 		}
-		reSortUsers();
 		
 		//Update Game Records
 		PreparedStatement ps = con.prepareStatement(addGameRecord);
