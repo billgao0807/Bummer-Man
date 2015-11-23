@@ -188,8 +188,9 @@ public class BMClientPanel extends JPanel{
 				@Override
 				public void actionPerformed(ActionEvent e){
 					//enter the game
-					simulation.startGame(0);	
+					System.out.println("Set variables " + roomPanel.sendTime + "  " + roomPanel.sendhp);
 					simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
+					simulation.startGame(0);	
 				}
 			},
 			new ActionListener()
@@ -198,8 +199,9 @@ public class BMClientPanel extends JPanel{
 				public void actionPerformed(ActionEvent e)
 				{			
 				//enter Game
+				System.out.println("Set variables " + roomPanel.sendTime + "  " + roomPanel.sendhp);
+				simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
 					simulation.startGame(1);
-					simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
 				}
 			},
 			new ActionListener()
