@@ -51,7 +51,7 @@ public class BMClientPanel extends JPanel{
 			
 			public void actionPerformed(ActionEvent ae) {
 				BMClientPanel.this.username = "Guest";
-				simulation = new BMSimulation(5555,4);
+				simulation = new BMSimulation(5555,4,null);
 				simulation.setVariables(60, 2);
 				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
 				hostClient.sendJoin("Guest");
@@ -216,6 +216,7 @@ public class BMClientPanel extends JPanel{
 						port = Integer.parseInt(temp2);
 					}catch(NumberFormatException nfe)
 					{
+						popError("number format is wrong");
 						System.out.println("number format is wrong");
 					}
 				}
@@ -245,9 +246,9 @@ public class BMClientPanel extends JPanel{
 				
 				
 				
-				simulation = new BMSimulation(5555,4);
+				simulation = new BMSimulation(menuPanel.getPort(),4,BMClientPanel.this);
 				System.out.println("start server");
-				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
+				hostClient = new HostClientListener(BMClientPanel.this, "localhost", menuPanel.getPort());
 				System.out.println("connect server");
 				hostClient.sendJoin(username);
 				System.out.println("Join game");
@@ -259,7 +260,7 @@ public class BMClientPanel extends JPanel{
 		@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
+				hostClient = new HostClientListener(BMClientPanel.this, menuPanel.getIP(), menuPanel.getPort());
 				hostClient.sendJoin(username);
 				identity = false;
 			}
@@ -305,7 +306,7 @@ public class BMClientPanel extends JPanel{
 		BMClientPanel.this.revalidate();
 	}
 	
-	void popError(String error)
+	public void popError(String error)
 	{
 		System.out.println("popError");
 		ipChecking popup = new ipChecking(error, this, menuPanel);

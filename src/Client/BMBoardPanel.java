@@ -260,7 +260,7 @@ public class BMBoardPanel extends JPanel{
 			@Override
 			public void run() {
 					try{
-						while (true){
+						while (!endGame){
 							Thread.sleep(10);
 							clientListener.sendMove(keyPressed);
 						}

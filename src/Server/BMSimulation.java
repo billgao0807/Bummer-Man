@@ -6,6 +6,7 @@ import java.util.Timer;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import Client.BMClientPanel;
 import Utilities.BMLibrary;
 import Utilities.BMNodeType;
 import Utilities.BMResult;
@@ -25,11 +26,13 @@ public class BMSimulation extends Thread {
 	private BMHostServer hs;
 	private int totalHP = 5;
 	private int numPlayer;
+	private BMClientPanel clientPanel;
 	
 	public final static int start_game = 0;
 	public final static int start_with_AI = 1;
 	
-	public BMSimulation(int port, int numPlayer){
+	public BMSimulation(int port, int numPlayer, BMClientPanel bmClientPanel){
+		clientPanel = bmClientPanel;
 		System.out.println("num of player "+ numPlayer);
 		this.numPlayer = numPlayer; 
 		if (this.numPlayer > 4) numPlayer = 4;
@@ -71,6 +74,10 @@ public class BMSimulation extends Thread {
 			}			
 		}).start();
 	}
+	public void popError(String msg){
+		clientPanel.popError(msg);
+	}
+	
 	public void setVariables(int time, int HP){
 		timeLeft = time;
 		totalHP = HP;
@@ -164,6 +171,12 @@ public class BMSimulation extends Thread {
 		gameOver();
 	}
 	public void gameOver(){
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		hs.endGame();
 		for (BMPlayer player : players) player.setLose();
 		this.interrupt();

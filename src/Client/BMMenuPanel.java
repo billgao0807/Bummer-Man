@@ -107,4 +107,12 @@ public class BMMenuPanel extends PaintedPanel{
 		btnJoin.addActionListener(join);
 
 	}
+
+	public int getPort() {
+		return Integer.parseInt(portField.getText());
 	}
+
+	public String getIP() {
+		return ipField.getText();
+	}
+}

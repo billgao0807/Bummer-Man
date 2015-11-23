@@ -31,9 +31,18 @@ public class BMHostServer extends Thread {
 		}
 	}
 	public void run(){
+
+		try {
+			ss = new ServerSocket(port);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			simulation.popError(e.getMessage());
+			return;
+		}
+		
 		try {
 			System.out.println("Starting Chat Server");
-			ss = new ServerSocket(port);
 			while (true) {
 				System.out.println("Waiting for client to connect...");
 				Socket s = ss.accept();
