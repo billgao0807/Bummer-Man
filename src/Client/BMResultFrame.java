@@ -9,6 +9,8 @@ import java.util.Dictionary;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -41,9 +43,14 @@ public class BMResultFrame  extends JFrame{
 			JLabel three = new JLabel ((int)result.get(i).get("death") +"death");
 			JLabel four = new JLabel ((int)result.get(i).get("item") +"items");
 			single.add(one);
+			single.add(Box.createHorizontalGlue());
 			single.add(two);
+			single.add(Box.createHorizontalGlue());
 			single.add(three);
+			single.add(Box.createHorizontalGlue());
 			single.add(four);
+			
+//			single.setBorder(BorderFactory.createLineBorder(color));
 			midP.add(single);
 			
 		}
