@@ -33,7 +33,7 @@ public class BMCentralServerClient extends Thread {
 	private Boolean vipStatus;
 	private Boolean signupSuccess;
 	
-	private Queue<BMRating> ranks;
+	private Queue<RankContainer> ranks;
 	private Vector<GameRecord> gameRecords;
 	
 	{
@@ -47,6 +47,9 @@ public class BMCentralServerClient extends Thread {
 		running = false;
 		loggedIn = false;
 		vipStatus = false;
+		
+		ranks = new LinkedList<RankContainer>();
+		gameRecords = new Vector<GameRecord>();
 	}
 	
 	public BMCentralServerClient(int port) throws UnknownHostException {
@@ -83,6 +86,7 @@ public class BMCentralServerClient extends Thread {
 	public Boolean login(String username, String password) {
 		mLock.lock();
 		System.out.println("**LOGGING IN**");
+		
 		UserPasswordInfo upi = new UserPasswordInfo(username, password, ServerConstants.LOGIN);
 		try {
 			sendObject(upi);
@@ -101,6 +105,7 @@ public class BMCentralServerClient extends Thread {
 	public Boolean signup(String username, String password) {
 		mLock.lock();
 		System.out.println("**SIGNING UP**");
+		
 		UserPasswordInfo upi = new UserPasswordInfo(username, password, ServerConstants.SIGNUP);
 		try {
 			sendObject(upi);
@@ -168,13 +173,11 @@ public class BMCentralServerClient extends Thread {
 	/*
 	 * Access Rankings and Records
 	 */
-	public Queue<BMRating> requestWorldRankings() {
+	public Queue<RankContainer> requestWorldRankings() {
+		mLock.lock();
 		try {
-			mLock.lock();
 			sendObject(ServerConstants.REQUESTWORLDRANKING);
 			mRanksArrived.await();
-			mLock.unlock();
-			return ranks;
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException ie) {
@@ -182,16 +185,16 @@ public class BMCentralServerClient extends Thread {
 		}
 		
 		System.out.println(ServerConstants.WorldRankingFetchFailure);
-		return new LinkedList<BMRating>();
+		mLock.unlock();
+		
+		return ranks;
 	}
 	
 	public Vector<GameRecord> requestPersonalRecords() {
+		mLock.lock();
 		try {
-			mLock.lock();
 			sendObject(ServerConstants.REQUESTPERSONALRECORDS);
 			mRanksArrived.await();
-			mLock.unlock();
-			return gameRecords;
 		} catch (IOException e) {
 			e.printStackTrace();
 		} catch (InterruptedException ie) {
@@ -199,7 +202,9 @@ public class BMCentralServerClient extends Thread {
 		}
 		
 		System.out.println(ServerConstants.WorldRankingFetchFailure);
-		return new Vector<GameRecord>();
+		mLock.unlock();
+		
+		return gameRecords;
 	}
 	
 	/*
@@ -222,7 +227,7 @@ public class BMCentralServerClient extends Thread {
 					mLock.lock();
 					Object obj = ois.readObject();
 					if (obj instanceof Queue<?>){
-						ranks = (Queue<BMRating>) obj;
+						ranks = (Queue<RankContainer>) obj;
 						mRanksArrived.signal();
 					}
 					else if (obj instanceof Vector<?>){

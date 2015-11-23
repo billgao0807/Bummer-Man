@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.util.Queue;
 import java.util.TreeMap;
 import java.util.Vector;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 
 public class BMCentralServerClientCommunicator extends Thread {
@@ -20,12 +22,15 @@ public class BMCentralServerClientCommunicator extends Thread {
 	private boolean running;
 	private UserPasswordInfo currentUPI;
 	
+	private Lock recordRetrieval;
+	
 	public BMCentralServerClientCommunicator(Socket s, BMCentralServer bmcs) throws IOException {
 		super();
 		this.s = s;
 		this.bmcs = bmcs;
 		oos = new ObjectOutputStream(s.getOutputStream());
 		ois = new ObjectInputStream(s.getInputStream());
+		recordRetrieval = new ReentrantLock();
 		
 		running = true;
 		
@@ -103,12 +108,16 @@ public class BMCentralServerClientCommunicator extends Thread {
 							sendObject(ServerConstants.SUCCESSFULLOGOUT);
 						}
 						else if (str.equals(ServerConstants.REQUESTPERSONALRECORDS)) {
+							recordRetrieval.lock();
 							Vector<GameRecord> records = bmcs.retrievePersonalRecords(currentUPI.getUsername());
 							sendObject(records);
+							recordRetrieval.unlock();
 						}
 						else if (str.equals(ServerConstants.REQUESTWORLDRANKING)) {
+							recordRetrieval.lock();
 							Queue<RankContainer> rankings = bmcs.retrieveWorldRankings();
 							sendObject(rankings);
+							recordRetrieval.unlock();
 						}
 						else if (str.equals(ServerConstants.VIPSTATUSREQUEST)) {
 							if (currentUPI != null) {

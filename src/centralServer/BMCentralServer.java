@@ -46,7 +46,7 @@ public class BMCentralServer extends Thread {
 	/*
 	 * Methods for signup, login, and vip status
 	 */
-	public synchronized boolean login(String username, String password) {
+	public boolean login(String username, String password) {
 		try {
 			return msqlDriver.doesMatch(username, password);
 		} catch (SQLException e) {
@@ -103,7 +103,7 @@ public class BMCentralServer extends Thread {
 		}
 	}
 	
-	public Vector<GameRecord> retrievePersonalRecords(String username) {
+	public synchronized Vector<GameRecord> retrievePersonalRecords(String username) {
 		try {
 			return msqlDriver.getPersonalRecords(username);
 		} catch (SQLException e) {
@@ -116,7 +116,7 @@ public class BMCentralServer extends Thread {
 		
 		return new Vector<GameRecord>();
 	}
-	public Queue<RankContainer> retrieveWorldRankings() {
+	public synchronized Queue<RankContainer> retrieveWorldRankings() {
 		try {
 			return msqlDriver.getWorldRankings();
 		} catch (SQLException e) {
