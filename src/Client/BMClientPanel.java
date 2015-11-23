@@ -226,7 +226,7 @@ public class BMClientPanel extends JPanel{
 				
 				simulation = new BMSimulation(menuPanel.getPort(),4,BMClientPanel.this);
 				System.out.println("start server");
-				hostClient = new HostClientListener(BMClientPanel.this, menuPanel.getIP(), menuPanel.getPort());
+				hostClient = new HostClientListener(BMClientPanel.this, "localhost", menuPanel.getPort());
 				System.out.println("connect server");
 				hostClient.sendJoin(username);
 				System.out.println("Join game");
@@ -238,7 +238,7 @@ public class BMClientPanel extends JPanel{
 		@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
+				hostClient = new HostClientListener(BMClientPanel.this, menuPanel.getIP(), menuPanel.getPort());
 				hostClient.sendJoin(username);
 				identity = false;
 			}
