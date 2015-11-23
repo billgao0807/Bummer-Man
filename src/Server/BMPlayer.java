@@ -158,7 +158,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 				} catch (InterruptedException ie){
 					ie.printStackTrace();
 				} finally{
-					System.out.println("Recovered " + HP);
+//					System.out.println("Recovered " + HP);
 					respawning = false;
 				}
 		//		new Thread(new Runnable(){
@@ -178,8 +178,8 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		Vector<Integer> returnVector = new Vector<Integer>();
 		//Object [] array = itemQueue.toArray();
 		
-		if (items.size() > 2 || items.size() < 0)
-			System.out.println("Player has " + items.size() + " items. Error in BMPlayer getItemsProcessed.");
+//		if (items.size() > 2 || items.size() < 0)
+//			System.out.println("Player has " + items.size() + " items. Error in BMPlayer getItemsProcessed.");
 		for(int i=0; i< items.size(); i++){
 			returnVector.add(items.get(i));
 		}
@@ -291,7 +291,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 								e.printStackTrace();
 							}
 							finally {
-								System.out.println("Cooled");
+//								System.out.println("Cooled");
 								cooling = false;
 							}
 						}
@@ -311,7 +311,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	protected boolean canMove(int moveType) {
 		if (hasLost()) return false;
 		if (moveType < 0 || moveType > 5){
-			System.out.println("Error input of moveType. BMPlayer canMove.");
+//			System.out.println("Error input of moveType. BMPlayer canMove.");
 			return false;
 		}
 		else if (moveType == 0) return true;
@@ -319,7 +319,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 			if (cooling) return false;
 			BMNode node = simulation.getNode(location.x/coordinatesRatio, location.y/coordinatesRatio);
 			if (node instanceof BMBombing || node instanceof BMBomb){
-				System.out.println("cant drop bomb because tile is bomb or bombing");
+//				System.out.println("cant drop bomb because tile is bomb or bombing");
 				return false;
 			}
 			else return true;
@@ -453,7 +453,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	
 	
 	public void setInitialLocation(int playerNumber){
-		if (playerNumber > 3 || playerNumber < 0) System.out.println("Input out of bounds, needs 0 to 3. In BMPlayer setInitialLocation.");
+//		if (playerNumber > 3 || playerNumber < 0) System.out.println("Input out of bounds, needs 0 to 3. In BMPlayer setInitialLocation.");
 		switch(playerNumber){
 		
 			case 0:
@@ -487,7 +487,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		resultMap.put("kill", kills);
 		resultMap.put("death", new Integer(initialHP-HP));
 		resultMap.put("item", itemCount);
-		resultMap.put("username", username);
+		resultMap.put("username", this.getUserName());
 		return resultMap;
 	}
 

@@ -68,7 +68,7 @@ public class BMAIPlayer extends BMPlayer {
 					break;
 				}
 			}
-			if (p != null) System.out.println("Safe point " + p);
+//			if (p != null) System.out.println("Safe point " + p);
 			if (path == null) continue;
 			while (!path.isEmpty()){
 				board = this.searchSave();

@@ -371,7 +371,7 @@ public class BMBoardPanel extends JPanel{
 		
 		if (endGame) return;
 		else {
-		
+			System.out.println("Result " + result);
 			BMResultFrame bmrf = new BMResultFrame(result, playingGame);
 			bmrf.setVisible(true);
 			System.out.println("BMBP.GAMEOVER");
