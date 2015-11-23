@@ -12,8 +12,6 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-import Utilities.BMRating;
-
 //For connecting to MySQL Server, which contains all the scores, user accounts, etc. 
 public class BMCentralServerClient extends Thread {
 	
@@ -84,32 +82,33 @@ public class BMCentralServerClient extends Thread {
 	 * Login screen methods
 	 */
 	public Boolean login(String username, String password) {
-		mLock.lock();
 		System.out.println("**LOGGING IN**");
 		
 		UserPasswordInfo upi = new UserPasswordInfo(username, password, ServerConstants.LOGIN);
 		try {
+			mLock.lock();
 			sendObject(upi);
 			if (running) loginResult.await();
+			mLock.unlock();
 		} catch (IOException | NullPointerException e) {
 			//e.printStackTrace();
 			System.out.println(ServerConstants.CannotCompleteRequest + ServerConstants.NotLoggedIn);
 		} catch (InterruptedException ie) {
 			System.out.println("LOGIN INTERRUPTED");
 		}
-		mLock.unlock();
 		
 		if (loggedIn) return true;
 		else return false;
 	}
 	public Boolean signup(String username, String password) {
-		mLock.lock();
 		System.out.println("**SIGNING UP**");
 		
 		UserPasswordInfo upi = new UserPasswordInfo(username, password, ServerConstants.SIGNUP);
 		try {
+			mLock.lock();
 			sendObject(upi);
 			signupResult.await();
+			mLock.unlock();
 		} catch (IOException | NullPointerException e) {
 			//e.printStackTrace();
 			signupSuccess = false;
@@ -118,7 +117,6 @@ public class BMCentralServerClient extends Thread {
 			signupSuccess = false;
 			System.out.println("SIGNUP INTERRUPTED");
 		}
-		mLock.unlock();
 		
 		if (signupSuccess) return true;
 		else return false;
@@ -224,7 +222,6 @@ public class BMCentralServerClient extends Thread {
 		try {
 			while(running) {
 				try {
-					mLock.lock();
 					Object obj = ois.readObject();
 					if (obj instanceof Queue<?>){
 						ranks = (Queue<RankContainer>) obj;
@@ -235,6 +232,7 @@ public class BMCentralServerClient extends Thread {
 						mRanksArrived.signal();
 					}
 					
+					mLock.lock();
 					if (obj instanceof String) {
 						String str = (String) obj;
 						if (str.equals(ServerConstants.SUCCESSFULLOGIN)){
@@ -262,7 +260,6 @@ public class BMCentralServerClient extends Thread {
 							running = false;
 						}
 					}
-					
 					mLock.unlock();
 				} catch (ClassNotFoundException cnfe) {
 					System.out.println("Error reading object sent from Server");
@@ -291,5 +288,6 @@ public class BMCentralServerClient extends Thread {
 		csc.signup("Zoe", "brasil");
 		
 		csc.login("Brandon", "cocacola");
+		csc.logout();
 	}
 }
