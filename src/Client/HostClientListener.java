@@ -106,7 +106,7 @@ public class HostClientListener  extends Thread{
 					try {
 					
 						// in case the server sends another factory to us
-	
+						
 						Object obj = ois.readObject();
 						if (!(obj instanceof TreeMap<?,?>)) continue;
 						TreeMap<String,Object>map = (TreeMap<String,Object>)obj;
@@ -147,6 +147,7 @@ public class HostClientListener  extends Thread{
 							Vector<TreeMap<String,Object>> result = (Vector<TreeMap<String,Object>>)map.get("result");
 							
 							clientpanel.boardPanel.Gameover(result);
+							return;
 						}
 					}catch (ClassNotFoundException cnfe) {
 						System.out.println(cnfe);
