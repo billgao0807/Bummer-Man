@@ -1,24 +1,27 @@
 package Client;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.UnknownHostException;
 import java.util.Dictionary;
 import java.util.TreeMap;
 import java.util.Vector;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-
 import Server.BMHostServer;
 import Server.BMPlayer;
 import Server.BMSimulation;
+import Utilities.BMFontLibrary;
 import Utilities.BMLibrary;
+import centralServer.BMCentralServerClient;
 import customUI.PaintedButton;
 import customUI.PaintedPanel;
 public class BMClientPanel extends JPanel{
@@ -40,6 +43,7 @@ public class BMClientPanel extends JPanel{
 	protected BMSimulation simulation;
 	//true = host the game
 	private boolean identity = true;
+	BMCentralServerClient centralServerClient;
 	
 	{
 		players = new Vector<TreeMap<String,Object>>();
@@ -66,13 +70,15 @@ public class BMClientPanel extends JPanel{
 				BMClientPanel.this.removeAll();
 				username = loginPanel.getSignin().txtUsername.getText().trim();
 				password = loginPanel.getSignin().txtPassword.getText().trim();
-				/*QuickGame
-				BMClientPanel.this.add(roomPanel);
-				*/
-				BMClientPanel.this.revalidate();
-				BMClientPanel.this.repaint();
-				System.out.println("login 2");
-//				detailSignin.closeMe();
+				centralServerClient = new BMCentralServerClient("172.20.10.3", 6789);
+				
+				if (centralServerClient.signup(username, password))
+				{
+					loginPanel.getSignin().label.setText("Signed up successfully! ");
+					loginPanel.getSignin().txtPassword.setText("");
+					loginPanel.getSignin().txtUsername.setText("");
+					System.out.println("");
+				}
 			}
 		},
 				new ActionListener(){
@@ -80,13 +86,26 @@ public class BMClientPanel extends JPanel{
 			public void actionPerformed(ActionEvent ae) {
 					/*add check the correctness of the username and password*/
 					username = loginPanel.getSignin().txtUsername.getText().trim();
-				BMClientPanel.this.removeAll();				
-				BMClientPanel.this.add(menuPanel);
-				BMClientPanel.this.revalidate();
-				BMClientPanel.this.repaint();
-				System.out.println("login 3");
-				loginPanel.closeSignup();
-//				detailSignin.closeMe();
+					password = loginPanel.getSignin().txtPassword.getText().trim();
+					centralServerClient = new BMCentralServerClient("172.20.10.3", 6789);
+					
+					if (centralServerClient.login(username, password))
+					{
+						BMClientPanel.this.removeAll();				
+						BMClientPanel.this.add(menuPanel);
+						BMClientPanel.this.revalidate();
+						BMClientPanel.this.repaint();
+						System.out.println("login success");
+						loginPanel.closeSignup();
+					}
+					else
+					{
+						loginPanel.getSignin().label.setText("Sign in failed");
+						loginPanel.getSignin().label.setForeground(Color.RED);
+						loginPanel.getSignin().label.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
+						loginPanel.getSignin().txtPassword.setText("");
+						loginPanel.getSignin().txtUsername.setText("");
+					}
 			}}, BMLibrary.readImages("menu.png"));
 		
 		
@@ -101,7 +120,6 @@ public class BMClientPanel extends JPanel{
 	{
 		initMenuPanel();
 		
-
 		
 		initRoomPanel(1);
 		rankPanel = new BMRankPanel(new ActionListener(){
@@ -275,14 +293,12 @@ public class BMClientPanel extends JPanel{
 		}, BMLibrary.readImages("menu.png")
 	);		
 	}
-
 	void set_start(Integer [][] board, int time, Vector<TreeMap<String, Object>> players)
 	{
 		this.board = board;
 		this.time = time;
 		this.players = players;
 		boardPanel.setupMap(board, time, players , username, hostClient);
-
 		BMClientPanel.this.removeAll();
 		BMClientPanel.this.add(boardPanel);		
 		BMClientPanel.this.revalidate();
@@ -309,7 +325,6 @@ public class BMClientPanel extends JPanel{
 		ipChecking popup = new ipChecking(error, this, menuPanel);
 	}
 }
-
 class ipChecking extends JFrame
 {
 	private BMClientPanel clientPanel;
