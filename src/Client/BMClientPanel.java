@@ -92,12 +92,83 @@ public class BMClientPanel extends JPanel{
 				add(loginPanel);
 				refreshComponents();
 	}
+	
+	
 	private void refreshComponents()
 	{
+		initMenuPanel();
+		
+
+		
+	initRoomPanel();
+	rankPanel = new BMRankPanel(new ActionListener(){
+		@Override
+		public void actionPerformed(ActionEvent e)
+		{
+			BMClientPanel.this.removeAll();
+			BMClientPanel.this.add(menuPanel);
+			BMClientPanel.this.revalidate();
+		}
+	});
+	}
+	private void initRoomPanel(){
+		roomPanel = new BMRoomPanel(identity,
+				new ActionListener(){
+					@Override
+					public void actionPerformed(ActionEvent e){
+						//enter the game
+						System.out.println("Set variables " + roomPanel.sendTime + "  " + roomPanel.sendhp);
+						simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
+						simulation.startGame(0);	
+					}
+				},
+				new ActionListener()
+				{
+				@Override
+					public void actionPerformed(ActionEvent e)
+					{			
+					//enter Game
+					System.out.println("Set variables " + roomPanel.sendTime + "  " + roomPanel.sendhp);
+					simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
+						simulation.startGame(1);
+					}
+				},
+				new ActionListener()
+				{
+				@Override
+					public void actionPerformed(ActionEvent e)
+					{
+					//Login
+						BMClientPanel.this.removeAll();
+						BMClientPanel.this.add(menuPanel);
+						BMClientPanel.this.revalidate();
+						
+					}
+				},BMLibrary.readImages("vs.png")
+				);
+		boardPanel = new BMBoardPanel(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				if (simulation != null) simulation.gameOver();
+				hostClient.interrupt();
+				simulation = null;
+				hostClient = null;
+				roomPanel = null;
+				System.gc();
+				BMClientPanel.this.removeAll();
+				BMClientPanel.this.add(menuPanel);
+				BMClientPanel.this.revalidate();
+				BMClientPanel.this.repaint();
+			}
+		});
+	}
+	private void initMenuPanel() {
 		menuPanel = new BMMenuPanel(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e){
 				//host the game
+				initRoomPanel();
 				BMClientPanel.this.removeAll();
 				BMClientPanel.this.add(roomPanel);
 				BMClientPanel.this.revalidate();
@@ -171,69 +242,9 @@ public class BMClientPanel extends JPanel{
 				
 			}
 		}, BMLibrary.readImages("menu.png")
-	);
-
-		boardPanel = new BMBoardPanel(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e)
-			{
-				if (simulation != null) simulation.gameOver();
-				hostClient.interrupt();
-				simulation = null;
-				hostClient = null;
-				System.gc();
-				BMClientPanel.this.removeAll();
-				BMClientPanel.this.add(menuPanel);
-				BMClientPanel.this.revalidate();
-				BMClientPanel.this.repaint();
-			}
-		});
-	roomPanel = new BMRoomPanel(identity,
-			new ActionListener(){
-				@Override
-				public void actionPerformed(ActionEvent e){
-					//enter the game
-					System.out.println("Set variables " + roomPanel.sendTime + "  " + roomPanel.sendhp);
-					simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
-					simulation.startGame(0);	
-				}
-			},
-			new ActionListener()
-			{
-			@Override
-				public void actionPerformed(ActionEvent e)
-				{			
-				//enter Game
-				System.out.println("Set variables " + roomPanel.sendTime + "  " + roomPanel.sendhp);
-				simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
-					simulation.startGame(1);
-				}
-			},
-			new ActionListener()
-			{
-			@Override
-				public void actionPerformed(ActionEvent e)
-				{
-				//Login
-					BMClientPanel.this.removeAll();
-					BMClientPanel.this.add(menuPanel);
-					BMClientPanel.this.revalidate();
-					
-				}
-			},BMLibrary.readImages("vs.png")
-			);
-		
-	rankPanel = new BMRankPanel(new ActionListener(){
-		@Override
-		public void actionPerformed(ActionEvent e)
-		{
-			BMClientPanel.this.removeAll();
-			BMClientPanel.this.add(menuPanel);
-			BMClientPanel.this.revalidate();
-		}
-	});
+	);		
 	}
-	
+
 	void set_start(Integer [][] board, int time, Vector<TreeMap<String, Object>> players)
 	{
 		this.board = board;
