@@ -80,6 +80,7 @@ public class BMBoardPanel extends JPanel{
 	private Thread sending;
 	public static long a;
 	private JScrollPane jsp;
+	private ActionListener playingGame;
 
 
 	public void setupMap(Integer[][] map, int time, Vector<TreeMap<String, Object>> players2 , String username, HostClientListener clientListener){
@@ -161,6 +162,7 @@ public class BMBoardPanel extends JPanel{
 	public BMBoardPanel(ActionListener playingGame){
 
 	//	setSize(1000,600);
+		this.playingGame=playingGame;
 		this.setLayout(new BorderLayout());
 		chatPanel= new PaintedPanel(null);
 		boardPanel = new PaintedPanel( null);
@@ -363,10 +365,11 @@ public class BMBoardPanel extends JPanel{
 
 	
 	public void Gameover(Vector<TreeMap<String, Object>> result){
-		BMResultFrame bmrf = new BMResultFrame(result);
+		BMResultFrame bmrf = new BMResultFrame(result, playingGame);
 		bmrf.setVisible(true);
 		System.out.println("BMBP.GAMEOVER");
 		bmrf.setVisible(true);
+		
 
 	}
 

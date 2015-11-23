@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 public class BMResultFrame  extends JFrame{
-	public BMResultFrame( Vector<TreeMap<String, Object>> result)
+	public BMResultFrame( Vector<TreeMap<String, Object>> result, ActionListener playingGame)
 	{
 
 		setTitle("Bomberman Result");
@@ -53,7 +53,7 @@ public class BMResultFrame  extends JFrame{
 		add(topP);
 		add(midP);
 		add(btmP);
-		
+		okButton.addActionListener( playingGame);
 		okButton.addActionListener(new ActionListener (){
 
 			@Override
@@ -65,6 +65,8 @@ public class BMResultFrame  extends JFrame{
 			}
 			
 		});
+		
+		
 		
 		final long serialVersionUID = 5147395078473323173L;		
 		final Dimension minSize = new Dimension(320,480);
