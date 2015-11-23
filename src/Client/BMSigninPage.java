@@ -2,6 +2,7 @@ package Client;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -11,12 +12,14 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.SwingConstants;
 
 import Utilities.BMFontLibrary;
-
-import javax.swing.SwingConstants;
+import Utilities.BMLibrary;
+import customUI.PaintedPanel;
 
 public class BMSigninPage extends JFrame{
 	private static final long serialVersionUID = 5147395078473323173L;
@@ -29,11 +32,14 @@ public class BMSigninPage extends JFrame{
 
 	public BMSigninPage(ActionListener quickG, ActionListener signup, ActionListener login)
 	{
+		setResizable(false);
+//		setIconImage(Toolkit.getDefaultToolkit().getImage(BMSigninPage.class.getResource("/Utilities/images/resultBG.png")));
 		setTitle("Bomberman Sign In");
 		setSize(minSize);
-		setResizable(false);
 		setLocationRelativeTo(null);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+//		setContentPane(new JLabel(new ImageIcon("/Utilities/images/resultBG.png")));
 		
 		txtUsername = new JTextField(SwingConstants.CENTER);
 		txtUsername.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 20));
@@ -71,10 +77,14 @@ public class BMSigninPage extends JFrame{
 			}
 		});
 		
+		
+		
+		PaintedPanel mainPanel = new PaintedPanel(BMLibrary.readImages("/Utilities/images/resultBG.png"));
+		
 		JButton btnLogin_1 = new JButton("Login");
 		btnLogin_1.addActionListener(login);
 		btnLogin_1.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 20));
-		GroupLayout groupLayout = new GroupLayout(getContentPane());
+		GroupLayout groupLayout = new GroupLayout(mainPanel);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(Alignment.TRAILING, groupLayout.createSequentialGroup()
@@ -115,8 +125,10 @@ public class BMSigninPage extends JFrame{
 					.addComponent(btnLogin_1)
 					.addGap(67))
 		);
-		getContentPane().setLayout(groupLayout);
-
+//		getContentPane().setLayout(groupLayout);
+//		JPanel mainPanel = new JPanel();
+		mainPanel.setLayout(groupLayout);
+		add(mainPanel);
 
 
 		//		signIn si = new signIn(signup, quickG, login, BMLibrary.readImages("background4.png"));
