@@ -48,6 +48,7 @@ public class BMAIPlayer extends BMPlayer {
 		items.add(bmPlayer.items.get(0));
 		items.add(bmPlayer.items.get(1));
 		direction = bmPlayer.direction;		
+		this.start();
 	}
 
 	@Override

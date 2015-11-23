@@ -301,6 +301,7 @@ public class BMClientPanel extends JPanel{
 		this.players = players;
 		this.time = time;
 		this.hp = hp;
+		this.initRoomPanel();
 		BMClientPanel.this.removeAll();
 		BMClientPanel.this.add(roomPanel);		
 		BMClientPanel.this.revalidate();
