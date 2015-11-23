@@ -2,6 +2,8 @@ package Client;
 
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -14,6 +16,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 import Utilities.BMFontLibrary;
 
 class vipClass extends JFrame{
+	public static final String secret = "handsomeMiller";
+	// is vip 
+	public static boolean vip = false;
 	private JLabel reminder;
 	private JTextField input;
 	private JTextField textField;
@@ -31,7 +36,19 @@ class vipClass extends JFrame{
 		textField.setColumns(10);
 		textField.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 10));
 		
+		
 		JButton btnConfirm = new JButton("Confirm");
+		btnConfirm.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				if (textField.getText().equals(secret))
+				{
+					vip = true;
+				}
+				setVisible(false);
+			}
+		});
 		btnConfirm.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 10));
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
@@ -61,7 +78,6 @@ class vipClass extends JFrame{
 					.addGap(31))
 		);
 		getContentPane().setLayout(groupLayout);
-		
 		
 	}
 }
