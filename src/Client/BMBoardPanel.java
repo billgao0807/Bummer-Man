@@ -21,6 +21,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Dictionary;
 import java.util.Map.Entry;
 import java.util.Stack;
@@ -115,6 +116,46 @@ public class BMBoardPanel extends JPanel{
 		this.players = players2;
 		playerPanel.set_up(players2, username);
 		repaint();
+		boardPanel.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				getFocus();
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+				getFocus();
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+	}
+	
+	public void getFocus(){
+		System.out.println("GEt focus");
+		this.requestFocusInWindow();
+		this.requestFocus();
 	}
 	
 	public BMBoardPanel(ActionListener playingGame){
@@ -321,8 +362,9 @@ public class BMBoardPanel extends JPanel{
 	}
 
 	
-	public void endGame(){
-		
+	public void Gameover(Vector<Dictionary> result){
+		BMResultFrame bmrf = new BMResultFrame(result);
+		bmrf.setVisible(true);
 	}
 
 	public void repaintBoard(Integer[][] board){
