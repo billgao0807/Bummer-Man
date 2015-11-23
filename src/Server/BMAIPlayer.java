@@ -53,27 +53,33 @@ public class BMAIPlayer extends BMPlayer {
 	@Override
 	public void run(){
 		while (!hasLost()){
-			Queue<Point> path = null;
-			Vector<Point> reachable = getReachablePoints();
-			int [][] board = searchSave();
-			Point p = null;
-			Random r = new Random();
-			while (path == null){
-				if (reachable.isEmpty()) break;
-				int index = Math.abs(r.nextInt())%reachable.size();
-				p = reachable.get(index);
-				reachable.remove(index);
-				if (board[p.x][p.y] == safe){ 
-					path = findBFSPath(p);
-					break;
+			try {
+				Queue<Point> path = null;
+				Vector<Point> reachable = getReachablePoints();
+				int [][] board = searchSave();
+				Point p = null;
+				Random r = new Random();
+				while (path == null){
+					if (reachable.isEmpty()) break;
+					int index = Math.abs(r.nextInt())%reachable.size();
+					p = reachable.get(index);
+					reachable.remove(index);
+					if (board[p.x][p.y] == safe){ 
+						path = findBFSPath(p);
+						break;
+					}
+				}
+	//			if (p != null) System.out.println("Safe point " + p);
+	//			if (p == null) System.out.println("Cannot find safe point");
+				if (path == null) continue;
+				while (!path.isEmpty()){
+					board = this.searchSave();
+					if (board[p.x][p.y] == unsafe || !AIMove(path.peek())) break;
+					path.remove();
 				}
 			}
-//			if (p != null) System.out.println("Safe point " + p);
-			if (path == null) continue;
-			while (!path.isEmpty()){
-				board = this.searchSave();
-				if (board[p.x][p.y] == unsafe || !AIMove(path.peek())) break;
-				path.remove();
+			catch (InterruptedException e){
+				System.out.println("Exception " + e.getMessage());
 			}
 		}
 	}
@@ -712,29 +718,25 @@ public class BMAIPlayer extends BMPlayer {
 		return new Point(location.x/coordinatesRatio,location.y/coordinatesRatio);
 	}
 	
-	public boolean AIMove(Point p){
+	public boolean AIMove(Point p) throws InterruptedException{
 		int moveType = 0;
 		Point curr = currPoint();
 		if (p.x > curr.x) moveType = BMMove.right;
 		else if (p.x < curr.x) moveType = BMMove.left;
 		else if (p.y > curr.y) moveType = BMMove.down;
 		else if (p.y < curr.y) moveType = BMMove.up;
+
+		if (canMove(5)){
+			startMove(BMMove.bomb);
+			Thread.sleep(10);
+		}
 		while (Math.abs(p.x*coordinatesRatio-location.x) > 30 ||
 				Math.abs(p.y*coordinatesRatio-location.y) > 30){
 //		while (!p.equals(currPoint())){
-			if (canMove(5)){
-				startMove(BMMove.bomb);
-			}
-			else{
-				if (!canMove(moveType)) return false;
-				startMove(moveType);
-			}
+			if (!canMove(moveType)) return false;
+			startMove(moveType);
 //			System.out.println("Move Type " + moveType);
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			Thread.sleep(10);
 		}
 		return true;
 	}
