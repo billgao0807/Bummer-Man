@@ -45,8 +45,8 @@ public class BMRoomPanel extends PaintedPanel{
 	public JPanel ll;
 	public JPanel rt;
 	public JPanel rl;
-	public int sendTime;
-	public int sendhp;
+	public int sendTime = 60;
+	public int sendhp = 1;
 
 	BMRoomPanel(boolean identity,ActionListener startP, ActionListener startB, ActionListener quit,Image image)
 	{
