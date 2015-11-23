@@ -119,7 +119,10 @@ public class BMRoomPanel extends PaintedPanel{
 		
 
 		JPanel mid = new JPanel();
-
+		if (identity == false)
+		{
+			mid.setVisible(false);
+		}
 
 		JComboBox comboBox = new JComboBox();
 		comboBox.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
