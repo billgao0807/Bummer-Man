@@ -31,23 +31,24 @@ public class BMClientPanel extends JPanel{
 	private int hp;
 	protected BMHostServer hs;
 	protected BMSimulation simulation;
-	
+	private boolean identity = true;
+
 	{
 		players = new Vector<TreeMap<String,Object>>();
 
 
 		serverClient = new BMCentralServerClient ( "localhost", 6789 );
-		
-		
+
+
 		loginPanel = new BMLoginPanel(new ActionListener() {
 			@Override
-			
+
 			public void actionPerformed(ActionEvent ae) {
 				BMClientPanel.this.removeAll();
 				if (serverClient.signup(username, password))
 				{
-					BMClientPanel.this.add(roomPanel);
-					
+
+					BMClientPanel.this.add(loginPanel);				
 					BMClientPanel.this.revalidate();
 					BMClientPanel.this.repaint();
 				}
@@ -55,21 +56,22 @@ public class BMClientPanel extends JPanel{
 				{
 					System.out.println("sign up failed");
 				}
-				
+				/*
 				BMClientPanel.this.add(roomPanel);
-			
+
 				BMClientPanel.this.revalidate();
 				BMClientPanel.this.repaint();
+				 */
 				System.out.println("login 1");
 			}
 		},
 				new ActionListener(){
-				@Override
+			@Override
 			public void actionPerformed(ActionEvent ae) {
 				BMClientPanel.this.removeAll();
 				/*QuickGame
 				BMClientPanel.this.add(roomPanel);
-				*/
+				 */
 				BMClientPanel.this.revalidate();
 				BMClientPanel.this.repaint();
 				System.out.println("login 2");
@@ -77,33 +79,32 @@ public class BMClientPanel extends JPanel{
 			}
 		},
 				new ActionListener(){
-				@Override				
+			@Override				
 			public void actionPerformed(ActionEvent ae) {
-					/*add check the correctness of the username and password*/
-					username = loginPanel.getSignin().nameInput.getText().trim();
-					password = loginPanel.getSignin().passwordInput.getText().trim();
-					if (serverClient.login(username, password))
-					{
-						BMClientPanel.this.removeAll();				
-						BMClientPanel.this.add(menuPanel);
-						BMClientPanel.this.revalidate();
-						BMClientPanel.this.repaint();
-					}
-					else
-					{
-						System.out.println("login in failed");
-					}
-				
+				/*add check the correctness of the username and password*/
+				username = loginPanel.getSignin().nameInput.getText().trim();
+				password = loginPanel.getSignin().passwordInput.getText().trim();
+				if (serverClient.login(username, password))
+				{
+					BMClientPanel.this.removeAll();				
+					BMClientPanel.this.add(menuPanel);
+					BMClientPanel.this.revalidate();
+					BMClientPanel.this.repaint();
+				}
+				else
+				{
+					System.out.println("login in failed");
+				}
+
 				System.out.println("login 3");
 				loginPanel.closeSignup();
-//				detailSignin.closeMe();
-			}}, BMLibrary.readImages("menu.png"));
-		
-		
+			}}, BMLibrary.readImages("menu.png"),serverClient );
+
+
 		//Set up the panel to display
-				setLayout(new BorderLayout());
-				add(loginPanel);
-				refreshComponents();
+		setLayout(new BorderLayout());
+		add(loginPanel);
+		refreshComponents();
 	}
 	private void refreshComponents()
 	{
@@ -115,88 +116,87 @@ public class BMClientPanel extends JPanel{
 				BMClientPanel.this.add(roomPanel);
 				BMClientPanel.this.revalidate();	
 				String temp = menuPanel.portField.getText();
-//				String ip = menuPanel.IP.getText();
 				int portNumber = Integer.parseInt(temp);
 				simulation = new BMSimulation(5555,5);
 
 				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
 			}
 		},
-		new ActionListener()
+				new ActionListener()
 		{
-		@Override
+			@Override
 			public void actionPerformed(ActionEvent e)
 			{
 				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
 				hostClient.sendJoin(username);
-				
+				identity = false;
 			}
 		},
 		new ActionListener()
 		{
-		@Override
+			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-			//Login
+				//Login
 				BMClientPanel.this.removeAll();
 				BMClientPanel.this.add(rankPanel);
 				BMClientPanel.this.revalidate();
-				
+
 			}
 		}, BMLibrary.readImages("menu.png")
-	);
+				);
 
 		boardPanel = new BMBoardPanel(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				
+
 			}
 		});
-	roomPanel = new BMRoomPanel(
-			new ActionListener(){
-				@Override
-				public void actionPerformed(ActionEvent e){
-					//enter the game
-					simulation.startGame(0);				
-				}
-			},
-			new ActionListener()
-			{
+		roomPanel = new BMRoomPanel(identity ,
+				new ActionListener(){
 			@Override
-				public void actionPerformed(ActionEvent e)
-				{
-				
-				
-				//enter Game
-					simulation.startGame(1);
-				}
-			},
-			new ActionListener()
-			{
-			@Override
-				public void actionPerformed(ActionEvent e)
-				{
-				//Login
-					BMClientPanel.this.removeAll();
-					BMClientPanel.this.add(menuPanel);
-					BMClientPanel.this.revalidate();
-					
-				}
-			},BMLibrary.readImages("background3.png")
-			);
-		
-	rankPanel = new BMRankPanel(new ActionListener(){
-		@Override
-		public void actionPerformed(ActionEvent e)
+			public void actionPerformed(ActionEvent e){
+				//enter the game
+				simulation.startGame(0);				
+			}
+		},
+				new ActionListener()
 		{
-			BMClientPanel.this.removeAll();
-			BMClientPanel.this.add(menuPanel);
-			BMClientPanel.this.revalidate();
-		}
-	});
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+
+
+				//enter Game
+				simulation.startGame(1);
+			}
+		},
+		new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				//Login
+				BMClientPanel.this.removeAll();
+				BMClientPanel.this.add(menuPanel);
+				BMClientPanel.this.revalidate();
+
+			}
+		},BMLibrary.readImages("background3.png")
+				);
+
+		rankPanel = new BMRankPanel(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e)
+			{
+				BMClientPanel.this.removeAll();
+				BMClientPanel.this.add(menuPanel);
+				BMClientPanel.this.revalidate();
+			}
+		});
 	}
-	
+
 	void set_start(Integer [][] board, int time, Vector<TreeMap<String, Object>> players)
 	{
 		this.board = board;
@@ -211,7 +211,7 @@ public class BMClientPanel extends JPanel{
 		boardPanel.requestFocusInWindow();
 		boardPanel.requestFocus();
 	}
-	
+
 	void set_join(Vector<TreeMap<String,Object>> players, int hp, int time)
 	{
 		this.players = players;

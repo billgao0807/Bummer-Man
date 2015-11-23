@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Random;
 import java.util.Set;
 import java.util.Vector;
 
@@ -22,13 +23,16 @@ public class BMAIPlayer extends BMPlayer {
 //		- aiGetBestTry : int
 //		- aiTry(int move) : int
 	private static final int potentialBombingMultiplier = 10;
-	public BMAIPlayer(int initialLives){
-		super(-1, initialLives);
+	public BMAIPlayer(int id, int initialLives){
+		super(id, initialLives);
+		this.start();
 	}
 	
 	public void run(){
 		int [] moveRatings = new int[5];
-		while(hasLost()){
+		Random rand = new Random();
+		System.out.println("Start running");
+		while(!hasLost()){
 			for(int i=0; i<5; i++) {
 				moveRatings[i] = 0;
 				if(canMove(i)) moveRatings[i] = calculateMoveRatings(i);
@@ -42,23 +46,28 @@ public class BMAIPlayer extends BMPlayer {
 					maxindex = i;
 				}
 			}
+			System.out.println("Player " + ID + " moves " + maxindex);
 			//Stay
 			if (maxindex == 0){
-				try{
-					Thread.sleep(1000);
+				/*try{
+					//Thread.sleep(10);
+					
 				} catch(InterruptedException ie){
 					ie.printStackTrace();
-				}
+				}*/
+				int randomMove = rand.nextInt(5);
+				
+				if (canMove(randomMove)) startMove(randomMove);
 			}
 			//Move
 			else {
-				for(int i=0; i<16; i++){
+				for(int i=0; i<coordinatesRatio/speed; i++){
 					startMove(maxindex);
-					/*try{
-						Thread.sleep(63);
+					try{
+						Thread.sleep(10);
 					} catch(InterruptedException ie){
 						ie.printStackTrace();
-					}*/
+					}
 				}
 			}
 			//Drop bomb
@@ -66,14 +75,16 @@ public class BMAIPlayer extends BMPlayer {
 				startMove(5);
 			}
 			
+			for(int i=0; i<5; i++)
+				moveRatings[i] = Integer.MIN_VALUE;
 			
 		}
 	}
 
 	private int calculateMoveRatings(int i) {
 		int rating = 0;
-		int initX = location.x/16;
-		int initY = location.y/16;
+		int initX = location.x/coordinatesRatio;
+		int initY = location.y/coordinatesRatio;
 		switch(i){
 			case 1: initY--; break;
 			case 2: initY++; break;

@@ -14,6 +14,7 @@ import java.awt.Insets;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -30,6 +31,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
@@ -52,14 +54,15 @@ public class BMBoardPanel extends JPanel{
 	private final static int boardSize = 16;
 	//private final TilePanel[][] tileGrid;
 
-	private PaintedPanel chatPanel, boardPanel, playerPanel;
+	private PaintedPanel chatPanel, boardPanel;
+
+	private BMBoard_Player playerPanel;
 	private static JTextPane chatPane;
 	private JTextField chatTF;
   	private final NodePanel[][] nodeGrid;
 
 	private PaintedButton chatButton;
-	private JLabel TimeLabel, HPLabel,AbilityLabel;
-	private PaintedButton SpeedButton, PowerButton, Item1Button, Item2Button , QuitButton;
+	
 	private Integer[][]map;
 	private KeyAdapter keylistener;
 	private HostClientListener clientListener;
@@ -73,6 +76,8 @@ public class BMBoardPanel extends JPanel{
 	volatile int keyPressed = 0;
 	private Thread sending;
 	public static long a;
+	private JScrollPane jsp;
+
 
 	public void setupMap(Integer[][] map, int time, Vector<TreeMap<String, Object>> players2 , String username, HostClientListener clientListener){
 
@@ -90,6 +95,7 @@ public class BMBoardPanel extends JPanel{
 			}
 		}
 		//boardPanel initialize
+
 				boardPanel.setLayout(new GridLayout(boardSize,boardSize));
 				for(int y = 0; y < boardSize; ++y) {
 					for(int x = 0; x < boardSize; ++x) {
@@ -105,6 +111,7 @@ public class BMBoardPanel extends JPanel{
 					}
 				}
 		this.players = players2;
+		playerPanel.set_up(players2, username);
 		repaint();
 	}
 	
@@ -113,8 +120,10 @@ public class BMBoardPanel extends JPanel{
 		setSize(1000,600);
 		this.setLayout(new BorderLayout());
 		chatPanel= new PaintedPanel(null);
-		boardPanel = new PaintedPanel(null);
-		playerPanel = new PaintedPanel(null);
+		boardPanel = new PaintedPanel( null);
+		playerPanel = new BMBoard_Player( BMLibrary.readImages("frame.png"));
+		playerPanel.setPreferredSize(new Dimension(150, BMBoardPanel.this.getHeight()));
+
 		chatPanel.setPreferredSize(new Dimension(150, BMBoardPanel.this.getHeight()));
 		keylistener = null;
 		nodeGrid = new NodePanel[boardSize][boardSize];
@@ -126,76 +135,27 @@ public class BMBoardPanel extends JPanel{
 		chatPane = new JTextPane();
 		chatTF = new JTextField();
 		chatButton = new PaintedButton("send" , null, null, 10);	
-		chatPane.setPreferredSize(new Dimension(chatPanel.getWidth(), 450));
+		chatButton.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				clientListener.sendMsg(chatTF.getText());
+				chatTF.setText("");
+				
+			}
+			
+		});
+		chatPane.setPreferredSize(new Dimension(chatPanel.getWidth(), 400));
+        jsp = new JScrollPane(chatPane);
+
 		chatPane.setEditable(false);
 		
-//PlayerPanel initialize
-		playerPanel.setLayout(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
-		TimeLabel = new JLabel("Time: " + time);
-		HPLabel = new JLabel("HP " + local_hp +"/" +total_hp);
-		AbilityLabel = new JLabel("Ability:");
-		SpeedButton = new PaintedButton("Speed", null, null, 10);
-		PowerButton = new PaintedButton("Power", null, null, 10);
-		Item1Button = new PaintedButton ("Item1", null, null, 10);
-		Item2Button = new PaintedButton ("Item2", null, null, 10);
-		QuitButton = new PaintedButton ("Quit", null, null, 10);
-		Item1Button.setPreferredSize(new Dimension(60, 50));
-		SpeedButton.setPreferredSize(new Dimension(60, 50));
-		Item2Button.setPreferredSize(new Dimension(60, 50));
-		PowerButton.setPreferredSize(new Dimension(60, 50));
-		//QuitButton.setPreferredSize(new Dimension(60, 50));
-
-		boardPanel.setLayout(new GridLayout(boardSize,boardSize));
-
-//playerPanel add component
-		gbc.gridx = 0;
-		gbc.gridy = 0;
-		gbc.gridwidth = 2;
-		gbc.insets = new Insets(15,0,15,0);
-		playerPanel.add(TimeLabel,gbc);
-		
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		playerPanel.add(HPLabel,gbc);
-		
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-		gbc.gridwidth = 1;
-		playerPanel.add(AbilityLabel,gbc);
-		
-		gbc.gridx = 0;
-		gbc.gridy = 3;
-		gbc.gridwidth = 1;
-		gbc.insets = new Insets(0,5,0,5);
-
-		playerPanel.add(SpeedButton,gbc);
-		
-		gbc.gridx = 1;
-		gbc.gridy = 3;
-		gbc.gridwidth = 1;
-		playerPanel.add(PowerButton,gbc);
-		
-		gbc.gridx = 0;
-		gbc.gridy = 4;
-		gbc.gridwidth = 1;
-		playerPanel.add(Item1Button,gbc);
-		
-		gbc.gridx = 1;
-		gbc.gridy = 4;
-		gbc.gridwidth = 1;
-		playerPanel.add(Item2Button,gbc);
-
-		gbc.gridx = 0;
-		gbc.gridy = 5;
-		gbc.gridwidth = 2;
-		gbc.insets = new Insets(15,0,15,0);
-		playerPanel.add(QuitButton,gbc);
 
 		
 //add component into chatPanel
 		
-		chatPanel.add(chatPane, BorderLayout.NORTH);
+		chatPanel.add(jsp, BorderLayout.NORTH);
 		chatPanel.add(chatTF, BorderLayout.CENTER);
 		chatPanel.add(chatButton, BorderLayout.SOUTH);
 //add players
@@ -230,6 +190,7 @@ public class BMBoardPanel extends JPanel{
 	
 	public void set_move(int time, Vector<TreeMap<String, Object>>  players_, Integer[][] board){
 		this.players = players_;
+		playerPanel.set_move(time, players_);
 //		paintComponent(this.getGraphics());
 //		System.out.println("Start Repaint " +(System.currentTimeMillis()-a) + " ms");
 //		a=System.currentTimeMillis();
@@ -245,16 +206,17 @@ public class BMBoardPanel extends JPanel{
 
 			@Override
 			public void run() {
-				try {
-					while (true){
-			 			Thread.sleep(10);
-						clientListener.sendMove(keyPressed);
+					try{
+						while (true){
+							Thread.sleep(10);
+							clientListener.sendMove(keyPressed);
+						}
 					}
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-//					System.out.println("Exception " + e.getMessage());
+					catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+//						System.out.println("Exception " + e.getMessage());
+					} 
 				}
-			}
 			
 		});
 		sending.start();
@@ -377,82 +339,14 @@ public class BMBoardPanel extends JPanel{
 			setLayout(new GridBagLayout());
 			update(node_type);
 		}
-
 		
 		public void update(int new_type){
 			node_type =new_type;
-			if(new_type == -1) return;
-			else if(new_type == BMNodeType.road){
-				//road
-				setImage(BMLibrary.readImages("wall0.png"));
-				
-			}
-			if(new_type == 1){
-				//wall
-				setImage(BMLibrary.readImages("wall1.png"));
-
-			}
-			if(new_type == 2){
-				//tile
-				setImage(BMLibrary.readImages("wall2.png"));
-
-			}
-			else if(new_type == 3){
-				//bomb
-				setImage(BMLibrary.readImages("bomb.png"));
-
-			}
-			else if(new_type == 4){
-				//bombing
-				setImage(BMLibrary.readImages("bombing.png"));
-
-			}
-			else if(new_type == 5){
-				//niceShoes
-				setImage(BMLibrary.readImages("niceShoes"));
-
-			}
-			else if(new_type == 6){
-				//badShoes
-				setImage(BMLibrary.readImages("badShoes"));
-
-			}
-			else if(new_type == 7){
-				//improvePower
-				setImage(BMLibrary.readImages("improvePower"));
-
-			}
-			else if(new_type == 8){
-				//reducePower
-				setImage(BMLibrary.readImages("reducePower"));
-
-			}
-			else if(new_type == 9){
-				//reduceCoolingTime
-				setImage(BMLibrary.readImages("reduceCoolingTime"));
-
-			}
-			else if(new_type == 10){
-				//increaseCoolingTime
-				setImage(BMLibrary.readImages("increaseCoolingTime"));
-
-			}
-			else if(new_type == 11){
-				//increaseDetonatedTime
-				setImage(BMLibrary.readImages("increaseDetonatedTime"));
-
-			}
-			else if(new_type ==12) {
-				//reduceDenotatedTime
-				setImage(BMLibrary.readImages("reduceDenotatedTime"));
-
-			}
-		
+			System.out.println("node"+node_type+".png");
+			Image image = BMLibrary.readImages("node"+node_type+".png");
+			setImage(image);
 			revalidate();
 			repaint();
-		}
-		
-		
-		
+		}	
 	}
 }
