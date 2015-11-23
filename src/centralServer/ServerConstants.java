@@ -63,7 +63,7 @@ public class ServerConstants {
 	 */
 	public static final String usernameString = "username";
 	public static final String pointsString = "points";
-	public static final String killsString = "kills";
-	public static final String deathsString = "deaths";
+	public static final String killString = "kill";
+	public static final String deathString = "death";
 	
 }

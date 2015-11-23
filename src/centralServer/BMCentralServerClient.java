@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Vector;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -33,6 +34,7 @@ public class BMCentralServerClient extends Thread {
 	private Boolean signupSuccess;
 	
 	private Queue<BMRating> ranks;
+	private Vector<GameRecord> gameRecords;
 	
 	{
 		mLock = new ReentrantLock();
@@ -146,6 +148,8 @@ public class BMCentralServerClient extends Thread {
 			System.out.println("**LOGGING OUT**");
 			try {
 				sendObject(ServerConstants.LOGOUT);
+				ranks = null;
+				gameRecords = null;
 			} catch (IOException e) {
 				//e.printStackTrace();
 				System.out.println(ServerConstants.LOGOUTFAILED);

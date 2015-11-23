@@ -6,10 +6,6 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.TreeMap;
 import java.util.Vector;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-//import java.util.concurrent.locks.Lock;
-//import java.util.concurrent.locks.ReentrantLock;
 
 
 
@@ -91,8 +87,8 @@ public class BMCentralServer extends Thread {
 						msqlDriver.updateGameRecords(
 								(String) map.get(ServerConstants.usernameString), 
 								(Double) map.get(ServerConstants.pointsString),
-								(Integer) map.get(ServerConstants.killsString),
-								(Integer) map.get(ServerConstants.deathsString));
+								(Integer) map.get(ServerConstants.killString),
+								(Integer) map.get(ServerConstants.deathString));
 					}
 				}
 			}
