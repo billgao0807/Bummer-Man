@@ -158,7 +158,8 @@ public class HostClientListener  extends Thread{
 					else if (((String)map.get("type")).equals("end")){
 						
 						Vector<Dictionary> result = (Vector<Dictionary>)map.get("result");
-//						BMBoardPanel.set_result(result);
+						
+						clientpanel.boardPanel.Gameover(result);
 					}
 				} catch (IOException ioe) {
 					//mFClientGUI.addMessage(Constants.serverCommunicationFailed);

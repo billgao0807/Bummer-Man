@@ -42,57 +42,21 @@ public class BMClientPanel extends JPanel{
 	
 	{
 		players = new Vector<TreeMap<String,Object>>();
-//		detailSignin = new BMSigninPage(new ActionListener() {
-//			@Override
-//			
-//			public void actionPerformed(ActionEvent ae) {
-//				BMClientPanel.this.removeAll();
-//				detailSignin.setVisible(false);
-//				/*Signup
-//				BMClientPanel.this.add(roomPanel);
-//				*/
-//				BMClientPanel.this.revalidate();
-//				BMClientPanel.this.repaint();
-//			}
-//		},
-//				new ActionListener(){
-//				@Override
-//			public void actionPerformed(ActionEvent ae) {
-//				BMClientPanel.this.removeAll();
-//				detailSignin.setVisible(false);
-//				/*QuickGame
-//				BMClientPanel.this.add(roomPanel);
-//				*/
-//				BMClientPanel.this.revalidate();
-//				BMClientPanel.this.repaint();
-//			}
-//		},
-//				new ActionListener(){
-//				@Override				
-//			public void actionPerformed(ActionEvent ae) {
-//					/*add check the correctness of the username and password*/
-//					username = detailSignin.nameInput.getText().trim();
-//					
-//				BMClientPanel.this.removeAll();				
-//				BMClientPanel.this.add(menuPanel);
-//				BMClientPanel.this.revalidate();
-//				BMClientPanel.this.repaint();
-//				System.out.println("CLosing jframe");
-//				detailSignin.closeMe();
-//			}}
-//				);
 		loginPanel = new BMLoginPanel(new ActionListener() {
 			@Override
 			
 			public void actionPerformed(ActionEvent ae) {
-				BMClientPanel.this.removeAll();
-				/*Signup
-				BMClientPanel.this.add(roomPanel);
-				*/
+				BMClientPanel.this.username = "Guest";
+				simulation = new BMSimulation(5555,4);
+				simulation.setVariables(60, 2);
+				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
+				hostClient.sendJoin("Guest");
+				BMClientPanel.this.removeAll();				
+				BMClientPanel.this.add(boardPanel);
 				BMClientPanel.this.revalidate();
 				BMClientPanel.this.repaint();
-				System.out.println("login 1");
-//				detailSignin.closeMe();
+				loginPanel.closeSignup();
+				simulation.startGame(1);
 			}
 		},
 				new ActionListener(){
@@ -112,7 +76,7 @@ public class BMClientPanel extends JPanel{
 				@Override				
 			public void actionPerformed(ActionEvent ae) {
 					/*add check the correctness of the username and password*/
-					username = loginPanel.getSignin().nameInput.getText().trim();
+					username = loginPanel.getSignin().txtUsername.getText().trim();
 				BMClientPanel.this.removeAll();				
 				BMClientPanel.this.add(menuPanel);
 				BMClientPanel.this.revalidate();
@@ -213,7 +177,10 @@ public class BMClientPanel extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e)
 			{
-				
+				BMClientPanel.this.removeAll();
+				BMClientPanel.this.add(menuPanel);
+				BMClientPanel.this.revalidate();
+				BMClientPanel.this.repaint();
 			}
 		});
 	roomPanel = new BMRoomPanel(identity,
@@ -221,17 +188,19 @@ public class BMClientPanel extends JPanel{
 				@Override
 				public void actionPerformed(ActionEvent e){
 					//enter the game
-					simulation.startGame(0);				
+					System.out.println("Set variables " + roomPanel.sendTime + "  " + roomPanel.sendhp);
+					simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
+					simulation.startGame(0);	
 				}
 			},
 			new ActionListener()
 			{
 			@Override
 				public void actionPerformed(ActionEvent e)
-				{
-				
-				
+				{			
 				//enter Game
+				System.out.println("Set variables " + roomPanel.sendTime + "  " + roomPanel.sendhp);
+				simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
 					simulation.startGame(1);
 				}
 			},
@@ -288,26 +257,32 @@ public class BMClientPanel extends JPanel{
 	void popError(String error)
 	{
 		System.out.println("popError");
-		ipChecking popup = new ipChecking(error);
+		ipChecking popup = new ipChecking(error, this, menuPanel);
 	}
 }
 
 class ipChecking extends JFrame
 {
-	
-	ipChecking(String error)
+	private BMClientPanel clientPanel;
+	private BMMenuPanel menuPanel;
+	ipChecking(String error, BMClientPanel clientPanel, BMMenuPanel menuPanel)
 	{
 		setSize(new Dimension(320,480));
 		setLocationRelativeTo(null);
-		
+		this.clientPanel = clientPanel;
+		this.menuPanel = menuPanel;
 		System.out.println("FRAME");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
-		Notice notice = new Notice(this,error,null);
+		Notice notice = new Notice(this,error,BMLibrary.readImages("frame1.png"));
 		add(notice);
 		setVisible(true);
 		
 	}	
 	public void close() {
+		clientPanel.removeAll();				
+		clientPanel.add(menuPanel);
+		clientPanel.revalidate();
+		clientPanel.repaint();
 		this.setVisible(false);
 		
 	}
@@ -338,6 +313,8 @@ class Notice extends PaintedPanel
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					// TODO Auto-generated method stub
+					
+					System.out.println("login 3");
 					frame.close();
 				}
 				});

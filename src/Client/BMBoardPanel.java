@@ -21,6 +21,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Dictionary;
 import java.util.Map.Entry;
 import java.util.Stack;
@@ -32,6 +33,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
@@ -58,7 +60,7 @@ public class BMBoardPanel extends JPanel{
 	private PaintedPanel chatPanel, boardPanel;
 
 	private BMBoard_Player playerPanel;
-	private static JTextPane chatPane;
+	private static JTextArea chatArea ;
 	private JTextField chatTF;
   	private final NodePanel[][] nodeGrid;
 
@@ -114,15 +116,55 @@ public class BMBoardPanel extends JPanel{
 		this.players = players2;
 		playerPanel.set_up(players2, username);
 		repaint();
+		boardPanel.addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// TODO Auto-generated method stub
+				getFocus();
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				// TODO Auto-generated method stub
+
+				getFocus();
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		});
+	}
+	
+	public void getFocus(){
+		System.out.println("GEt focus");
+		this.requestFocusInWindow();
+		this.requestFocus();
 	}
 	
 	public BMBoardPanel(ActionListener playingGame){
 
-		setSize(1000,600);
+	//	setSize(1000,600);
 		this.setLayout(new BorderLayout());
 		chatPanel= new PaintedPanel(null);
 		boardPanel = new PaintedPanel( null);
-		playerPanel = new BMBoard_Player( BMLibrary.readImages("frame.png"));
+		playerPanel = new BMBoard_Player( BMLibrary.readImages("frame.png"), playingGame);
 		playerPanel.setPreferredSize(new Dimension(150, BMBoardPanel.this.getHeight()));
 
 		chatPanel.setPreferredSize(new Dimension(150, BMBoardPanel.this.getHeight()));
@@ -133,10 +175,10 @@ public class BMBoardPanel extends JPanel{
 //chatPanel initialize
 		
 		chatPanel.setLayout(new BorderLayout());
-		chatPane = new JTextPane();
-		chatPane.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
+		chatArea = new JTextArea();
+		chatArea.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
 
-		chatTF = new JTextField();
+		chatTF = new JTextField(20);
 		chatTF.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
 
 		chatButton = new PaintedButton("send" , BMLibrary.readImages("button2.png"), BMLibrary.readImages("button2-0.png"), 10);	
@@ -152,10 +194,10 @@ public class BMBoardPanel extends JPanel{
 			}
 			
 		});
-		chatPane.setPreferredSize(new Dimension(chatPanel.getWidth(), 400));
-        jsp = new JScrollPane(chatPane);
+        jsp = new JScrollPane(chatArea);
+		jsp.setPreferredSize(new Dimension(chatPanel.getWidth(), 380));
 
-		chatPane.setEditable(false);
+        chatArea.setEditable(false);
 		
 
 		
@@ -311,17 +353,18 @@ public class BMBoardPanel extends JPanel{
 	}
 	
 	public static void set_chat_text(String name, String content){
-		String orgin = chatPane.getText();
+		String orgin = chatArea.getText();
 	
-		chatPane.setText(orgin + '\n' +name + " : " + content);
+		chatArea.setText(orgin + '\n' +name + " : " + content);
 
-		chatPane.setCaretPosition(chatPane.getDocument().getLength());
+		chatArea.setCaretPosition(chatArea.getDocument().getLength());
 		
 	}
 
 	
-	public void endGame(){
-		
+	public void Gameover(Vector<Dictionary> result){
+		BMResultFrame bmrf = new BMResultFrame(result);
+		bmrf.setVisible(true);
 	}
 
 	public void repaintBoard(Integer[][] board){
