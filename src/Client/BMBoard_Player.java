@@ -84,7 +84,9 @@ public class BMBoard_Player  extends PaintedPanel {
 				QuitButton = new PaintedButton ("Quit", BMLibrary.readImages("button2.png"), BMLibrary.readImages("button2-0.png"), 10);
 				QuitButton.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 15));
 
+				
 				QuitButton.addActionListener(quit);
+			
 				
 				Item1Label.setPreferredSize(new Dimension(60, 50));
 				SpeedLabel.setPreferredSize(new Dimension(60, 50));

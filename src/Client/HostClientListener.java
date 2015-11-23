@@ -163,4 +163,17 @@ public class HostClientListener  extends Thread{
 				ioe.printStackTrace();
 			} 
 	 }
+
+
+	public void close() {
+		if (mSocket!=null){
+			try {
+				mSocket.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
+	}
 }
