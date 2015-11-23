@@ -23,7 +23,7 @@ public class BMSimulation extends Thread {
 	private BMPlayer host;
 	private int timeLeft = 1000;
 	private BMHostServer hs;
-	private int totalHP = 3;
+	private int totalHP = 5;
 	private int numPlayer;
 	
 	public final static int start_game = 0;
@@ -156,6 +156,13 @@ public class BMSimulation extends Thread {
 		map.put("type", "end");
 		map.put("result", getResult());
 		hs.sendMapToClients(map);
+		System.out.println("End game");
+		gameOver();
+	}
+	public void gameOver(){
+		hs.endGame();
+		for (BMPlayer player : players) player.setLose();
+		this.interrupt();
 	}
 	public Integer[][] getBoard(){
 		Integer[][] myBoard = new Integer[16][16];
@@ -199,7 +206,9 @@ public class BMSimulation extends Thread {
 		hs.sendMapToClients(info);
 	}
 	public int getTime() {
-		
 		return timeLeft;
+	}
+	public void playerQuit(int id) {
+		players.set(id, new BMAIPlayer(players.get(id)));
 	}
 }

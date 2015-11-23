@@ -75,7 +75,7 @@ public class BMClient extends Thread {
 				}
 			}
 		} catch (IOException ioe) {
-			hs.removeChatThread(this);
+			hs.clientDisconnected(this.player.getid());
 			System.out.println(s.getInetAddress() + ":" + s.getPort() + " disconnected.");
 		} 
 	}
@@ -90,5 +90,9 @@ public class BMClient extends Thread {
 
 	public String getUserName() {
 		return userName;
+	}
+
+	public void close() throws IOException {
+		s.close();
 	}
 }
