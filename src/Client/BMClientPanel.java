@@ -70,12 +70,7 @@ public class BMClientPanel extends JPanel{
 				BMClientPanel.this.removeAll();
 				username = loginPanel.getSignin().txtUsername.getText().trim();
 				password = loginPanel.getSignin().txtPassword.getText().trim();
-				try {
-					centralServerClient = new BMCentralServerClient(6789);
-				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				centralServerClient = new BMCentralServerClient("172.20.10.3", 6789);
 				
 				if (centralServerClient.signup(username, password))
 				{
@@ -92,12 +87,7 @@ public class BMClientPanel extends JPanel{
 					/*add check the correctness of the username and password*/
 					username = loginPanel.getSignin().txtUsername.getText().trim();
 					password = loginPanel.getSignin().txtPassword.getText().trim();
-					try {
-						centralServerClient = new BMCentralServerClient(6789);
-					} catch (UnknownHostException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+					centralServerClient = new BMCentralServerClient("172.20.10.3", 6789);
 					
 					if (centralServerClient.login(username, password))
 					{

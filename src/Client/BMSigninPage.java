@@ -25,7 +25,7 @@ public class BMSigninPage extends JFrame{
 	public JTextField txtUsername;
 	public JTextField txtPassword;
 
-	public JLabel label;
+public JLabel label;
 	public BMSigninPage(ActionListener quickG, ActionListener signup, ActionListener login)
 	{
 		setResizable(false);
@@ -118,6 +118,7 @@ public class BMSigninPage extends JFrame{
 		
 
 		label = new JLabel("");
+	
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
 				.addGroup(groupLayout.createSequentialGroup()
