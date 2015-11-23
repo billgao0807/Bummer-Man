@@ -22,6 +22,7 @@ import javax.swing.SwingUtilities;
 
 import Utilities.BMFontLibrary;
 import Utilities.BMLibrary;
+import customUI.PaintedButton;
 import customUI.PaintedPanel;
 
 public class BMResultFrame  extends JFrame{
@@ -32,39 +33,41 @@ public class BMResultFrame  extends JFrame{
 		setSize(640, 480);
 		setLocationRelativeTo(null);
 		PaintedPanel all = new PaintedPanel (BMLibrary.readImages("resultBG.png"));
-		getContentPane().setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
+	
+		all.setLayout(new BoxLayout(all, BoxLayout.Y_AXIS));
 		
-		JPanel topP = new JPanel();
+		PaintedPanel topP = new PaintedPanel(null);
+	
 		JLabel topLabel = new JLabel ("Top");
-		topLabel.setFont(BMFontLibrary.getFont("font1.ttf", Font.PLAIN, 35));
+		topLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 35));
 		topP.add(topLabel);
-		JPanel midP = new JPanel();
+		PaintedPanel midP = new PaintedPanel(null);
 		midP.setLayout(new BoxLayout(midP, BoxLayout.X_AXIS));
 		System.out.println(result);
 		int highest = -1;
 
 		for (int i=0; i< result.size(); i++) {
-			PaintedPanel single =new PaintedPanel( BMLibrary.readImages("frameBG.png"));
+			PaintedPanel single =new PaintedPanel( BMLibrary.readImages("frame5.png"));
 			
 			single.setLayout(new BoxLayout(single, BoxLayout.Y_AXIS));
 			JLabel one = new JLabel ((String)result.get(i).get("username") + (int)result.get(i).get("points") + "points");
-			one.setFont(BMFontLibrary.getFont("font1.ttf", Font.PLAIN, 20));
+			one.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 
 			if ((int)result.get(i).get("points")> highest) {
 				highest = (int)result.get(i).get("points");
 				topLabel.setText("Champion is " + (String)result.get(i).get("username"));
 			}
 			one.setHorizontalAlignment(SwingConstants.CENTER);
-			JLabel two = new JLabel ((int)result.get(i).get("kill") +"kill ");
-			two.setFont(BMFontLibrary.getFont("font1.ttf", Font.PLAIN, 20));
+			JLabel two = new JLabel ("      "+(int)result.get(i).get("kill") +"       "+"kill ");
+			two.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 
 			two.setHorizontalAlignment(SwingConstants.CENTER);
-			JLabel three = new JLabel ((int)result.get(i).get("death") +"death");
-			three.setFont(BMFontLibrary.getFont("font1.ttf", Font.PLAIN, 20));
+			JLabel three = new JLabel ("      "+(int)result.get(i).get("death") +"       "+"death");
+			three.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 
 			three.setHorizontalAlignment(SwingConstants.CENTER);
-			JLabel four = new JLabel ((int)result.get(i).get("item") +"items");
-			four.setFont(BMFontLibrary.getFont("font1.ttf", Font.PLAIN, 20));
+			JLabel four = new JLabel ("      "+ (int)result.get(i).get("item") +"       "+"items");
+			four.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 
 			four.setHorizontalAlignment(SwingConstants.CENTER);
 			
@@ -83,8 +86,8 @@ public class BMResultFrame  extends JFrame{
 			
 		}
 		midP.add(Box.createHorizontalGlue());
-		JPanel btmP = new JPanel();
-		JButton okButton = new JButton("OK");
+		PaintedPanel btmP = new PaintedPanel(null);
+		PaintedButton okButton = new PaintedButton("Quit", BMLibrary.readImages("button2.png"), BMLibrary.readImages("button2-0.png"),20);
 		okButton.setVerticalAlignment(SwingConstants.BOTTOM);
 		btmP.add(Box.createVerticalGlue());
 		btmP.add(okButton);
@@ -111,6 +114,7 @@ public class BMResultFrame  extends JFrame{
 		final Dimension minSize = new Dimension(320,480);
 		
 		this.add(all);
+		repaint();
 	}
 	
 //	public static main() {
