@@ -17,6 +17,7 @@ public class ServerConstants {
 	public static final String REQUESTWORLDRANKING = "Request for World Rankings";
 	public static final String SENDINGPERSONALRECORD = "Sending Personal Record | ";
 	public static final String SENDINGWORLDRANKING = "Sending World Ranking | ";
+	public static final String CENTRALSERVERUPDATED = "Ranks and Records Successfully Updated";
 	
 	public static final String WorldRankingFetchFailure = "Error retrieving World Ranking";
 	public static final String PersonalRankingFetchFailure = "Error retrieving Personal Record";

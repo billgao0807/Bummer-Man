@@ -7,6 +7,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.TreeMap;
 import java.util.Vector;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
@@ -144,32 +145,7 @@ public class BMCentralServerClient extends Thread {
 	}
 	
 	/*
-	 * Logs out of the server
-	 */
-	public void logout() {
-		if (running) {
-			System.out.println("**LOGGING OUT**");
-			try {
-				sendObject(ServerConstants.LOGOUT);
-				ranks = null;
-				gameRecords = null;
-			} catch (IOException e) {
-				//e.printStackTrace();
-				System.out.println(ServerConstants.LOGOUTFAILED);
-			}
-		}
-	}
-	public void disconnect() {
-		try {
-			sendObject(ServerConstants.DISCONNECT);
-		} catch (IOException e) {
-			//e.printStackTrace();
-			System.out.println(ServerConstants.CannotCompleteRequest + "Disconnect Failed");
-		}
-	}
-	
-	/*
-	 * Access Rankings and Records
+	 * Access/Update Rankings and Records
 	 */
 	public Queue<RankContainer> requestWorldRankings() {
 		mLock.lock();
@@ -203,6 +179,40 @@ public class BMCentralServerClient extends Thread {
 		mLock.unlock();
 		
 		return gameRecords;
+	}
+	
+	public void updateWorldRankings(Vector<TreeMap<String, Object>> newRanks) {
+		try {
+			sendObject(newRanks);
+		} catch (NullPointerException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Logs out of the server
+	 */
+	public void logout() {
+		if (running) {
+			System.out.println("**LOGGING OUT**");
+			try {
+				sendObject(ServerConstants.LOGOUT);
+				ranks = null;
+				gameRecords = null;
+			} catch (IOException e) {
+				//e.printStackTrace();
+				System.out.println(ServerConstants.LOGOUTFAILED);
+			}
+		}
+	}
+	public void disconnect() {
+		try {
+			sendObject(ServerConstants.DISCONNECT);
+		} catch (IOException e) {
+			//e.printStackTrace();
+			System.out.println(ServerConstants.CannotCompleteRequest + "Disconnect Failed");
+		}
 	}
 	
 	/*
@@ -289,5 +299,32 @@ public class BMCentralServerClient extends Thread {
 		
 		csc.login("Brandon", "cocacola");
 		csc.logout();
+		csc.login("Zoe", "brasil");
+		
+		Vector<TreeMap<String, Object>> rankings = new Vector<TreeMap<String, Object>>();
+		
+		TreeMap<String, Object> bTree = new TreeMap<String, Object>();
+		bTree.put(ServerConstants.usernameString, "Brandon");
+		bTree.put(ServerConstants.pointsString, (double) 400);
+		bTree.put(ServerConstants.killString, 6);
+		bTree.put(ServerConstants.deathString, 2);
+		System.out.println("JUST MADE TREE FOR : " + (String) bTree.get("username"));
+		
+		TreeMap<String, Object> zTree = new TreeMap<String, Object>();
+		zTree.put(ServerConstants.usernameString, "Zoe");
+		zTree.put(ServerConstants.pointsString, (double)1000);
+		zTree.put(ServerConstants.killString, 300);
+		zTree.put(ServerConstants.deathString, 1);
+		System.out.println("JUST MADE TREE FOR : " + (String) zTree.get("username"));
+		
+		rankings.add(bTree);
+		rankings.add(zTree);
+		
+		for (TreeMap<String, Object> map : rankings) {
+			String name = (String) map.get("username");
+			System.out.println("THERE IS A " + name + " IN THIS VECTOR<TREEMAP>");
+		}
+		
+		csc.updateWorldRankings(rankings);
 	}
 }
