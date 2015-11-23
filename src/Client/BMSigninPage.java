@@ -79,7 +79,7 @@ public class BMSigninPage extends JFrame{
 		
 		
 		
-		PaintedPanel mainPanel = new PaintedPanel(BMLibrary.readImages("/Utilities/images/resultBG.png"));
+		PaintedPanel mainPanel = new PaintedPanel(BMLibrary.readImages("resultBG.png"));
 		
 		JButton btnLogin_1 = new JButton("Login");
 		btnLogin_1.addActionListener(login);
@@ -125,15 +125,9 @@ public class BMSigninPage extends JFrame{
 					.addComponent(btnLogin_1)
 					.addGap(67))
 		);
-//		getContentPane().setLayout(groupLayout);
-//		JPanel mainPanel = new JPanel();
+
 		mainPanel.setLayout(groupLayout);
 		add(mainPanel);
-
-
-		//		signIn si = new signIn(signup, quickG, login, BMLibrary.readImages("background4.png"));
-		//		add(si);
-
 
 	}
 }
