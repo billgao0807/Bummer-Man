@@ -56,7 +56,7 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	private static final int normalDetonatedTime = 4;
 	private static final int decreasedDetonatedTime = 3;
 	//Inclusive small coordinates limit:7, 247
-	private static final int smallCoordinateUpperLimit = 988;
+	private static final int smallCoordinateUpperLimit = 1005;
 	private static final int smallCoordinateLowerLimit = 16;
 	//Inclusive big coordinates limit:0, 15
 	private static final int bigCoordinateUpperLimit = 15;
@@ -409,10 +409,18 @@ public abstract class BMPlayer extends Thread implements Serializable{
 				int SmallY = location.y/coordinatesRatio;
 				//threshold /= 2;
 				switch(direction){
-					case BMMove.up: SmallY -= threshold; break;
-					case BMMove.down: SmallY += threshold; break;
-					case BMMove.left: SmallX -= threshold; break;
-					case BMMove.right: SmallX += threshold; break;
+					case BMMove.up: SmallY -= threshold; 
+									SmallX = BigX/coordinatesRatio + coordinatesRatio/2;
+									break;
+					case BMMove.down: SmallY += threshold; 
+									SmallX = BigX/coordinatesRatio + coordinatesRatio/2;
+									break;
+					case BMMove.left: SmallX -= threshold; 
+									SmallY = BigY/coordinatesRatio + coordinatesRatio/2;
+									break;
+					case BMMove.right: SmallX += threshold; 
+									SmallY = BigY/coordinatesRatio + coordinatesRatio/2;	
+									break;
 				}
 				if(pointInSmallBounds(new Point(SmallX, SmallY))){
 					BMNode node = simulation.getNode(SmallX/coordinatesRatio, SmallY/coordinatesRatio);
