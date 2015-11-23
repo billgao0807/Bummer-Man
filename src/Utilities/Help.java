@@ -20,7 +20,7 @@ public class Help {
 	private static final JDialog helpDisplay;
 
 	static {
-		helpText = new PaintedPanel(BMLibrary.readImages("resultBG.png"));
+		helpText = new PaintedPanel(BMLibrary.readImages("help.png"));
 		helpText.setBackground(new Color(250, 200, 100));
 //		helpText.setEditable(false);
 //		helpText.setLineWrap(true);
@@ -42,7 +42,7 @@ public class Help {
 		helpDisplay = new JDialog();
 		helpDisplay.setTitle("Help");
 		helpDisplay.setModal(true);
-		helpDisplay.setSize(450, 300);
+		helpDisplay.setSize(633, 474);
 		helpDisplay.setResizable(false);
 		
 		JScrollPane jsp = new JScrollPane(helpText);
