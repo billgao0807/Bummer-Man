@@ -151,13 +151,14 @@ public class BMClientPanel extends JPanel{
 					public void actionPerformed(ActionEvent e)
 					{
 					//Login
+						initMenuPanel();
 						BMClientPanel.this.removeAll();
 						BMClientPanel.this.add(menuPanel);
 						BMClientPanel.this.revalidate();
 						
 					}
 				},BMLibrary.readImages("vs.png")
-				);
+			);
 		boardPanel = new BMBoardPanel(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -278,6 +279,7 @@ public class BMClientPanel extends JPanel{
 		this.players = players;
 		this.time = time;
 		this.hp = hp;
+		this.initRoomPanel();
 		BMClientPanel.this.removeAll();
 		BMClientPanel.this.add(roomPanel);		
 		BMClientPanel.this.revalidate();
