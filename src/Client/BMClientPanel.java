@@ -181,6 +181,23 @@ public class BMClientPanel extends JPanel{
 			}
 		},BMLibrary.readImages("vs.png")
 				);
+=======
+				{
+				@Override
+					public void actionPerformed(ActionEvent e)
+					{
+					//Login
+						if (simulation != null)simulation.gameOver();
+						roomPanel = null;
+						initMenuPanel();
+						BMClientPanel.this.removeAll();
+						BMClientPanel.this.add(menuPanel);
+						BMClientPanel.this.revalidate();
+						
+					}
+				},BMLibrary.readImages("vs.png")
+			);
+>>>>>>> ca33b44ed3a055da2078429cc9ee04f31ac2556c
 		boardPanel = new BMBoardPanel(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -318,13 +335,22 @@ public class BMClientPanel extends JPanel{
 		boardPanel.requestFocusInWindow();
 		boardPanel.requestFocus();
 	}
+<<<<<<< HEAD
 
 	void set_join(Vector<TreeMap<String,Object>> players, int hp, int time)
+=======
+	
+	void set_join(Vector<String> players, int hp, int time)
+>>>>>>> ca33b44ed3a055da2078429cc9ee04f31ac2556c
 	{
-		this.players = players;
+//		this.players = players;
 		this.time = time;
 		this.hp = hp;
+<<<<<<< HEAD
 
+=======
+		System.out.println(players);
+>>>>>>> ca33b44ed3a055da2078429cc9ee04f31ac2556c
 		this.initRoomPanel(players.size());
 		BMClientPanel.this.removeAll();
 		BMClientPanel.this.add(roomPanel);		
@@ -336,6 +362,22 @@ public class BMClientPanel extends JPanel{
 		System.out.println("popError");
 		ipChecking popup = new ipChecking(error, this, menuPanel);
 	}
+	public void server_quit() {
+		if (roomPanel == null) return;
+		if (simulation != null) simulation.gameOver();
+		simulation = null;
+		hostClient = null;
+		roomPanel = null;
+		System.gc();
+		
+		removeAll();
+		add(menuPanel);
+		revalidate();
+		this.repaint();
+		
+		BMClientPanel.this.hostClient.close();
+		if (simulation != null) simulation.gameOver();	
+		}
 }
 class ipChecking extends JFrame
 {

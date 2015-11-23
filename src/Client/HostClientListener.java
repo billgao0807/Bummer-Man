@@ -112,7 +112,8 @@ public class HostClientListener  extends Thread{
 						if (((String)map.get("type")).equals("join")){
 							int time = (int )map.get("time");
 							int hp = (int) map.get("hp");
-							Vector<TreeMap<String,Object>> player = (Vector<TreeMap<String,Object>>) map.get("player");				
+//							System.out.println( map.get("players"));
+							Vector<String> player = (Vector<String>) map.get("players");				
 							
 							clientpanel.set_join(player, hp, time);
 						}
@@ -161,6 +162,8 @@ public class HostClientListener  extends Thread{
 				//mFClientGUI.addMessage(Constants.serverCommunicationFailed);
 				System.out.println("serverCommunicationFailed");
 				ioe.printStackTrace();
+				clientpanel.server_quit();
+				
 			} 
 	 }
 

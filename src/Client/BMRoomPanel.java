@@ -253,7 +253,6 @@ public class BMRoomPanel extends PaintedPanel{
 		rl = new JPanel();
 		rl.setLayout(new BorderLayout());
 		rl.setOpaque(false);
-		rl.setVisible(false);
 
 		JLabel username3 = new JLabel("player Three");
 		username3.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
@@ -264,8 +263,10 @@ public class BMRoomPanel extends PaintedPanel{
 		rl.add(username3, BorderLayout.NORTH);
 		rl.add(player3, BorderLayout.CENTER);
 		if (num <=3) rl.setVisible(false);
-
-//		right.add(rl);
+		else {rl.setVisible(true);}
+		System.out.println("----------------------------" + num );
+		
+		right.add(rl);
 
 	}
 	public void repaintPlayer(TreeMap<Integer, String> treeMap)

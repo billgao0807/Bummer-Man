@@ -77,8 +77,10 @@ public class BMClient extends Thread {
 				}
 			}
 		} catch (IOException ioe) {
-			hs.clientDisconnected(this.player.getid());
 			System.out.println(s.getInetAddress() + ":" + s.getPort() + " disconnected.");
+			ioe.printStackTrace();
+			hs.clientDisconnected(this);
+			if (mSimulation != null) mSimulation.joinGame();
 		} 
 	}
 
@@ -96,5 +98,9 @@ public class BMClient extends Thread {
 
 	public void close() throws IOException {
 		s.close();
+	}
+
+	public BMPlayer getPlayer() {
+		return player;
 	}
 }
