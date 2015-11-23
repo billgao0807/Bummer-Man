@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Dictionary;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import javax.swing.BoxLayout;
@@ -16,22 +17,29 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 public class BMResultFrame  extends JFrame{
-	public BMResultFrame( Vector<Dictionary> result)
+	public BMResultFrame( Vector<TreeMap<String, Object>> result)
 	{
+
+		setTitle("Bomberman Result");
+		setSize(640, 480);
+		setLocationRelativeTo(null);
+
 		setLayout(new BoxLayout(getContentPane(), BoxLayout.Y_AXIS));
 		
 		JPanel topP = new JPanel();
 		topP.add(new JLabel("top"));
 		JPanel midP = new JPanel();
 		midP.setLayout(new BoxLayout(midP, BoxLayout.X_AXIS));
-		
+		System.out.println(result);
+
 		for (int i=0; i< result.size(); i++) {
 			JPanel single =new JPanel();
+			
 			single.setLayout(new BoxLayout(single, BoxLayout.Y_AXIS));
 			JLabel one = new JLabel ((String)result.get(i).get("username") + (int)result.get(i).get("points"));
-			JLabel two = new JLabel ((int)result.get(i).get("kill") +"kill ");
+			JLabel two = new JLabel ((int)result.get(i).get("Kill") +"kill ");
 			JLabel three = new JLabel ((int)result.get(i).get("death") +"death");
-			JLabel four = new JLabel ((int)result.get(i).get("items") +"items");
+			JLabel four = new JLabel ((int)result.get(i).get("item") +"items");
 			single.add(one);
 			single.add(two);
 			single.add(three);

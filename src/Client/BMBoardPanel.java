@@ -362,9 +362,12 @@ public class BMBoardPanel extends JPanel{
 	}
 
 	
-	public void Gameover(Vector<Dictionary> result){
+	public void Gameover(Vector<TreeMap<String, Object>> result){
 		BMResultFrame bmrf = new BMResultFrame(result);
 		bmrf.setVisible(true);
+		System.out.println("BMBP.GAMEOVER");
+		bmrf.setVisible(true);
+
 	}
 
 	public void repaintBoard(Integer[][] board){

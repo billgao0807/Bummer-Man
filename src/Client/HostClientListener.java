@@ -157,8 +157,9 @@ public class HostClientListener  extends Thread{
 					}
 					else if (((String)map.get("type")).equals("end")){
 						
-						Vector<Dictionary> result = (Vector<Dictionary>)map.get("result");
-						
+						Vector<TreeMap<String, Object>> result = (Vector<TreeMap<String, Object>>)map.get("result");
+						System.out.println("LISTENER.GAMEOVER " + result);
+
 						clientpanel.boardPanel.Gameover(result);
 					}
 				} catch (IOException ioe) {
