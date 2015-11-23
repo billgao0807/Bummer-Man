@@ -13,7 +13,7 @@ public class ServerConstants {
 	public static final String SUCCESSFULSIGNUP = " SUCCESFULLY SIGNED UP | ";
 	public static final String SIGNUPFAILED = " SIGNUP FAILED | ";
 	
-	public static final String REQUESTPERSONALRECORD = "Request for Personal Record";
+	public static final String REQUESTPERSONALRECORDS = "Request for Personal Record";
 	public static final String REQUESTWORLDRANKING = "Request for World Rankings";
 	public static final String SENDINGPERSONALRECORD = "Sending Personal Record | ";
 	public static final String SENDINGWORLDRANKING = "Sending World Ranking | ";

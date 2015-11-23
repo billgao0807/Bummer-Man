@@ -166,7 +166,7 @@ public class BMCentralServerClient extends Thread {
 	}
 	
 	/*
-	 * Access Rankings
+	 * Access Rankings and Records
 	 */
 	public Queue<BMRating> requestWorldRankings() {
 		try {
@@ -186,6 +186,24 @@ public class BMCentralServerClient extends Thread {
 		return emptyRanks;
 	}
 	
+	public Vector<GameRecord> requestPersonalRecords() {
+		try {
+			mLock.lock();
+			sendObject(ServerConstants.REQUESTPERSONALRECORDS);
+			mRanksArrived.await();
+			mLock.unlock();
+			return gameRecords;
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException ie) {
+			ie.printStackTrace(); 
+		}
+		
+		System.out.println(ServerConstants.WorldRankingFetchFailure);
+		Vector<GameRecord> emptyRecord = new Vector<GameRecord>();
+		return emptyRecord;
+	}
+	
 	/*
 	 * Helper Methods
 	 */
@@ -203,16 +221,18 @@ public class BMCentralServerClient extends Thread {
 		try {
 			while(running) {
 				try {
+					mLock.lock();
 					Object obj = ois.readObject();
 					if (obj instanceof Queue<?>){
-						mLock.lock();
 						ranks = (Queue<BMRating>) obj;
 						mRanksArrived.signal();
-						mLock.unlock();
+					}
+					else if (obj instanceof Vector<?>){
+						gameRecords = (Vector<GameRecord>) obj;
+						mRanksArrived.signal();
 					}
 					
 					if (obj instanceof String) {
-						mLock.lock();
 						String str = (String) obj;
 						if (str.equals(ServerConstants.SUCCESSFULLOGIN)){
 							loggedIn = true;
@@ -238,9 +258,9 @@ public class BMCentralServerClient extends Thread {
 						} else if (str.equals(ServerConstants.DISCONNECT)) {
 							running = false;
 						}
-						
-						mLock.unlock();
 					}
+					
+					mLock.unlock();
 				} catch (ClassNotFoundException cnfe) {
 					System.out.println("Error reading object sent from Server");
 					cnfe.printStackTrace();
@@ -260,25 +280,4 @@ public class BMCentralServerClient extends Thread {
 			}
 		}
 	}
-	
-	
-	/*
-	 * For debugging
-	 */
-<<<<<<< HEAD
-	/*public static void main(String args[]) {
-=======
-	/*
-	public static void main(String args[]) {
->>>>>>> master
-		try {
-			BMCentralServerClient csc = new BMCentralServerClient(6789);
-			csc.login("TurdFerguson", "hello");
-			csc.signup("TurdFerguson", "hello");
-			csc.login("TurdFerguson", "hello");
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}*/
 }

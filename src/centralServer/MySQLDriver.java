@@ -6,8 +6,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Vector;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import com.mysql.jdbc.Driver;
+
 
 public class MySQLDriver {
 	
@@ -20,6 +23,7 @@ public class MySQLDriver {
 	
 	private final static String selectGameRecord = "SELECT * FROM GAMERECORDS WHERE USERNAME=?";
 	private final static String addGameRecord = "INSERT INTO GAMERECORDS(USERNAME,POINTS,KILLS,DEATHS,TIME) VALUES(?,?,?,?,?)";
+	private final static String getWorldRankings = "SELECT username, maxpoints FROM USERS";
 	//private final static String sortByTime = "ALTER TABLE USERS ORDER BY TIME DESC";
 
 	private final static String connectionString = "jdbc:mysql://localhost:3306/bomberman?user=root&password=root";
@@ -68,8 +72,7 @@ public class MySQLDriver {
 			ps.executeUpdate();
 			System.out.println("Adding User:" + userName);
 			
-			ps = con.prepareStatement(sortByRank);
-			ps.executeUpdate();
+			reSortUsers();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -138,6 +141,7 @@ public class MySQLDriver {
 				ps.executeUpdate();
 			}
 		}
+		reSortUsers();
 		
 		//Update Game Records
 		PreparedStatement ps = con.prepareStatement(addGameRecord);
@@ -165,13 +169,32 @@ public class MySQLDriver {
 		return vect;
 	}
 	
+	public Queue<RankContainer> getWorldRankings() throws SQLException {
+		Queue<RankContainer> rankQueue = new LinkedList<RankContainer>();
+		PreparedStatement ps = con.prepareStatement(getWorldRankings);
+		ResultSet results = ps.executeQuery();
+		
+		while (results.next()) {
+			RankContainer temp = new RankContainer(
+					results.getString("username"),
+					results.getDouble("maxpoints"));
+			rankQueue.add(temp);
+		}
+		
+		return rankQueue;
+	}
+	
 	//Helper Function
-	public ResultSet getUsernameResults(String userName) throws SQLException {
+	private ResultSet getUsernameResults(String userName) throws SQLException {
 		PreparedStatement ps = con.prepareStatement(selectUser);
 		ps.setString(1, userName);
 		return ps.executeQuery();
 	}
 	
+	private void reSortUsers() throws SQLException {
+		PreparedStatement ps = con.prepareStatement(sortByRank);
+		ps.executeUpdate();
+	}
 	/*
 	public static void main(String[] args) {
 		MySQLDriver msqld = new MySQLDriver();

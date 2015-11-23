@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.Queue;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -91,6 +92,8 @@ public class BMCentralServerClientCommunicator extends Thread {
 			while (running) {
 				try {
 					Object obj = ois.readObject();
+					
+					//STRING CASES
 					if (obj instanceof String) {
 						String str = (String) obj;
 						if (str.equals(ServerConstants.LOGOUT)) {
@@ -99,12 +102,21 @@ public class BMCentralServerClientCommunicator extends Thread {
 							currentUPI = null;
 							sendObject(ServerConstants.SUCCESSFULLOGOUT);
 						}
+						else if (str.equals(ServerConstants.REQUESTPERSONALRECORDS)) {
+							Vector<GameRecord> records = bmcs.retrievePersonalRecords(currentUPI.getUsername());
+							sendObject(records);
+						}
+						else if (str.equals(ServerConstants.REQUESTWORLDRANKING)) {
+							Queue<RankContainer> rankings = bmcs.retrieveWorldRankings();
+							sendObject(rankings);
+						}
 						else if (str.equals(ServerConstants.VIPSTATUSREQUEST)) {
 							if (currentUPI != null) {
 								sendObject(currentUPI.getVIPStatus());
 								BMCentralServerGUI.addMessage(ServerConstants.VIPSTATUSREQUEST + currentUPI.getUsername());
 							}
-						} else if (str.equals(ServerConstants.DISCONNECT)) {
+						} 
+						else if (str.equals(ServerConstants.DISCONNECT)) {
 							BMCentralServerGUI.addMessage(ServerConstants.clientDisconnected);
 							running = false;
 						}
@@ -115,7 +127,7 @@ public class BMCentralServerClientCommunicator extends Thread {
 						if (upi.isLogin()) login(upi);
 						else if (upi.isSignup()) signup(upi);
 					}
-					
+					//Client wants to update Rating database stuff/add gamerecords
 					else if (obj instanceof Vector<?>){
 						@SuppressWarnings("unchecked")
 						Vector<TreeMap<String, Object>> rankings = (Vector<TreeMap<String, Object>>) obj;

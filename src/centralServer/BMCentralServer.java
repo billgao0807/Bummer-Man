@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -42,7 +44,7 @@ public class BMCentralServer extends Thread {
 	}
 	
 	/*
-	 * Methods for access the mySQLDB
+	 * Methods for signup, login, and vip status
 	 */
 	public synchronized boolean login(String username, String password) {
 		try {
@@ -76,6 +78,10 @@ public class BMCentralServer extends Thread {
 		}
 		return false;
 	}
+	
+	/*
+	 * Methods for accessing/modifying rankings and records
+	 */
 	public void updateRatings(Vector<TreeMap<String, Object> > tmVect) {
 		try {
 			for(TreeMap<String, Object> map : tmVect){
@@ -95,6 +101,32 @@ public class BMCentralServer extends Thread {
 		} catch (SQLException e) {
 			BMCentralServerGUI.addMessage(ServerConstants.GenericSQLException + "Occured while updating rankings");
 		}
+	}
+	
+	public Vector<GameRecord> retrievePersonalRecords(String username) {
+		try {
+			return msqlDriver.getPersonalRecords(username);
+		} catch (SQLException e) {
+			//e.printStackTrace();
+			BMCentralServerGUI.addMessage(ServerConstants.GenericSQLException 
+					+ "Occured while retrieving personal records for: "
+					+ username);
+			
+		}
+		
+		return new Vector<GameRecord>();
+	}
+	public Queue<RankContainer> retrieveWorldRankings() {
+		try {
+			return msqlDriver.getWorldRankings();
+		} catch (SQLException e) {
+			//e.printStackTrace();
+			BMCentralServerGUI.addMessage(ServerConstants.GenericSQLException 
+					+ "Occured while retrieving World Rankings");
+			
+		}
+		
+		return new LinkedList<RankContainer>();
 	}
 	
 	/*
