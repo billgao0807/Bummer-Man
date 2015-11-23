@@ -11,6 +11,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import Utilities.BMRating;
+
 //For connecting to MySQL Server, which contains all the scores, user accounts, etc. 
 public class BMCentralServerClient extends Thread {
 	
@@ -30,7 +32,7 @@ public class BMCentralServerClient extends Thread {
 	private Boolean vipStatus;
 	private Boolean signupSuccess;
 	
-	private Queue<Ranking> ranks;
+	private Queue<BMRating> ranks;
 	
 	{
 		mLock = new ReentrantLock();
@@ -162,7 +164,7 @@ public class BMCentralServerClient extends Thread {
 	/*
 	 * Access Rankings
 	 */
-	public Queue<Ranking> requestWorldRankings() {
+	public Queue<BMRating> requestWorldRankings() {
 		try {
 			mLock.lock();
 			sendObject(ServerConstants.REQUESTWORLDRANKING);
@@ -176,7 +178,7 @@ public class BMCentralServerClient extends Thread {
 		}
 		
 		System.out.println(ServerConstants.WorldRankingFetchFailure);
-		Queue<Ranking> emptyRanks = new LinkedList<Ranking>();
+		Queue<BMRating> emptyRanks = new LinkedList<BMRating>();
 		return emptyRanks;
 	}
 	
@@ -200,7 +202,7 @@ public class BMCentralServerClient extends Thread {
 					Object obj = ois.readObject();
 					if (obj instanceof Queue<?>){
 						mLock.lock();
-						ranks = (Queue<Ranking>) obj;
+						ranks = (Queue<BMRating>) obj;
 						mRanksArrived.signal();
 						mLock.unlock();
 					}

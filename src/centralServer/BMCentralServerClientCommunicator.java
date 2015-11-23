@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.TreeMap;
+import java.util.Vector;
 
 
 public class BMCentralServerClientCommunicator extends Thread {
@@ -21,8 +23,9 @@ public class BMCentralServerClientCommunicator extends Thread {
 		super();
 		this.s = s;
 		this.bmcs = bmcs;
-		ois = new ObjectInputStream(s.getInputStream());
 		oos = new ObjectOutputStream(s.getOutputStream());
+		ois = new ObjectInputStream(s.getInputStream());
+		
 		running = true;
 		
 	}
@@ -111,6 +114,11 @@ public class BMCentralServerClientCommunicator extends Thread {
 						UserPasswordInfo upi = (UserPasswordInfo) obj;
 						if (upi.isLogin()) login(upi);
 						else if (upi.isSignup()) signup(upi);
+					}
+					
+					else if (obj instanceof Vector<?>){
+						Vector<TreeMap<String, Object>> rankings = (Vector<TreeMap<String, Object>>) obj;
+						bmcs.updateRatings(rankings);
 					}
 				} catch (ClassNotFoundException cnfe) {
 					cnfe.printStackTrace();

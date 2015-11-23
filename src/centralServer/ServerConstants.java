@@ -53,4 +53,16 @@ public class ServerConstants {
 	
 	public static final String connectionToMySQL = "Successful Connection to MySQL | ";
 	public static final String failedConnectionToMySQL = "Failed to Connect to MySQL | ";
+	public static final String disconnectedFromMySQL = "Disconnecting from MySQL | ";
+	public static final String failedDisconnectFromMySQL = "Failed to Disconnect from MySQL | ";
+	
+	
+	/*
+	 * Map and Updating constants
+	 */
+	public static final String usernameString = "username";
+	public static final String pointsString = "points";
+	public static final String killsString = "kills";
+	public static final String deathsString = "deaths";
+	
 }

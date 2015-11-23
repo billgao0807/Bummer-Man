@@ -8,9 +8,9 @@ public class GameRecord implements Serializable {
 	
 	int kills;
 	int deaths;
-	double time;
+	String time;
 	
-	public GameRecord(int k, int d, double t) {
+	public GameRecord(int k, int d, String t) {
 		kills = k;
 		deaths = d;
 		time = t;
@@ -25,7 +25,7 @@ public class GameRecord implements Serializable {
 	public void setDeathCount(int d) {
 		deaths = d;
 	}
-	public void setTime(double t) {
+	public void setTime(String t) {
 		time = t;
 	}
 	
@@ -39,8 +39,7 @@ public class GameRecord implements Serializable {
 		return deaths;
 	}
 	public String getTime() {
-		String t = Double.toString(time) + " sec";
-		return t;
+		return time;
 	}
 
 }

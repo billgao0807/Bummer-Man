@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Vector;
 
 import com.mysql.jdbc.Driver;
 
@@ -13,10 +14,14 @@ public class MySQLDriver {
 	private Connection con;
 	private final static String selectUser = "SELECT * FROM USERS WHERE USERNAME=?";
 	private final static String deleteUser = "DELETE FROM USERS WHERE USERNAME=? AND PASS=?";
-	//private final static String selectRank = "SELECT * FROM WORLDRANKS WHERE RANK=?";
-	private final static String addUser = "INSERT INTO USERS(USERNAME,PASS,VIP,RATING,RATINGDEVIATION,VOLATIVITY) VALUES(?,?,?,?,?,?)";
+	private final static String addUser = "INSERT INTO USERS(USERNAME,PASS,VIP,MAXPOINTS) VALUES(?,?,?,?)";
+	private final static String setMaxPoints = "UPDATE USERS WHERE USERNAME=? SET MAXPOINTS=?";
 	private final static String sortByRank = "ALTER TABLE USERS ORDER BY RATING DESC";
 	
+	private final static String selectGameRecord = "SELECT * FROM GAMERECORDS WHERE USERNAME=?";
+	private final static String addGameRecord = "INSERT INTO GAMERECORDS(USERNAME,POINTS,KILLS,DEATHS,TIME) VALUES(?,?,?,?,?)";
+	//private final static String sortByTime = "ALTER TABLE USERS ORDER BY TIME DESC";
+
 	private final static String connectionString = "jdbc:mysql://localhost:3306/bomberman?user=root&password=root";
 	
 	public MySQLDriver() {
@@ -43,8 +48,10 @@ public class MySQLDriver {
 	public void stop() {
 		try {
 			con.close();
+			BMCentralServerGUI.addMessage(ServerConstants.disconnectedFromMySQL + connectionString);
 		} catch (SQLException e) {
-			e.printStackTrace();
+			//e.printStackTrace();
+			BMCentralServerGUI.addMessage(ServerConstants.failedDisconnectFromMySQL + connectionString);
 		}
 	}
 	
@@ -58,8 +65,6 @@ public class MySQLDriver {
 			ps.setString(2, password);
 			ps.setString(3, "false");
 			ps.setDouble(4, 0);
-			ps.setDouble(5, 0);
-			ps.setDouble(6, 0);
 			ps.executeUpdate();
 			System.out.println("Adding User:" + userName);
 			
@@ -122,6 +127,40 @@ public class MySQLDriver {
 		}
 		
 		return false;
+	}
+	
+	/*
+	 * Game Record related methods
+	 */
+	public void update(String userName, Double points, Integer kills, Integer deaths) {
+		try {
+			//Update max points
+			ResultSet result1 = getUsernameResults(userName);
+			while (result1.next()) {
+				if (result1.getDouble(4) < points) {
+					PreparedStatement ps = con.prepareStatement(setMaxPoints);
+					ps.setString(1, userName);
+					ps.setDouble(2, points);
+					ps.executeUpdate();
+				}
+			}
+			
+			//Update Game Records
+			PreparedStatement ps = con.prepareStatement(addGameRecord);
+			ps.setString(1, userName);
+			ps.setDouble(2, points);
+			ps.setInt(3, kills);
+			ps.setInt(4, deaths);
+			ps.executeUpdate();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			BMCentralServerGUI.addMessage("Error updating MySQL");
+		}
+	}
+	
+	public Vector<GameRecord> getPersonalRecords(String userName) {
+		
 	}
 	
 	//Helper Function

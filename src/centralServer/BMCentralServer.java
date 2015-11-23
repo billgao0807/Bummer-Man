@@ -3,7 +3,10 @@ package centralServer;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.TreeMap;
 import java.util.Vector;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 //import java.util.concurrent.locks.Lock;
 //import java.util.concurrent.locks.ReentrantLock;
 
@@ -16,12 +19,13 @@ public class BMCentralServer extends Thread {
 	private Vector<BMCentralServerClientCommunicator> csccVector;
 	
 	private MySQLDriver msqlDriver;
+	private static BMCentralServerGUI csGUI;
 	//private Lock sqlLock;
 	
 	{
 		csccVector = new Vector<BMCentralServerClientCommunicator>();
 		msqlDriver = new MySQLDriver();
-		new BMCentralServerGUI();
+		csGUI = new BMCentralServerGUI(msqlDriver);
 		//sqlLock = new ReentrantLock();
 	}
 	
@@ -31,9 +35,8 @@ public class BMCentralServer extends Thread {
 	public BMCentralServer() {
 		super();
 		PortGUI pg = new PortGUI();
-		msqlDriver.connect();
-		
 		ss = pg.getServerSocket();
+		csGUI.setVisible(true);
 		start();
 	}
 	
@@ -57,9 +60,27 @@ public class BMCentralServer extends Thread {
 	public synchronized boolean isVIP(String username) {
 		return msqlDriver.isVIP(username);
 	}
+	public void updateRatings(Vector<TreeMap<String, Object> > tmVect) {
+		for(TreeMap<String, Object> map : tmVect){
+			Object uname = map.get("username");
+			if(uname instanceof String){
+				String username = (String) uname;
+				if (username.equals("BOT")) continue;
+				else{
+					msqlDriver.update(
+							(String) map.get(ServerConstants.usernameString), 
+							(Double) map.get(ServerConstants.pointsString),
+							(Integer) map.get(ServerConstants.killsString),
+							(Integer) map.get(ServerConstants.deathsString));
+				}
+			}
+		}
+	}
 	
-	
-	
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 */
 	public void run() {
 		try {
 			while(true) {
