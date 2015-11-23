@@ -4,6 +4,9 @@ import java.awt.event.ActionListener;
 import java.util.Queue;
 import java.util.Vector;
 
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
@@ -13,7 +16,7 @@ import javax.swing.table.DefaultTableModel;
 import centralServer.GameRecord;
 import centralServer.RankContainer;
 
-public class BMRankPanel extends JPanel{
+public class BMRankPanel extends JFrame{
 	/**
 	 * Vector for myrank
 	 * Queue for wrdrank 
@@ -22,16 +25,22 @@ public class BMRankPanel extends JPanel{
 	 */
 	private static final long serialVersionUID = 1L;
 
+	private JPanel main;
 	private JTable myRcdTable;
 	private JTable wrdRcdTable; 
 	
 	BMRankPanel(ActionListener returnMain)
 	{
 		
+		main = new JPanel();
+		main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
+		
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		
 		JPanel myRecord = new JPanel();
 		JPanel wrdRecord = new JPanel();
+		
+		JButton btnReturn = new JButton("Return");
 		
 		String[] columnNames = {"Rank",
                 "Name",
@@ -68,7 +77,11 @@ public class BMRankPanel extends JPanel{
 		tabbedPane.add("My Record", myRecord);
 		tabbedPane.add("Word Record", wrdRecord);
 		
-		add(tabbedPane);
+		btnReturn.addActionListener(returnMain);
+		
+		main.add(tabbedPane);
+		main.add(btnReturn);
+		add(main);
 		
 	}
 	
