@@ -44,6 +44,8 @@ public class BMRoomPanel extends PaintedPanel{
 	public JPanel ll;
 	public JPanel rt;
 	public JPanel rl;
+	public int sendTime;
+	public int sendhp;
 
 	BMRoomPanel(boolean identity,ActionListener startP, ActionListener startB, ActionListener quit,Image image)
 	{
@@ -51,9 +53,9 @@ public class BMRoomPanel extends PaintedPanel{
 		time = new JLabel("Time:");
 		HP = new JLabel("HP:");
 		this.identity = identity;
-		String[] t = new String[]{"one min", "two mins", " half min"};
+		String[] t = new String[]{"one min", "two mins", " three mins", "five mins"};
 		//timing = new JComboBox<>(t);
-		String[] hp = new String[]{"one","two","three"};
+		String[] hp = new String[]{"one","two","three", "five", "ten"};
 		//HPCounting = new JComboBox<>(hp);
 		//		
 		//		timeP.add(time);
@@ -124,12 +126,57 @@ public class BMRoomPanel extends PaintedPanel{
 			comboBox.addItem(str);
 			comboBox.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		}
+		int timing = comboBox.getSelectedIndex();
+		if (timing == 0)
+		{
+			sendTime = 60;
+		}
+		else if (timing == 1)
+		{
+			sendTime = 120;
+		}
+		else if (timing == 2)
+		{
+			sendTime = 180;
+		}
+		else if (timing == 3)
+		{
+			sendTime = 300;
+		}
+		else if (timing == 4)
+		{
+			sendTime = 600;
+		}
+		
+		
 		JComboBox comboBox_1 = new JComboBox();
 		for (String Int : hp){
 			comboBox_1.addItem(Int);
 			comboBox_1.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		}
 		comboBox_1.setBorder(BorderFactory.createEmptyBorder(0, 0, 60, 0));
+		int hpC = comboBox_1.getSelectedIndex();
+		if (hpC == 0)
+		{
+			sendhp = 1;
+		}
+		else if (hpC == 1)
+		{
+			sendhp = 2;
+		}
+		else if (hpC == 2)
+		{
+			sendhp = 3;
+		}
+		else if (hpC == 3)
+		{
+			sendhp = 5;
+		}
+		else if (hpC == 4)
+		{
+			sendhp = 10;
+		}
+		
 		JButton btnPlay = new JButton("Play");
 		btnPlay.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		btnPlay.setAlignmentX(CENTER_ALIGNMENT);

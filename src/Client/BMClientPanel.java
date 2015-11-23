@@ -42,57 +42,21 @@ public class BMClientPanel extends JPanel{
 	
 	{
 		players = new Vector<TreeMap<String,Object>>();
-//		detailSignin = new BMSigninPage(new ActionListener() {
-//			@Override
-//			
-//			public void actionPerformed(ActionEvent ae) {
-//				BMClientPanel.this.removeAll();
-//				detailSignin.setVisible(false);
-//				/*Signup
-//				BMClientPanel.this.add(roomPanel);
-//				*/
-//				BMClientPanel.this.revalidate();
-//				BMClientPanel.this.repaint();
-//			}
-//		},
-//				new ActionListener(){
-//				@Override
-//			public void actionPerformed(ActionEvent ae) {
-//				BMClientPanel.this.removeAll();
-//				detailSignin.setVisible(false);
-//				/*QuickGame
-//				BMClientPanel.this.add(roomPanel);
-//				*/
-//				BMClientPanel.this.revalidate();
-//				BMClientPanel.this.repaint();
-//			}
-//		},
-//				new ActionListener(){
-//				@Override				
-//			public void actionPerformed(ActionEvent ae) {
-//					/*add check the correctness of the username and password*/
-//					username = detailSignin.nameInput.getText().trim();
-//					
-//				BMClientPanel.this.removeAll();				
-//				BMClientPanel.this.add(menuPanel);
-//				BMClientPanel.this.revalidate();
-//				BMClientPanel.this.repaint();
-//				System.out.println("CLosing jframe");
-//				detailSignin.closeMe();
-//			}}
-//				);
 		loginPanel = new BMLoginPanel(new ActionListener() {
 			@Override
 			
 			public void actionPerformed(ActionEvent ae) {
-				BMClientPanel.this.removeAll();
-				/*Signup
-				BMClientPanel.this.add(roomPanel);
-				*/
+				BMClientPanel.this.username = "Guest";
+				simulation = new BMSimulation(5555,4);
+				simulation.setVariables(60, 2);
+				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
+				hostClient.sendJoin("Guest");
+				BMClientPanel.this.removeAll();				
+				BMClientPanel.this.add(boardPanel);
 				BMClientPanel.this.revalidate();
 				BMClientPanel.this.repaint();
-				System.out.println("login 1");
-//				detailSignin.closeMe();
+				loginPanel.closeSignup();
+				simulation.startGame(1);
 			}
 		},
 				new ActionListener(){
@@ -224,18 +188,18 @@ public class BMClientPanel extends JPanel{
 				@Override
 				public void actionPerformed(ActionEvent e){
 					//enter the game
-					simulation.startGame(0);				
+					simulation.startGame(0);	
+					simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
 				}
 			},
 			new ActionListener()
 			{
 			@Override
 				public void actionPerformed(ActionEvent e)
-				{
-				
-				
+				{			
 				//enter Game
 					simulation.startGame(1);
+					simulation.setVariables(roomPanel.sendTime, roomPanel.sendhp);
 				}
 			},
 			new ActionListener()
