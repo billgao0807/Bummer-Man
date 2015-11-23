@@ -23,6 +23,7 @@ public class BMCentralServerClientCommunicator extends Thread {
 	private UserPasswordInfo currentUPI;
 	
 	private Lock recordRetrieval;
+	private Lock signuploginLock;
 	
 	public BMCentralServerClientCommunicator(Socket s, BMCentralServer bmcs) throws IOException {
 		super();
@@ -31,6 +32,7 @@ public class BMCentralServerClientCommunicator extends Thread {
 		oos = new ObjectOutputStream(s.getOutputStream());
 		ois = new ObjectInputStream(s.getInputStream());
 		recordRetrieval = new ReentrantLock();
+		signuploginLock = new ReentrantLock();
 		
 		running = true;
 		
@@ -39,7 +41,9 @@ public class BMCentralServerClientCommunicator extends Thread {
 	/*
 	 * Login and Sign up
 	 */
-	private synchronized void login(UserPasswordInfo upi) {
+	private void login(UserPasswordInfo upi) {
+		signuploginLock.lock();
+		
 		try {
 			if (bmcs.login(upi.getUsername(), upi.getPassword())) {
 				//If login is successful, then set the currentUPI and assign their VIP status
@@ -58,8 +62,12 @@ public class BMCentralServerClientCommunicator extends Thread {
 			ioe.printStackTrace();
 			System.out.println("Problem connecting with Server/Client:" + s.getInetAddress() + ":" + s.getPort());
 		}
+		
+		signuploginLock.unlock();
 	}
-	private synchronized void signup(UserPasswordInfo upi) {
+	private void signup(UserPasswordInfo upi) {
+		
+		signuploginLock.lock();
 		try {
 			if (bmcs.signup(upi.getUsername(), upi.getPassword())) {
 				sendObject(ServerConstants.SUCCESSFULSIGNUP);
@@ -72,6 +80,7 @@ public class BMCentralServerClientCommunicator extends Thread {
 			ioe.printStackTrace();
 			System.out.println("Problem connecting with Server/Client:" + s.getInetAddress() + ":" + s.getPort());
 		}
+		signuploginLock.unlock();
 	}
 	
 	/*

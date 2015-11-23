@@ -55,7 +55,7 @@ public class BMCentralServer extends Thread {
 		}
 		return false;
 	}
-	public synchronized boolean signup(String username, String password) {
+	public boolean signup(String username, String password) {
 		try {
 			if (!msqlDriver.doesExist(username)) {
 				msqlDriver.addUser(username, password);

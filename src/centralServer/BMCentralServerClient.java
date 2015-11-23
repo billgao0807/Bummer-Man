@@ -283,4 +283,13 @@ public class BMCentralServerClient extends Thread {
 			}
 		}
 	}
+	
+	public static void main(String args[]) throws UnknownHostException {
+		BMCentralServerClient csc = new BMCentralServerClient(6789);
+		
+		csc.signup("Brandon", "cocacola");
+		csc.signup("Zoe", "brasil");
+		
+		csc.login("Brandon", "cocacola");
+	}
 }
