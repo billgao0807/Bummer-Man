@@ -22,13 +22,15 @@ class vipClass extends JFrame{
 	private JLabel reminder;
 	private JTextField input;
 	private JTextField textField;
-	vipClass()
+	private BMMenuPanel panel;
+	public vipClass(BMMenuPanel panel1)
 	{
+		panel = panel1;
 		setTitle("Become VIP");
 		setSize(new Dimension(320,200));
 		setResizable(false);
 		setLocationRelativeTo(null);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
 		
 		JLabel lblPleaseInputYour = new JLabel("Please input your Secret Code");
 		lblPleaseInputYour.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 10));
@@ -45,6 +47,11 @@ class vipClass extends JFrame{
 				if (textField.getText().equals(secret))
 				{
 					vip = true;
+					panel.btnBecomeVip.setText("Welcome vip");
+				}
+				else {
+					vip = false;
+					panel.btnBecomeVip.setText("Become vip");
 				}
 				setVisible(false);
 			}
