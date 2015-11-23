@@ -291,12 +291,12 @@ public class BMClientPanel extends JPanel{
 		boardPanel.requestFocus();
 	}
 	
-	void set_join(Vector<TreeMap<String,Object>> players, int hp, int time)
+	void set_join(Vector<String> players, int hp, int time)
 	{
-		this.players = players;
+//		this.players = players;
 		this.time = time;
 		this.hp = hp;
-		
+		System.out.println(players);
 		this.initRoomPanel(players.size());
 		BMClientPanel.this.removeAll();
 		BMClientPanel.this.add(roomPanel);		
