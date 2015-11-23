@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.UnknownHostException;
 import java.util.Dictionary;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -19,6 +20,7 @@ import Server.BMHostServer;
 import Server.BMPlayer;
 import Server.BMSimulation;
 import Utilities.BMLibrary;
+import centralServer.BMCentralServerClient;
 import customUI.PaintedButton;
 import customUI.PaintedPanel;
 public class BMClientPanel extends JPanel{
@@ -40,6 +42,7 @@ public class BMClientPanel extends JPanel{
 	protected BMSimulation simulation;
 	//true = host the game
 	private boolean identity = true;
+	private BMCentralServerClient centralServerClient;
 	
 	{
 		players = new Vector<TreeMap<String,Object>>();
@@ -66,6 +69,7 @@ public class BMClientPanel extends JPanel{
 				BMClientPanel.this.removeAll();
 				username = loginPanel.getSignin().txtUsername.getText().trim();
 				password = loginPanel.getSignin().txtPassword.getText().trim();
+				
 				/*QuickGame
 				BMClientPanel.this.add(roomPanel);
 				*/
@@ -80,12 +84,29 @@ public class BMClientPanel extends JPanel{
 			public void actionPerformed(ActionEvent ae) {
 					/*add check the correctness of the username and password*/
 					username = loginPanel.getSignin().txtUsername.getText().trim();
-				BMClientPanel.this.removeAll();				
-				BMClientPanel.this.add(menuPanel);
-				BMClientPanel.this.revalidate();
-				BMClientPanel.this.repaint();
-				System.out.println("login 3");
-				loginPanel.closeSignup();
+					password = loginPanel.getSignin().txtPassword.getText().trim();
+					try {
+						centralServerClient = new BMCentralServerClient(6789);
+					} catch (UnknownHostException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					if (centralServerClient.login(username, password))
+					{
+						BMClientPanel.this.removeAll();				
+						BMClientPanel.this.add(menuPanel);
+						BMClientPanel.this.revalidate();
+						BMClientPanel.this.repaint();
+						System.out.println("login success");
+						loginPanel.closeSignup();
+					}
+					else
+					{
+						loginPanel.getSignin().label.setText("Sign in failed");
+						loginPanel.getSignin().txtPassword.setText("");
+						loginPanel.getSignin().txtUsername.setText("");
+					}
 //				detailSignin.closeMe();
 			}}, BMLibrary.readImages("menu.png"));
 		
@@ -151,13 +172,14 @@ public class BMClientPanel extends JPanel{
 					public void actionPerformed(ActionEvent e)
 					{
 					//Login
+						initMenuPanel();
 						BMClientPanel.this.removeAll();
 						BMClientPanel.this.add(menuPanel);
 						BMClientPanel.this.revalidate();
 						
 					}
 				},BMLibrary.readImages("vs.png")
-				);
+			);
 		boardPanel = new BMBoardPanel(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e)
@@ -264,6 +286,7 @@ public class BMClientPanel extends JPanel{
 		this.players = players;
 		boardPanel.setupMap(board, time, players , username, hostClient);
 
+		initRoomPanel();
 		BMClientPanel.this.removeAll();
 		BMClientPanel.this.add(boardPanel);		
 		BMClientPanel.this.revalidate();
