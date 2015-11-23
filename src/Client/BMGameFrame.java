@@ -17,6 +17,7 @@ import javax.swing.JMenuItem;
 
 import Utilities.BMLibrary;
 import Utilities.Help;
+import Utilities.MusicLibrary;
 public class BMGameFrame extends JFrame implements KeyListener{
 private static final long serialVersionUID = 5147395078473323173L;
 	
@@ -60,6 +61,7 @@ private static final long serialVersionUID = 5147395078473323173L;
 	
 	public static void main(String[] args) {
 		BMGameFrame bmgf = new BMGameFrame();
+		//MusicLibrary.startGame();
 		bmgf.setJMenuBar(menuBar);
 		bmgf.setVisible(true);
 		bmgf.setCursor(cursor);

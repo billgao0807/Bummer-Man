@@ -25,6 +25,8 @@ public class MusicLibrary {
 	}
 	
 	public static void playSound(final String address) {
+		
+		
 		try {
 			System.out.println(MusicLibrary.class);
 			URL url = MusicLibrary.class.getResource(path+address);

@@ -162,7 +162,7 @@ public class BMRoomPanel extends PaintedPanel{
 			comboBox_1.setFont(BMFontLibrary.getFont("font.ttf", Font.PLAIN, 20));
 		}
 		comboBox_1.setBorder(BorderFactory.createEmptyBorder(0, 0, 60, 0));
-		comboBox.addActionListener(new ActionListener(){
+		comboBox_1.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent ae){
 				int hpC = comboBox_1.getSelectedIndex();
 				if (hpC == 0)
