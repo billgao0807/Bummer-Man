@@ -106,8 +106,6 @@ private static final long serialVersionUID = 5147395078473323173L;
     	});
     	menuBar.add(info);
     	menuBar.add(help);
-//		this.addKeyListener(this);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 	}
 	
 	public static void main(String[] args) {

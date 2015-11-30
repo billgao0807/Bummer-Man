@@ -45,13 +45,13 @@ public class BMBoard_Player  extends PaintedPanel {
 				HPLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 25));
 
 				AbilityLabel = new JLabel("Ability ");
-				AbilityLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 9));
+				AbilityLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 
 				SpeedLabel = new PaintedLabel(null);
-				SpeedLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 9));
+				SpeedLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 11));
 
 				PowerLabel = new PaintedLabel(null);
-				PowerLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 9));
+				PowerLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 11));
 
 				Item1Label= new PaintedLabel (null);
 				Item1Label.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
@@ -64,11 +64,11 @@ public class BMBoard_Player  extends PaintedPanel {
 
 
 				CoolingTimeLabel = new PaintedLabel (null);
-				CoolingTimeLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 8));
+				CoolingTimeLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 10));
 
 				
 				DetonatedTime_Label = new PaintedLabel (null);
-				DetonatedTime_Label.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 8));
+				DetonatedTime_Label.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 10));
 
 				SpeedLabel.setText("Speed");
 				PowerLabel.setText("Power");
@@ -92,8 +92,8 @@ public class BMBoard_Player  extends PaintedPanel {
 				SpeedLabel.setPreferredSize(new Dimension(60, 50));
 				Item2Label.setPreferredSize(new Dimension(60, 50));
 				PowerLabel.setPreferredSize(new Dimension(60, 50));
-				CoolingTimeLabel.setPreferredSize(new Dimension(120, 50));
-				DetonatedTime_Label.setPreferredSize(new Dimension(120, 50));
+				CoolingTimeLabel.setPreferredSize(new Dimension(120, 30));
+				DetonatedTime_Label.setPreferredSize(new Dimension(120, 30));
 				
 				//QuitButton.setPreferredSize(new Dimension(60, 50));
 

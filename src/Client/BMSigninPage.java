@@ -100,14 +100,14 @@ public JLabel label;
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
 						.addGroup(groupLayout.createSequentialGroup()
-							.addContainerGap()
-							.addComponent(btnConnectServer))
+							.addGap(60)
+							.addComponent(btnConnectServer, GroupLayout.PREFERRED_SIZE, 201, Short.MAX_VALUE))
 						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(95)
+							.addGap(60)
 							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(txtPassword, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-								.addComponent(txtUsername, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))))
-					.addGap(95))
+								.addComponent(txtPassword, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+								.addComponent(txtUsername, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))))
+					.addGap(60))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -116,7 +116,7 @@ public JLabel label;
 					.addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 70, Short.MAX_VALUE)
 					.addComponent(btnConnectServer)
 					.addGap(18)
 					.addComponent(btnQuickgame)
@@ -130,6 +130,7 @@ public JLabel label;
 
 		label = new JLabel("");
 		btnConnectServer.addActionListener(connect_Server);
+		btnConnectServer.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
 
 		
 		mainPanel.setLayout(groupLayout);

@@ -57,6 +57,7 @@ public class BMClientPanel extends JPanel{
 				simulation.setVariables(60, 2);
 				hostClient = new HostClientListener(BMClientPanel.this, "localhost", 5555);
 				hostClient.sendJoin("Guest");
+				init_board();
 				BMClientPanel.this.removeAll();				
 				BMClientPanel.this.add(boardPanel);
 				BMClientPanel.this.revalidate();
@@ -215,6 +216,9 @@ public class BMClientPanel extends JPanel{
 					}
 				},BMLibrary.readImages("vs.png")
 		);
+		init_board();
+	}
+	private void init_board(){
 		boardPanel = new BMBoardPanel(new ActionListener(){
 			@Override
 			public void actionPerformed(ActionEvent e)
