@@ -103,7 +103,7 @@ public class BMCentralServer extends Thread {
 					else{
 						msqlDriver.updateGameRecords(
 								(String) map.get(ServerConstants.usernameString), 
-								(Double) map.get(ServerConstants.pointsString),
+								((Integer) map.get(ServerConstants.pointsString)).doubleValue(),
 								(Integer) map.get(ServerConstants.killString),
 								(Integer) map.get(ServerConstants.deathString));
 					}

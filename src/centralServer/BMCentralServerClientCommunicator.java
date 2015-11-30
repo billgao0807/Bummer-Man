@@ -162,8 +162,10 @@ public class BMCentralServerClientCommunicator extends Thread {
 				
 			}
 		} catch (IOException ioe) {
+			System.out.println("IOE: " + ioe.getMessage());
 			BMCentralServerGUI.addMessage("Trouble connecting to client");
 		} finally {
+			System.out.println("Disconnect");
 			bmcs.removeServerClientCommunicator(this);
 			BMCentralServerGUI.addMessage(ServerConstants.clientDisconnected + " - " + s.getInetAddress() + ":" + s.getPort());
 			// this means that the socket is closed since no more lines are being received

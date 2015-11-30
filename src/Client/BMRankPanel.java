@@ -117,7 +117,7 @@ public class BMRankPanel extends JFrame{
 		myRecord.add(myRcdScrollPane);
 		
 		tabbedPane.add("My Record", myRecord);
-		tabbedPane.add("Word Record", wrdRecord);
+		tabbedPane.add("World Record", wrdRecord);
 		tabbedPane.setOpaque(false);
 		
 //		btnReturn.addActionListener(returnMain);

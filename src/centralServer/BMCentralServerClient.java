@@ -307,7 +307,7 @@ public class BMCentralServerClient extends Thread {
 				}
 			}
 		} catch (IOException ioe) {
-			//ioe.printStackTrace();
+			ioe.printStackTrace();
 			System.out.println("Lost connection to Central Server at " + s.getInetAddress() + ":" + s.getPort());
 		} finally {
 			if (s != null) {

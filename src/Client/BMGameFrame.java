@@ -16,6 +16,7 @@ package Client;
 
 
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
@@ -26,7 +27,16 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -43,8 +53,11 @@ private static final long serialVersionUID = 5147395078473323173L;
 	private static Cursor cursor;
 	private static Cursor cursor2;
 
+	private static Clip clip;
+
 	//new comment
 	{
+		BMGameFrame.playSound();
 		setTitle("Bomberman");
 		setSize(minSize);
 //		setMinimumSize(minSize);
@@ -70,6 +83,28 @@ private static final long serialVersionUID = 5147395078473323173L;
     			Help.display();
     		}
     	});
+    	
+    	JMenuItem info = new JMenuItem("info");
+    	//help.setMnemonic('H');
+    	//help.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_H,ActionEvent.CTRL_MASK));
+    	info.addActionListener(new ActionListener() {
+    		@Override
+    		public void actionPerformed(ActionEvent ae) {
+    			if(Desktop.isDesktopSupported())
+				{
+					try {
+						Desktop.getDesktop().browse(new URI("http://jiahuiwe.wix.com/bomberman#!our-story/c2sa"));
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} catch (URISyntaxException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+    		}
+    	});
+    	menuBar.add(info);
     	menuBar.add(help);
 //		this.addKeyListener(this);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -112,6 +147,43 @@ private static final long serialVersionUID = 5147395078473323173L;
 		System.out.println("Release");
 	}
 	
-	
+	public static void playSound() {
+		try {
+			
+			URL url = MusicLibrary.class.getResource("opening-fmv.wav");
+
+			System.out.println(url);
+			AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
+			System.out.println(audioIn);
+			clip = AudioSystem.getClip();
+			System.out.println(clip);
+			clip.open(audioIn);
+			new Thread(new Runnable(){
+
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					while (true){
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						if (!clip.isActive()){
+							BMGameFrame.clip.start();
+						}
+					}
+				}
+			}).start();
+		}
+		catch (IOException e){
+			System.out.println("IOE");
+		} catch (UnsupportedAudioFileException e) {
+			System.out.println("IOUnsupportedAudioFileExceptionE");
+		} catch (LineUnavailableException e) {
+			System.out.println("LineUnavailableException");
+		}
+	}
 	
 }
