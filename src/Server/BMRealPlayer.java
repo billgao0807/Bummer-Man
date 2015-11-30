@@ -21,6 +21,6 @@ public class BMRealPlayer extends BMPlayer {
 			coolingTime-=1;
 			detonatedTime-=1;
 		}
-		System.out.println("USer's name " +username);
+		System.out.println("User's name " +username);
 	}
 }

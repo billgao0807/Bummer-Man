@@ -80,14 +80,21 @@ public class BMClientPanel extends JPanel{
 					e.printStackTrace();
 				}*/
 				//centralServerClient = new BMCentralServerClient();
-
-				if (centralServerClient.signup(username, password))
-				{
-					loginPanel.getSignin().label.setText("Signed up successfully! ");
-					loginPanel.getSignin().txtPassword.setText("");
-					loginPanel.getSignin().txtUsername.setText("");
-					System.out.println("");
+				if(centralServerClient != null){
+					if (centralServerClient.signup(username, password))
+					{
+						loginPanel.getSignin().label.setText("Signed up successfully! ");
+						loginPanel.getSignin().txtPassword.setText("");
+						loginPanel.getSignin().txtUsername.setText("");
+						System.out.println("");
+					}
 				}
+				else{
+					loginPanel.getSignin().label.setText("Please connect to login server first");
+					loginPanel.getSignin().label.setForeground(Color.RED);
+					loginPanel.getSignin().label.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
+				}
+				
 			}
 		},
 				new ActionListener(){
@@ -234,8 +241,11 @@ public class BMClientPanel extends JPanel{
 					BMClientPanel.this.revalidate();
 					BMClientPanel.this.repaint();
 				}
-				BMClientPanel.this.hostClient.close();
-				if (simulation != null) simulation.gameOver();
+				if (BMClientPanel.this.hostClient != null) BMClientPanel.this.hostClient.close();
+				if (simulation != null) {
+					System.out.println("host calls simulation game over");
+					simulation.gameOver();
+				}
 			}
 
 		});
@@ -385,18 +395,12 @@ public class BMClientPanel extends JPanel{
 			
 			String usr = (String)tm.get("username");
 			if (!usr.startsWith("AI")) {
-				//temp.put(ServerConstants.usernameString, usr);
-//				temp.put(key, value)
-				
-				
-				
-				
-				
 				tmVector.add(tm);
 			}
 			
 			
 		}
+		System.out.println("Update world rankings number of real players: " + tmVector.size());
 		centralServerClient.updateWorldRankings(tmVector);
 		
 	}
