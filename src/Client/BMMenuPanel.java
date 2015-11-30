@@ -79,8 +79,8 @@ public class BMMenuPanel extends PaintedPanel{
 			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
 					.addGap(123)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(btnRanking, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addComponent(btnRanking, GroupLayout.PREFERRED_SIZE, 151, GroupLayout.PREFERRED_SIZE)
 						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING, false)
 							.addComponent(portField, 0, 0, Short.MAX_VALUE)
 							.addComponent(ipField, 0, 0, Short.MAX_VALUE)
@@ -88,9 +88,9 @@ public class BMMenuPanel extends PaintedPanel{
 							.addGroup(groupLayout.createSequentialGroup()
 								.addGap(35)
 								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-									.addComponent(btnStart)
-									.addComponent(btnJoin)))))
-					.addContainerGap(212, Short.MAX_VALUE))
+									.addComponent(btnJoin)
+									.addComponent(btnStart)))))
+					.addContainerGap(154, Short.MAX_VALUE))
 		);
 		groupLayout.setVerticalGroup(
 			groupLayout.createParallelGroup(Alignment.LEADING)
@@ -107,7 +107,7 @@ public class BMMenuPanel extends PaintedPanel{
 					.addComponent(btnJoin)
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addComponent(btnRanking)
-					.addContainerGap(86, Short.MAX_VALUE))
+					.addContainerGap(78, Short.MAX_VALUE))
 		);
 		setLayout(groupLayout);
 		btnStart.addActionListener(host);
