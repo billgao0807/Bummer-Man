@@ -13,6 +13,8 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
+import Utilities.CommandLineMonitor;
+
 //For connecting to MySQL Server, which contains all the scores, user accounts, etc. 
 public class BMCentralServerClient extends Thread {
 	
@@ -79,6 +81,21 @@ public class BMCentralServerClient extends Thread {
 		}
 	}
 	
+	public BMCentralServerClient() {
+		HostAndPortGUI hapgui = new HostAndPortGUI();
+		s = hapgui.getSocket();
+		
+		try {
+			oos = new ObjectOutputStream(s.getOutputStream());
+			ois = new ObjectInputStream(s.getInputStream());
+			running = true;
+			start();
+		} catch (IOException ioe) {
+			running = false;
+			CommandLineMonitor.printExceptionToCommand(ioe);
+		}
+	}
+	
 	/*
 	 * Login screen methods
 	 */
@@ -113,10 +130,10 @@ public class BMCentralServerClient extends Thread {
 		} catch (IOException | NullPointerException e) {
 			//e.printStackTrace();
 			signupSuccess = false;
-			System.out.println(ServerConstants.CannotCompleteRequest + ServerConstants.NotLoggedIn);
+			CommandLineMonitor.printMessageToCommand(ServerConstants.CannotCompleteRequest + ServerConstants.NotLoggedIn);
 		} catch (InterruptedException ie) {
 			signupSuccess = false;
-			System.out.println("SIGNUP INTERRUPTED");
+			CommandLineMonitor.printMessageToCommand("SIGNUP INTERRUPTED");
 		}
 		
 		if (signupSuccess) return true;
@@ -132,16 +149,24 @@ public class BMCentralServerClient extends Thread {
 		try {
 			sendObject(ServerConstants.VIPSTATUSREQUEST);
 			vipResult.await();
-		} catch (IOException ioe) {
-			//ioe.printStackTrace();
-			System.out.println(ServerConstants.CannotCompleteRequest + ServerConstants.NotConnected);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace();
-			System.out.println(ServerConstants.CannotCompleteRequest + "Method call interrupted");
-		}
+		} catch (IOException | InterruptedException e) {
+			CommandLineMonitor.printExceptionToCommand(e);
+		} 
 		
 		mLock.unlock();
 		return vipStatus;
+	}
+	public void makeVIP() {
+		if (loggedIn) {
+			try{
+				sendObject(ServerConstants.UPGRADETOVIP);
+			} catch (IOException e) {
+				CommandLineMonitor.printExceptionToCommand(e);
+			}
+		} 
+		else {
+			CommandLineMonitor.printMessageToCommand(ServerConstants.CannotCompleteRequest + ServerConstants.NotLoggedIn);
+		}
 	}
 	
 	/*
@@ -152,13 +177,10 @@ public class BMCentralServerClient extends Thread {
 		try {
 			sendObject(ServerConstants.REQUESTWORLDRANKING);
 			mRanksArrived.await();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(ServerConstants.WorldRankingFetchFailure);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace(); 
-			System.out.println(ServerConstants.WorldRankingFetchFailure);
-		}
+		} catch (IOException | InterruptedException e) {
+			CommandLineMonitor.printMessageToCommand(ServerConstants.WorldRankingFetchFailure);
+			CommandLineMonitor.printExceptionToCommand(e);
+		} 
 		mLock.unlock();
 		
 		return ranks;
@@ -169,13 +191,10 @@ public class BMCentralServerClient extends Thread {
 		try {
 			sendObject(ServerConstants.REQUESTPERSONALRECORDS);
 			mRanksArrived.await();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.println(ServerConstants.PersonalRankingFetchFailure);
-		} catch (InterruptedException ie) {
-			ie.printStackTrace(); 
-			System.out.println(ServerConstants.PersonalRankingFetchFailure);
-		}
+		} catch (IOException | InterruptedException e) {
+			CommandLineMonitor.printMessageToCommand(ServerConstants.PersonalRankingFetchFailure);
+			CommandLineMonitor.printExceptionToCommand(e);
+		} 
 		
 		mLock.unlock();
 		
@@ -187,7 +206,7 @@ public class BMCentralServerClient extends Thread {
 			sendObject(newRanks);
 		} catch (NullPointerException | IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			CommandLineMonitor.printExceptionToCommand(e);
 		}
 	}
 	
@@ -203,7 +222,7 @@ public class BMCentralServerClient extends Thread {
 				gameRecords = null;
 			} catch (IOException e) {
 				//e.printStackTrace();
-				System.out.println(ServerConstants.LOGOUTFAILED);
+				CommandLineMonitor.printMessageToCommand(ServerConstants.LOGOUTFAILED);
 			}
 		}
 	}
@@ -212,7 +231,7 @@ public class BMCentralServerClient extends Thread {
 			sendObject(ServerConstants.DISCONNECT);
 		} catch (IOException e) {
 			//e.printStackTrace();
-			System.out.println(ServerConstants.CannotCompleteRequest + "Disconnect Failed");
+			CommandLineMonitor.printExceptionToCommand(e);
 		}
 	}
 	
@@ -273,8 +292,7 @@ public class BMCentralServerClient extends Thread {
 					}
 					mLock.unlock();
 				} catch (ClassNotFoundException cnfe) {
-					System.out.println("Error reading object sent from Server");
-					cnfe.printStackTrace();
+					CommandLineMonitor.printExceptionToCommand(cnfe);
 				}
 			}
 		} catch (IOException ioe) {
@@ -286,35 +304,26 @@ public class BMCentralServerClient extends Thread {
 					s.close();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					System.out.println(ServerConstants.LOGOUTFAILED);
+					CommandLineMonitor.printExceptionToCommand(e);
 				}
 			}
 		}
 	}
 	
 	public static void main(String args[]) throws UnknownHostException {
-		BMCentralServerClient csc = new BMCentralServerClient(6789);
+		BMCentralServerClient csc = new BMCentralServerClient();
 		
 		csc.login("Brandon", "cocacola");
 		
 		Vector<TreeMap<String, Object>> rankings = new Vector<TreeMap<String, Object>>();
 		
 		TreeMap<String, Object> bTree = new TreeMap<String, Object>();
-		bTree.put(ServerConstants.usernameString, "Brandon");
-		bTree.put(ServerConstants.pointsString, (double) 200);
-		bTree.put(ServerConstants.killString, 6);
-		bTree.put(ServerConstants.deathString, 2);
+		bTree.put(ServerConstants.usernameString, "TurdFerguson");
+		bTree.put(ServerConstants.pointsString, (double) 72);
+		bTree.put(ServerConstants.killString, 7);
+		bTree.put(ServerConstants.deathString, 100);
+		rankings.add(bTree);
 		
-		Thread t = new Thread(new Runnable(){
-			public void run(){
-				try{
-					Thread.sleep(10000);
-				} catch(InterruptedException ie) {
-					ie.printStackTrace();
-				}
-			}
-		});
-		t.start();
 		/*
 		TreeMap<String, Object> bTree2 = new TreeMap<String, Object>();
 		bTree2.put(ServerConstants.usernameString, "Brandon");
@@ -348,9 +357,20 @@ public class BMCentralServerClient extends Thread {
 		Vector<GameRecord> gamerec = csc.requestPersonalRecords();
 		System.out.println("Getting Record for whoever is logged in. Vector Size: " + gamerec.size());
 		
+		Queue<RankContainer> worldrec = csc.requestWorldRankings();
+		System.out.println("Getting Record for whoever is logged in. Queue Size: " + worldrec.size());
+		
 		int i = 1;
 		for (GameRecord gr : gamerec) {
 			System.out.println(i++ + ": " + gr.getPoints() + " " + gr.getKillCount() + " " + gr.getDeathCount() + " " + gr.getTime());
 		}
+		i = 1;
+		for (RankContainer rc : worldrec) {
+			System.out.println(i++ + ": " + rc.getUsername() + " " + rc.getRating());
+		}
+		
+		csc.makeVIP();
+		csc.logout();
+		csc.disconnect();
 	}
 }

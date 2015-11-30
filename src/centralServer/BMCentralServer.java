@@ -78,6 +78,16 @@ public class BMCentralServer extends Thread {
 		}
 		return false;
 	}
+	public String makeVIP(String username) {
+		try {
+			return msqlDriver.makeVIP(username);
+		} catch (SQLException e) {
+			//e.printStackTrace();
+			BMCentralServerGUI.addMessage(ServerConstants.GenericSQLException + "Occured while changing VIP Status");
+		}
+		
+		return ServerConstants.VIPSTATUSFALSE;
+	}
 	
 	/*
 	 * Methods for accessing/modifying rankings and records
@@ -154,12 +164,11 @@ public class BMCentralServer extends Thread {
 			} catch (IOException ioe) {
 				ioe.printStackTrace();
 			} finally {
-					try {
-						if (ss != null)
-							ss.close();
-						msqlDriver.stop();
+				msqlDriver.stop();
+				try {
+					if (ss != null)
+						ss.close();
 					} catch (IOException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}

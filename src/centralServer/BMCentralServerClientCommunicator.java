@@ -134,8 +134,13 @@ public class BMCentralServerClientCommunicator extends Thread {
 								BMCentralServerGUI.addMessage(ServerConstants.VIPSTATUSREQUEST + currentUPI.getUsername());
 							}
 						} 
+						else if (str.equals(ServerConstants.UPGRADETOVIP)) {
+							if (currentUPI != null) {
+								String vipStatus = bmcs.makeVIP(currentUPI.getUsername());
+								currentUPI.setVIPStatus(vipStatus);
+							}
+						}
 						else if (str.equals(ServerConstants.DISCONNECT)) {
-							BMCentralServerGUI.addMessage(ServerConstants.clientDisconnected);
 							running = false;
 						}
 					}
@@ -157,10 +162,10 @@ public class BMCentralServerClientCommunicator extends Thread {
 				
 			}
 		} catch (IOException ioe) {
-			System.out.println("Trouble connecting to client");
+			BMCentralServerGUI.addMessage("Trouble connecting to client");
 		} finally {
 			bmcs.removeServerClientCommunicator(this);
-			BMCentralServerGUI.addMessage(s.getInetAddress() + ":" + s.getPort() + " - " + ServerConstants.clientDisconnected);
+			BMCentralServerGUI.addMessage(ServerConstants.clientDisconnected + " - " + s.getInetAddress() + ":" + s.getPort());
 			// this means that the socket is closed since no more lines are being received
 			try {
 				s.close();

@@ -5,7 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.Vector;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -20,8 +19,7 @@ public class MySQLDriver {
 	private final static String deleteUser = "DELETE FROM USERS WHERE USERNAME=? AND PASS=?";
 	private final static String addUser = "INSERT INTO USERS(USERNAME,PASS,VIP,MAXPOINTS) VALUES(?,?,?,?)";
 	private final static String setMaxPoints = "UPDATE USERS SET MAXPOINTS=? WHERE USERNAME=?";
-	private final static String sortByRank = "SELECT * FROM USERS ORDER BY MAXPOINTS DESC";
-	
+	private final static String setVIPStatus = "UPDATE USERS SET VIP=? WHERE USERNAME=?";
 	private final static String selectGameRecord = "SELECT * FROM GAMERECORDS WHERE USERNAME=? ORDER BY TIME DESC";
 	private final static String addGameRecord = "INSERT INTO GAMERECORDS(USERNAME,POINTS,KILLS,DEATHS) VALUES(?,?,?,?)";
 	private final static String getWorldRankings = "SELECT username, maxpoints FROM USERS ORDER BY MAXPOINTS DESC";
@@ -127,6 +125,18 @@ public class MySQLDriver {
 	
 		return false;
 	}
+	public String makeVIP(String userName) throws SQLException {
+		ResultSet result = getUsernameResults(userName);
+		while (result.next()) {
+			PreparedStatement ps = con.prepareStatement(setVIPStatus);
+			ps.setString(1, "true");
+			ps.setString(2, userName);
+			ps.executeUpdate();
+		}
+	
+		if (isVIP(userName)) return ServerConstants.VIPSTATUSTRUE;
+		else return ServerConstants.VIPSTATUSFALSE;
+	}
 	
 	/*
 	 * Game Record related methods
@@ -190,10 +200,6 @@ public class MySQLDriver {
 		return ps.executeQuery();
 	}
 	
-	private void reSortUsers() throws SQLException {
-		PreparedStatement ps = con.prepareStatement(sortByRank);
-		ps.executeUpdate();
-	}
 	/*
 	public static void main(String[] args) {
 		MySQLDriver msqld = new MySQLDriver();
