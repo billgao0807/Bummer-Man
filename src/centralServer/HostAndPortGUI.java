@@ -35,9 +35,11 @@ public class HostAndPortGUI extends JFrame {
 	private Socket socket;
 	
 	private PaintedPanel outerPanel;
-
-	public HostAndPortGUI() {
+	
+	private BMCentralServerClient serverClient;
+	public HostAndPortGUI(BMCentralServerClient serverClient) {
 		super("Central Server Host and Port");
+		this.serverClient = serverClient;
 		initializeVariables();
 		createGUI();
 		addActionAdapters();
@@ -85,6 +87,7 @@ public class HostAndPortGUI extends JFrame {
 		outerPanel.add(connectButton);
 		
 		add(outerPanel);
+		
 	}
 	
 	private void addActionAdapters() {
@@ -106,6 +109,7 @@ public class HostAndPortGUI extends JFrame {
 						hostAndPortLock.lock();
 						hostAndPortCondition.signal();
 						hostAndPortLock.unlock();
+						serverClient.setUp();
 						HostAndPortGUI.this.setVisible(false);
 					} catch (IOException ioe) {
 						errorLabel.setText(ServerConstants.unableToConnectString);

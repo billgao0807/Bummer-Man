@@ -73,12 +73,14 @@ public class BMClientPanel extends JPanel{
 				username = loginPanel.getSignin().txtUsername.getText().trim();
 				password = loginPanel.getSignin().txtPassword.getText().trim();
 //				centralServerClient = new BMCentralServerClient("172.20.10.3", 6789);
-				try {
-					centralServerClient = new BMCentralServerClient( 6789);
-				} catch (UnknownHostException e) {
+				/*try {
+					//centralServerClient = new BMCentralServerClient( 6789);
+									} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}
+				}*/
+				//centralServerClient = new BMCentralServerClient();
+
 				if (centralServerClient.signup(username, password))
 				{
 					loginPanel.getSignin().label.setText("Signed up successfully! ");
@@ -95,31 +97,51 @@ public class BMClientPanel extends JPanel{
 				username = loginPanel.getSignin().txtUsername.getText().trim();
 				password = loginPanel.getSignin().txtPassword.getText().trim();
 //				centralServerClient = new BMCentralServerClient("172.20.10.3", 6789);
-				try {
+				/*try {
 					centralServerClient = new BMCentralServerClient( 6789);
 				} catch (UnknownHostException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				}*/
+				//centralServerClient = new BMCentralServerClient();
+				if (centralServerClient != null){
+					if (centralServerClient.login(username, password))
+					{
+						BMClientPanel.this.removeAll();				
+						BMClientPanel.this.add(menuPanel);
+						BMClientPanel.this.revalidate();
+						BMClientPanel.this.repaint();
+						System.out.println("login success");
+						loginPanel.closeSignup();
+					}
+					else
+					{
+						loginPanel.getSignin().label.setText("Sign in failed");
+						loginPanel.getSignin().label.setForeground(Color.RED);
+						loginPanel.getSignin().label.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
+						loginPanel.getSignin().txtPassword.setText("");
+						loginPanel.getSignin().txtUsername.setText("");
+					}
 				}
-
-				if (centralServerClient.login(username, password))
-				{
-					BMClientPanel.this.removeAll();				
-					BMClientPanel.this.add(menuPanel);
-					BMClientPanel.this.revalidate();
-					BMClientPanel.this.repaint();
-					System.out.println("login success");
-					loginPanel.closeSignup();
-				}
-				else
-				{
-					loginPanel.getSignin().label.setText("Sign in failed");
+				else{
+					loginPanel.getSignin().label.setText("Please connect to login server first");
 					loginPanel.getSignin().label.setForeground(Color.RED);
 					loginPanel.getSignin().label.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
-					loginPanel.getSignin().txtPassword.setText("");
-					loginPanel.getSignin().txtUsername.setText("");
 				}
-			}}, BMLibrary.readImages("menu.png"));
+				
+			}},
+				new ActionListener(){
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						centralServerClient = new BMCentralServerClient();
+
+						
+					}
+				
+				
+				
+			},BMLibrary.readImages("menu.png"));
 
 
 		//Set up the panel to display

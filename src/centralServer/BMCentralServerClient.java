@@ -29,6 +29,7 @@ public class BMCentralServerClient extends Thread {
 	private Condition signupResult;
 	private Condition vipResult;
 	
+	
 	private volatile boolean running;
 	private Boolean loggedIn;
 	private Boolean vipStatus;
@@ -36,6 +37,7 @@ public class BMCentralServerClient extends Thread {
 	
 	private Queue<RankContainer> ranks;
 	private Vector<GameRecord> gameRecords;
+	private HostAndPortGUI hapgui;
 	
 	{
 		mLock = new ReentrantLock();
@@ -44,6 +46,7 @@ public class BMCentralServerClient extends Thread {
 		loginResult = mLock.newCondition();
 		signupResult = mLock.newCondition();
 		vipResult = mLock.newCondition();
+		
 		
 		running = false;
 		loggedIn = false;
@@ -82,10 +85,18 @@ public class BMCentralServerClient extends Thread {
 	}
 	
 	public BMCentralServerClient() {
-		HostAndPortGUI hapgui = new HostAndPortGUI();
-		s = hapgui.getSocket();
 		
+		hapgui = new HostAndPortGUI(this);
+		
+		
+		//
+	}
+	
+	public void setUp(){
+		s = hapgui.getSocket();
+		//System.out.println("3");
 		try {
+			//System.out.println("4");
 			oos = new ObjectOutputStream(s.getOutputStream());
 			ois = new ObjectInputStream(s.getInputStream());
 			running = true;

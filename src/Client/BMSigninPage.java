@@ -24,9 +24,10 @@ public class BMSigninPage extends JFrame{
 		private final static Dimension maxSize = new Dimension(960,640);
 	public JTextField txtUsername;
 	public JTextField txtPassword;
+	public JButton connectServer;
 
 public JLabel label;
-	public BMSigninPage(ActionListener quickG, ActionListener signup, ActionListener login)
+	public BMSigninPage(ActionListener quickG, ActionListener signup, ActionListener login, ActionListener connect_Server)
 	{
 		setResizable(false);
 //		setIconImage(Toolkit.getDefaultToolkit().getImage(BMSigninPage.class.getResource("/Utilities/images/resultBG.png")));
@@ -36,6 +37,7 @@ public JLabel label;
 		//setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
 //		setContentPane(new JLabel(new ImageIcon("/Utilities/images/resultBG.png")));
+		
 		
 		txtUsername = new JTextField(SwingConstants.CENTER);
 		txtUsername.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
@@ -80,6 +82,8 @@ public JLabel label;
 		JButton btnLogin_1 = new JButton("Login");
 		btnLogin_1.addActionListener(login);
 		btnLogin_1.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 20));
+		
+		JButton btnConnectServer = new JButton("Connect Server");
 		GroupLayout groupLayout = new GroupLayout(mainPanel);
 		groupLayout.setHorizontalGroup(
 			groupLayout.createParallelGroup(Alignment.TRAILING)
@@ -94,10 +98,15 @@ public JLabel label;
 						.addComponent(btnLogin_1, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
 					.addGap(105))
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(95)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addComponent(txtPassword, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-						.addComponent(txtUsername, GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE))
+					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
+						.addGroup(groupLayout.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(btnConnectServer))
+						.addGroup(groupLayout.createSequentialGroup()
+							.addGap(95)
+							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addComponent(txtPassword, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+								.addComponent(txtUsername, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))))
 					.addGap(95))
 		);
 		groupLayout.setVerticalGroup(
@@ -107,7 +116,9 @@ public JLabel label;
 					.addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 					.addGap(18)
 					.addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 125, Short.MAX_VALUE)
+					.addPreferredGap(ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
+					.addComponent(btnConnectServer)
+					.addGap(18)
 					.addComponent(btnQuickgame)
 					.addGap(18)
 					.addComponent(btnSignup)
@@ -118,48 +129,7 @@ public JLabel label;
 		
 
 		label = new JLabel("");
-	
-		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.TRAILING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(60)
-					.addComponent(btnQuickgame, GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
-					.addGap(60))
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(105)
-					.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-						.addComponent(btnSignup, GroupLayout.PREFERRED_SIZE, 110, Short.MAX_VALUE)
-						.addComponent(btnLogin_1, GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE))
-					.addGap(105))
-				.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-					.addGap(100)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addComponent(label)
-							.addContainerGap())
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(txtPassword, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-								.addComponent(txtUsername, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
-							.addGap(100))))
-		);
-		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
-				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(35)
-					.addComponent(label)
-					.addGap(18)
-					.addComponent(txtUsername, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(txtPassword, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 129, Short.MAX_VALUE)
-					.addComponent(btnQuickgame)
-					.addGap(18)
-					.addComponent(btnSignup)
-					.addGap(18)
-					.addComponent(btnLogin_1)
-					.addGap(67))
-		);
+		btnConnectServer.addActionListener(connect_Server);
 
 		
 		mainPanel.setLayout(groupLayout);
