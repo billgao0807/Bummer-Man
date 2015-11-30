@@ -19,6 +19,7 @@ public class MySQLDriver {
 	private final static String deleteUser = "DELETE FROM USERS WHERE USERNAME=? AND PASS=?";
 	private final static String addUser = "INSERT INTO USERS(USERNAME,PASS,VIP,MAXPOINTS) VALUES(?,?,?,?)";
 	private final static String setMaxPoints = "UPDATE USERS SET MAXPOINTS=? WHERE USERNAME=?";
+	private final static String setVIPStatus = "UPDATE USERS SET VIP=? WHERE USERNAME=?";
 	private final static String selectGameRecord = "SELECT * FROM GAMERECORDS WHERE USERNAME=? ORDER BY TIME DESC";
 	private final static String addGameRecord = "INSERT INTO GAMERECORDS(USERNAME,POINTS,KILLS,DEATHS) VALUES(?,?,?,?)";
 	private final static String getWorldRankings = "SELECT username, maxpoints FROM USERS ORDER BY MAXPOINTS DESC";
@@ -123,6 +124,18 @@ public class MySQLDriver {
 		}
 	
 		return false;
+	}
+	public String makeVIP(String userName) throws SQLException {
+		ResultSet result = getUsernameResults(userName);
+		while (result.next()) {
+			PreparedStatement ps = con.prepareStatement(setVIPStatus);
+			ps.setString(1, "true");
+			ps.setString(2, userName);
+			ps.executeUpdate();
+		}
+	
+		if (isVIP(userName)) return ServerConstants.VIPSTATUSTRUE;
+		else return ServerConstants.VIPSTATUSFALSE;
 	}
 	
 	/*
