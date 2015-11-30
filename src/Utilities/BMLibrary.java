@@ -13,7 +13,8 @@ import java.util.Scanner;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 public class BMLibrary {
-	public static final String path = "src/Utilities/images/";
+//	public static final String path = BMLibrary.class.getResource(".").getPath();
+	public static final String path = "/Utilities/images/";
 	private File file;
 	public final String SQLName = "SQLName";
 	
@@ -34,7 +35,7 @@ public class BMLibrary {
 				if(path.startsWith("http")) {
 					img = ImageIO.read(new URL(path));
 				}
-				else img = ImageIO.read(new File(BMLibrary.path + path));
+				else img = ImageIO.read(BMLibrary.class.getResource(BMLibrary.path+path));
 			}
 			catch (IOException e) { System.out.println("Error reading image: " + path + e); return null; }
 			imageMap.put(path, img);
@@ -60,7 +61,7 @@ public class BMLibrary {
 		
 		List<String[]> data = new ArrayList<>();		 
 		try {
-			Scanner in = new Scanner(new File(path+"map1.txt"));
+			Scanner in = new Scanner(BMLibrary.class.getResource(path+"map1.txt").openStream());
 		 
 		    while (in.hasNextLine()) {
 		           String str = in.nextLine();

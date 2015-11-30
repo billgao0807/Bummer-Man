@@ -19,7 +19,7 @@ public class MusicLibrary {
 //	public static void main(String[] args){
 //		victory();
 //	}
-	public static final String path = "src/Utilities/bgm/";
+	public static final String path = "/Utilities/bgm/";
 	public static void startGame(){
 		playSound("roomBGM.mp3");
 	}

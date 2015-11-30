@@ -11,7 +11,7 @@ import java.util.Map;
 //Ensures that images aren't loaded into memory more than necessary
 public class BMFontLibrary {
 	private static Map<String, Font> fontMap;
-	public static final String path = "src/Utilities/font/";
+	public static final String path = "/Utilities/font/";
 	static{
 		fontMap = new HashMap<String,Font>();
 	}
@@ -23,7 +23,7 @@ public class BMFontLibrary {
 		Font font = fontMap.get(directory);
 		if(font == null) {
 			try {
-				font = Font.createFont(Font.TRUETYPE_FONT, new FileInputStream(path+directory));
+				font = Font.createFont(Font.TRUETYPE_FONT, BMFontLibrary.class.getResource(path+directory).openStream());
 			}
 			catch (IOException | FontFormatException e) { System.out.println("Error reading image: " + e); return null; }
 			fontMap.put(directory, font);
