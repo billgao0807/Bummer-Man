@@ -17,6 +17,7 @@ public class ServerConstants {
 	public static final String REQUESTWORLDRANKING = "Request for World Rankings";
 	public static final String SENDINGPERSONALRECORD = "Sending Personal Record | ";
 	public static final String SENDINGWORLDRANKING = "Sending World Ranking | ";
+	public static final String CENTRALSERVERUPDATED = "Ranks and Records Successfully Updated";
 	
 	public static final String WorldRankingFetchFailure = "Error retrieving World Ranking";
 	public static final String PersonalRankingFetchFailure = "Error retrieving Personal Record";
@@ -25,6 +26,7 @@ public class ServerConstants {
 	public static final String NotConnected = "Not Connected to Server";
 	
 	public static final String VIPSTATUSREQUEST = "VIP Status Request Received | ";
+	public static final String UPGRADETOVIP = "Upgrade to VIP | ";
 	public static final String VIPSTATUSTRUE = "User is a VIP";
 	public static final String VIPSTATUSFALSE = "User is not a VIP";
 	
@@ -57,6 +59,14 @@ public class ServerConstants {
 	public static final String disconnectedFromMySQL = "Disconnecting from MySQL | ";
 	public static final String failedDisconnectFromMySQL = "Failed to Disconnect from MySQL | ";
 	
+	//For the BMCentralServerClient
+	public static final String hostAndPortDescriptionString = "<html>Enter the hostname and port number of the Central Server</html>";
+	public static final String hostnameLabelString = "Hostname";
+	public static final String connectButtonString = "Connect";
+	public static final int hostAndPortGUIwidth = 330;
+	public static final int hostAndPortGUIheight = 200;
+	public static final String unableToConnectString = "<html><font color=\"red\">Unable to connect to host.</font></html>";
+	public static final String unableToGetStreams = "Could not get reader and writer for socket";
 	
 	/*
 	 * Map and Updating constants

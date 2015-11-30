@@ -31,9 +31,10 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 	ActionListener signup;
 	ActionListener quickG;
 	ActionListener login;
+	ActionListener connect_Server;
 	 BMSigninPage signin;
 	
-	BMLoginPanel (ActionListener signup, ActionListener quickG, ActionListener login, Image image)
+	BMLoginPanel (ActionListener signup, ActionListener quickG, ActionListener login, ActionListener connect_Server,Image image)
 	{
 		super(image);
 		this.setFocusable(true);
@@ -43,6 +44,7 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 		this.signup = signup;
 		this.quickG = quickG;
 		this.login = login;
+		this.connect_Server = connect_Server;
 		
 
 		
@@ -92,7 +94,7 @@ public class BMLoginPanel extends PaintedPanel implements KeyListener{
 		// TODO Auto-generated method stub
 		System.out.println("Hello2");
 		
-		signin = new BMSigninPage(signup,quickG,login);
+		signin = new BMSigninPage(signup,quickG,login,connect_Server);
 		signin.setVisible(true);
 		
 	}

@@ -86,6 +86,10 @@ public abstract class BMPlayer extends Thread implements Serializable{
 	protected volatile boolean cooling;
 	
 	private int itemCount = 0;
+	
+	boolean vip = false;
+	protected String username = "AI Player";
+	
 //	Functions:
 //		+ BMPlayer(int ID, int initialLives, boolean isVIP)
 //		+ setSimulation(BMSimulation simulation)
@@ -494,11 +498,11 @@ public abstract class BMPlayer extends Thread implements Serializable{
 		resultMap.put("death", new Integer(initialHP-HP));
 		resultMap.put("item", itemCount);
 		resultMap.put("username", this.getUserName());
+		System.out.println("Result username " + this.getUserName());
 		return resultMap;
 	}
 
-	boolean vip = false;
-	protected String username = "AI Player";
+	
 	public TreeMap<String,Object> getInfo(){
 		TreeMap<String,Object> info = new TreeMap<String,Object>();
 		info.put("username",getUserName());

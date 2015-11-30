@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.text.DefaultCaret;
 
 /*
  * Copied from Factory Code
@@ -34,6 +35,8 @@ public class BMCentralServerGUI extends JFrame {
 		textArea = new JTextArea();
 		textArea.setEditable(false);
 		textArea.setLineWrap(true);
+		DefaultCaret caret = (DefaultCaret)textArea.getCaret();
+		 caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		textAreaScrollPane = new JScrollPane(textArea);
 		
 		connectButton = new JButton("Connect");

@@ -1,4 +1,20 @@
 package Client;
+
+/*
+ * Zhongyang Gao zhongyag@usc.edu
+ * Jiahui Wei jiahuiwe@usc.edu
+ * Zhongzhen Yang zhongyanz@usc.edu
+ * Yiqing Xu yiqingxu@usc.edu
+ * Brandon Keiji Horton bkhorton@usc.edu
+ * Cheuk Yin Matthew Lam cheukyin@usc.edu
+ * 
+ * 
+ * 
+ * 
+ * 
+ */
+
+
 import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Image;

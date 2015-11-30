@@ -35,40 +35,40 @@ public class BMBoard_Player  extends PaintedPanel {
 				setLayout(new GridBagLayout());
 				GridBagConstraints gbc = new GridBagConstraints();
 				NameLabel = new JLabel ("Name");
-				NameLabel.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 30));
+				NameLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 30));
 
 
 				TimeLabel = new JLabel("Time  "  );
-				TimeLabel.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 25));
+				TimeLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 25));
 
 				HPLabel = new JLabel("HP ");
-				HPLabel.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 25));
+				HPLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 25));
 
 				AbilityLabel = new JLabel("Ability ");
-				AbilityLabel.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 25));
+				AbilityLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 9));
 
 				SpeedLabel = new PaintedLabel(null);
-				SpeedLabel.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 18));
+				SpeedLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 9));
 
 				PowerLabel = new PaintedLabel(null);
-				PowerLabel.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 18));
+				PowerLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 9));
 
 				Item1Label= new PaintedLabel (null);
-				Item1Label.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 25));
+				Item1Label.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 
 				Item2Label= new PaintedLabel (null);
-				Item2Label.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 25));
+				Item2Label.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 
 				Item0Label= new PaintedLabel (null);
-				Item0Label.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 25));
+				Item0Label.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 15));
 
 
 				CoolingTimeLabel = new PaintedLabel (null);
-				CoolingTimeLabel.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
+				CoolingTimeLabel.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 8));
 
 				
 				DetonatedTime_Label = new PaintedLabel (null);
-				DetonatedTime_Label.setFont(BMFontLibrary.getFont("font2.otf", Font.PLAIN, 15));
+				DetonatedTime_Label.setFont(BMFontLibrary.getFont("font3.ttf", Font.PLAIN, 8));
 
 				SpeedLabel.setText("Speed");
 				PowerLabel.setText("Power");
@@ -237,7 +237,9 @@ public class BMBoard_Player  extends PaintedPanel {
 				HPLabel.setText("HP " + curr_hp+ '/' + total_hp);
 				
 				TimeLabel.setText("Time : " +(String)players.get(0).get("time"));
-//				System.out.println("Current_hp" +curr_hp + "total_hp" +total_hp );
+				System.out.println(local_username +players);
+    			System.out.println(local_username+"time" +(String)players.get(0).get("time") );
+    			System.out.println("timeLabel:" + TimeLabel.getText());
 				repaint();
 			}
 			

@@ -146,6 +146,7 @@ public class HostClientListener  extends Thread{
 							Vector<TreeMap<String,Object>> result = (Vector<TreeMap<String,Object>>)map.get("result");
 							
 							clientpanel.boardPanel.Gameover(result);
+							clientpanel.game_over(result);
 							return;
 						}
 					}catch (ClassNotFoundException cnfe) {
