@@ -405,7 +405,10 @@ public class BMClientPanel extends JPanel{
 			
 		}
 		System.out.println("Update world rankings number of real players: " + tmVector.size());
-		centralServerClient.updateWorldRankings(tmVector);
+		if (simulation != null) {
+			centralServerClient.updateWorldRankings(tmVector);	
+		}
+		
 		
 	}
 }
