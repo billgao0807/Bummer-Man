@@ -57,7 +57,7 @@ private static final long serialVersionUID = 5147395078473323173L;
 
 	//new comment
 	{
-		BMGameFrame.playSound();
+//		BMGameFrame.playSound();
 		setTitle("Bomberman");
 		setSize(minSize);
 //		setMinimumSize(minSize);
@@ -145,43 +145,43 @@ private static final long serialVersionUID = 5147395078473323173L;
 		System.out.println("Release");
 	}
 	
-	public static void playSound() {
-		try {
-			
-			URL url = MusicLibrary.class.getResource("opening-fmv.wav");
-
-			System.out.println(url);
-			AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
-			System.out.println(audioIn);
-			clip = AudioSystem.getClip();
-			System.out.println(clip);
-			clip.open(audioIn);
-			new Thread(new Runnable(){
-
-				@Override
-				public void run() {
-					// TODO Auto-generated method stub
-					while (true){
-						try {
-							Thread.sleep(5000);
-						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						if (!clip.isActive()){
-							BMGameFrame.clip.start();
-						}
-					}
-				}
-			}).start();
-		}
-		catch (IOException e){
-			System.out.println("IOE");
-		} catch (UnsupportedAudioFileException e) {
-			System.out.println("IOUnsupportedAudioFileExceptionE");
-		} catch (LineUnavailableException e) {
-			System.out.println("LineUnavailableException");
-		}
-	}
+//	public static void playSound() {
+//		try {
+//			
+//			URL url = MusicLibrary.class.getResource("opening-fmv.wav");
+//
+//			System.out.println(url);
+//			AudioInputStream audioIn = AudioSystem.getAudioInputStream(url);
+//			System.out.println(audioIn);
+//			clip = AudioSystem.getClip();
+//			System.out.println(clip);
+//			clip.open(audioIn);
+//			new Thread(new Runnable(){
+//
+//				@Override
+//				public void run() {
+//					// TODO Auto-generated method stub
+//					while (true){
+//						try {
+//							Thread.sleep(5000);
+//						} catch (InterruptedException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//						if (!clip.isActive()){
+//							BMGameFrame.clip.start();
+//						}
+//					}
+//				}
+//			}).start();
+//		}
+//		catch (IOException e){
+//			System.out.println("IOE");
+//		} catch (UnsupportedAudioFileException e) {
+//			System.out.println("IOUnsupportedAudioFileExceptionE");
+//		} catch (LineUnavailableException e) {
+//			System.out.println("LineUnavailableException");
+//		}
+//	}
 	
 }
